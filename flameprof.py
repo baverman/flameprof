@@ -76,10 +76,10 @@ def render(funcs, calls, threshold=0.0001, h=24, fsize=12, width=1200):
                 if k not in visited:
                     _counts(child, visited | {k}, level+1)
 
-    def _render(parent, timings, level, origin, visited):
+    def _render(parent, timings, level, origin, visited, pccnt=1):
         childs = funcs[parent]['calls']
         _, _, ptt, ptc = timings
-        fchilds = sorted(((f, funcs[f], calls[(parent, f)], block_counts[(parent, f)])
+        fchilds = sorted(((f, funcs[f], calls[(parent, f)], max(block_counts[(parent, f)], pccnt))
                           for f in childs),
                          key=lambda r: r[0])
 
@@ -110,7 +110,7 @@ def render(funcs, calls, threshold=0.0001, h=24, fsize=12, width=1200):
                     'x': origin
                 })
                 if ckey not in visited:
-                    _render(child, (cc, nc, tt, tc), level + 1, origin, visited | {ckey})
+                    _render(child, (cc, nc, tt, tc), level + 1, origin, visited | {ckey}, ccnt)
             origin += tc
 
     maxw = funcs['root']['total'] * 1.0
@@ -169,7 +169,6 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     s = pstats.Stats(args.stats)
-    # epprint(s.stats)
     funcs, calls = calc_callers(s.stats)
     print(render(funcs, calls, h=args.row_height,
                  fsize=args.font_size, width=args.width, threshold=args.threshold / 100))
