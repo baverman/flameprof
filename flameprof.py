@@ -101,7 +101,7 @@ def render(funcs, calls, threshold=0.0001, h=24, fsize=12, width=1200):
             ckey = parent, child
             if tc/maxw > threshold:
                 blocks.append({
-                    'ccnt': ccnt,
+                    'ccnt': (pccnt==1 and ccnt > 1),
                     'level': level,
                     'name': child[2],
                     'hash_name': '{0[0]}:{0[1]}:{0[2]}'.format(child),
@@ -126,7 +126,7 @@ def render(funcs, calls, threshold=0.0001, h=24, fsize=12, width=1200):
         y = height - b['level']*h - h
         ty = h / 2
         w = max(1, b['w'] * width / maxw - 1)
-        if b['ccnt'] > 1:
+        if b['ccnt']:
             fill = CCOLORS[int(len(CCOLORS) * name_hash(b['hash_name']))]
         else:
             fill = COLORS[int(len(COLORS) * name_hash(b['hash_name']))]
@@ -164,7 +164,7 @@ if __name__ == '__main__':
     parser.add_argument('--row-height', type=int, help='row height, default is %(default)s', default=24)
     parser.add_argument('--font-size', type=int, help='font size, default is %(default)s', default=12)
     parser.add_argument('--threshold', type=float,
-                        help='limit functions relative cumulative time in percents, default is %(default)s%%', default=0.01)
+                        help='limit functions relative cumulative time in percents, default is %(default)s%%', default=0.1)
 
     args = parser.parse_args()
 
