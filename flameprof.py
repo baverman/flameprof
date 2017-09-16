@@ -4,6 +4,7 @@ from __future__ import division, print_function
 import sys
 import pstats
 import argparse
+import pprint
 
 from struct import Struct
 from hashlib import sha1
@@ -12,6 +13,7 @@ from collections import Counter
 from xml.sax.saxutils import escape
 
 eprint = partial(print, file=sys.stderr)
+epprint = partial(pprint.pprint, stream=sys.stderr)
 
 PY2 = sys.version_info[0] == 2
 if PY2:
@@ -66,12 +68,13 @@ def render(funcs, calls, threshold=0.0001, h=24, fsize=12, width=1200):
     blocks = []
     block_counts = Counter()
 
-    def _counts(parent, visited):
+    def _counts(parent, visited, level=0):
         for child in funcs[parent]['calls']:
             k = parent, child
             block_counts[k] += 1
-            if k not in visited:
-                _counts(child, visited | {k})
+            if block_counts[k] < 2:
+                if k not in visited:
+                    _counts(child, visited | {k}, level+1)
 
     def _render(parent, timings, level, origin, visited):
         childs = funcs[parent]['calls']
@@ -106,8 +109,8 @@ def render(funcs, calls, threshold=0.0001, h=24, fsize=12, width=1200):
                     'w': tc,
                     'x': origin
                 })
-            if ckey not in visited:
-                _render(child, (cc, nc, tt, tc), level + 1, origin, visited | {ckey})
+                if ckey not in visited:
+                    _render(child, (cc, nc, tt, tc), level + 1, origin, visited | {ckey})
             origin += tc
 
     maxw = funcs['root']['total'] * 1.0
@@ -166,6 +169,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     s = pstats.Stats(args.stats)
+    # epprint(s.stats)
     funcs, calls = calc_callers(s.stats)
     print(render(funcs, calls, h=args.row_height,
                  fsize=args.font_size, width=args.width, threshold=args.threshold / 100))
