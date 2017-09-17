@@ -1,0 +1,1858 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" width="1200" height="384"
+     xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<style type="text/css">
+    .func_g:hover { stroke:black; stroke-width:0.5; cursor:pointer; }
+</style>
+<svg class="func_g" x="0.0" y="360" width="1198.99993821" height="23"><g>
+    <title>bench2.py:71:timeit 100.00% (1 1 0.112298 19.420062)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 190, 110)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">timeit</text>
+</g></svg>
+<svg class="func_g" x="0.000308958832935" y="336" width="1" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/response.py:489:closed 0.12% (10000 10000 0.017405 0.023121)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 215, 125)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">closed</text>
+</g></svg>
+<svg class="func_g" x="1.42899639409" y="336" width="1190.54954338" height="23"><g>
+    <title>bench2.py:9:iter 99.30% (10000 10000 0.024229 19.283306)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 240, 141)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">iter</text>
+</g></svg>
+<svg class="func_g" x="1.77348549281" y="312" width="1188.70790157" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/sessions.py:512:get 99.14% (10000 10000 0.045479 19.253502)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 190, 110)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">get</text>
+</g></svg>
+<svg class="func_g" x="1.77348549281" y="288" width="1185.71606781" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/sessions.py:441:request 98.89% (10000 10000 0.139092 19.205084)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 140, 79)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">request</text>
+</g></svg>
+<svg class="func_g" x="1.77348549281" y="264" width="4.60797356837" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/models.py:218:__init__ 0.47% (10000 10000 0.044245 0.090756)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 115, 64)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">__init__</text>
+</g></svg>
+<svg class="func_g" x="1.77348549281" y="240" width="1.74151530816" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/hooks.py:17:default_hooks 0.23% (10000 10000 0.037058 0.044367)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 190, 110)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">default_hooks</text>
+</g></svg>
+<svg class="func_g" x="7.38145906118" y="264" width="295.071294928" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/sessions.py:401:prepare_request 24.67% (10000 10000 0.15389 4.791436)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 240, 141)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">prepare_request</text>
+</g></svg>
+<svg class="func_g" x="7.38145906118" y="240" width="10.0749383254" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/cookies.py:503:cookiejar_from_dict 0.92% (10000 10000 0.031871 0.17923)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 190, 110)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">cookiejar_from_dict</text>
+</g></svg>
+<svg class="func_g" x="7.38145906118" y="216" width="1.4731833163" height="23"><g>
+    <title>/usr/lib64/python2.7/cookielib.py:1196:deepvalues 0.21% (9275.0 9275.0 0.0121490214759 0.0400244798443)</title>
+    <rect height="100%" width="100%" fill="rgb(85, 218, 84)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">deepvalues</text>
+</g></svg>
+<svg class="func_g" x="7.38145906118" y="192" width="1" height="23"><g>
+    <title>/usr/lib64/python2.7/cookielib.py:1191:vals_sorted_by_key 0.14% (11374.0 11374.0 0.0159606470853 0.0278754583683)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 165, 95)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">vals_sorted_by_key</text>
+</g></svg>
+<svg class="func_g" x="9.85464237748" y="216" width="5.12176272883" height="23"><g>
+    <title>/usr/lib64/python2.7/cookielib.py:1233:__init__ 0.51% (9275.0 9275.0 0.0364308329604 0.0990708482208)</title>
+    <rect height="100%" width="100%" fill="rgb(71, 230, 126)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">__init__</text>
+</g></svg>
+<svg class="func_g" x="10.9117241928" y="192" width="1.81355538667" height="23"><g>
+    <title>/usr/lib64/python2.7/threading.py:114:RLock 0.23% (10692.0 10692.0 0.0115598089132 0.0455328523859)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 215, 125)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">RLock</text>
+</g></svg>
+<svg class="func_g" x="10.9117241928" y="168" width="1.09925437251" height="23"><g>
+    <title>/usr/lib64/python2.7/threading.py:132:__init__ 0.17% (10692.0 10692.0 0.0247169991599 0.0339730434726)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 90, 49)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">__init__</text>
+</g></svg>
+<svg class="func_g" x="18.4563973866" y="240" width="9.12705262594" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/cookies.py:523:merge_cookies 0.84% (20000 20000 0.038612 0.16389)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 115, 64)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">merge_cookies</text>
+</g></svg>
+<svg class="func_g" x="18.4563973866" y="216" width="4.85785947244" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/cookies.py:349:update 0.49% (20000 20000 0.027239 0.0948)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 240, 141)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">update</text>
+</g></svg>
+<svg class="func_g" x="18.4563973866" y="192" width="2.04435675621" height="23"><g>
+    <title>/usr/lib64/python2.7/cookielib.py:1196:deepvalues 0.25% (20000 20000 0.01409 0.049268)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 140, 79)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">deepvalues</text>
+</g></svg>
+<svg class="func_g" x="18.4563973866" y="168" width="1.173710765" height="23"><g>
+    <title>/usr/lib64/python2.7/cookielib.py:1191:vals_sorted_by_key 0.18% (14353.0 14353.0 0.0201418622699 0.035178)</title>
+    <rect height="100%" width="100%" fill="rgb(71, 230, 126)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">vals_sorted_by_key</text>
+</g></svg>
+<svg class="func_g" x="24.314256859" y="216" width="1" height="23"><g>
+    <title>~:0:&lt;isinstance&gt; 0.16% (60000 60000 0.030478 0.030478)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 190, 110)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">&lt;isinstance&gt;</text>
+</g></svg>
+<svg class="func_g" x="28.5834500125" y="240" width="2.53560130057" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/models.py:282:__init__ 0.29% (10000 10000 0.025324 0.057218)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 215, 125)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">__init__</text>
+</g></svg>
+<svg class="func_g" x="28.5834500125" y="216" width="1" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/hooks.py:17:default_hooks 0.16% (10000 10000 0.026139 0.031894)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 190, 110)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">default_hooks</text>
+</g></svg>
+<svg class="func_g" x="32.1190513131" y="240" width="153.031673327" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/models.py:299:prepare 12.84% (10000 10000 0.060053 2.492754)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 140, 79)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">prepare</text>
+</g></svg>
+<svg class="func_g" x="32.1190513131" y="216" width="1" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/models.py:331:prepare_method 0.15% (10000 10000 0.018532 0.028861)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 190, 110)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">prepare_method</text>
+</g></svg>
+<svg class="func_g" x="33.9024234885" y="216" width="50.8020770581" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/models.py:347:prepare_url 4.32% (10000 10000 0.170585 0.838333)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 140, 79)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">prepare_url</text>
+</g></svg>
+<svg class="func_g" x="33.9024234885" y="192" width="1.18328848882" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/_internal_utils.py:30:unicode_is_ascii 0.18% (10000 10000 0.01487 0.035333)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 140, 79)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">unicode_is_ascii</text>
+</g></svg>
+<svg class="func_g" x="36.0857119774" y="192" width="8.57772382098" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/models.py:82:_encode_params 0.80% (10000 10000 0.037657 0.155)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 165, 95)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">_encode_params</text>
+</g></svg>
+<svg class="func_g" x="36.0857119774" y="168" width="3.23415722184" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/utils.py:244:to_key_val_list 0.35% (10000 10000 0.020008 0.068523)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 190, 110)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">to_key_val_list</text>
+</g></svg>
+<svg class="func_g" x="36.0857119774" y="144" width="1" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/_abcoll.py:412:items 0.11% (1293.0 1293.0 0.00537088073722 0.0206886315658)</title>
+    <rect height="100%" width="100%" fill="rgb(57, 242, 168)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">items</text>
+</g></svg>
+<svg class="func_g" x="37.4700416487" y="144" width="1" height="23"><g>
+    <title>~:0:&lt;isinstance&gt; 0.13% (18095.0 18095.0 0.0113709535481 0.0251131391799)</title>
+    <rect height="100%" width="100%" fill="rgb(57, 242, 168)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">&lt;isinstance&gt;</text>
+</g></svg>
+<svg class="func_g" x="40.3198691992" y="168" width="1.09004471304" height="23"><g>
+    <title>/usr/lib64/python2.7/urllib.py:1308:urlencode 0.17% (10000 10000 0.022197 0.033824)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 240, 141)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">urlencode</text>
+</g></svg>
+<svg class="func_g" x="45.6634357983" y="192" width="4.36890122344" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/utils.py:524:requote_uri 0.45% (10000 10000 0.020892 0.086887)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 115, 64)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">requote_uri</text>
+</g></svg>
+<svg class="func_g" x="45.6634357983" y="168" width="1.15696519625" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/utils.py:500:unquote_unreserved 0.18% (10000 10000 0.020335 0.034907)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 190, 110)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">unquote_unreserved</text>
+</g></svg>
+<svg class="func_g" x="47.8204009946" y="168" width="1" height="23"><g>
+    <title>/usr/lib64/python2.7/urllib.py:1262:quote 0.16% (10000 10000 0.023344 0.031088)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 240, 141)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">quote</text>
+</g></svg>
+<svg class="func_g" x="51.0323370218" y="192" width="14.0508677547" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/util/url.py:132:parse_url 1.25% (10000 10000 0.10004 0.243574)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 240, 141)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">parse_url</text>
+</g></svg>
+<svg class="func_g" x="51.0323370218" y="168" width="3.5587642487" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/util/url.py:22:__new__ 0.38% (12126.0 12126.0 0.0464841548183 0.07377624076)</title>
+    <rect height="100%" width="100%" fill="rgb(71, 230, 126)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">__new__</text>
+</g></svg>
+<svg class="func_g" x="55.5911012705" y="168" width="1.93160553881" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/util/url.py:99:split_first 0.24% (12126.0 12126.0 0.0332955566735 0.0474433035456)</title>
+    <rect height="100%" width="100%" fill="rgb(57, 242, 168)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">split_first</text>
+</g></svg>
+<svg class="func_g" x="66.0832047764" y="192" width="1" height="23"><g>
+    <title>/usr/lib64/python2.7/urlparse.py:223:urlunparse 0.15% (10000 10000 0.012149 0.028871)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 90, 49)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">urlunparse</text>
+</g></svg>
+<svg class="func_g" x="67.8671948696" y="192" width="1" height="23"><g>
+    <title>~:0:&lt;isinstance&gt; 0.11% (70000 70000 0.022298 0.022298)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 190, 110)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">&lt;isinstance&gt;</text>
+</g></svg>
+<svg class="func_g" x="69.2450276809" y="192" width="1.71197884373" height="23"><g>
+    <title>~:0:&lt;method 'decode' of 'str' objects&gt; 0.23% (10000 10000 0.017173 0.043889)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 190, 110)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">&lt;method 'decode' of 'str' objects&gt;</text>
+</g></svg>
+<svg class="func_g" x="69.2462221202" y="168" width="1" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/encodings/utf_8.py:15:decode 0.14% (9205.0 9205.0 0.0100631432607 0.0266966699283)</title>
+    <rect height="100%" width="100%" fill="rgb(71, 230, 126)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">decode</text>
+</g></svg>
+<svg class="func_g" x="71.9570065246" y="192" width="1" height="23"><g>
+    <title>~:0:&lt;method 'encode' of 'unicode' objects&gt; 0.11% (30000 30000 0.020678 0.020678)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 115, 64)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">&lt;method 'encode' of 'unicode' objects&gt;</text>
+</g></svg>
+<svg class="func_g" x="85.7045005467" y="216" width="36.7427199901" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/models.py:433:prepare_headers 3.15% (10000 10000 0.102705 0.610805)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 190, 110)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">prepare_headers</text>
+</g></svg>
+<svg class="func_g" x="85.7045005467" y="192" width="6.96767755079" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/_abcoll.py:412:items 0.66% (10000 10000 0.037738 0.128944)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 215, 125)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">items</text>
+</g></svg>
+<svg class="func_g" x="85.7045005467" y="168" width="1" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/structures.py:53:__getitem__ 0.16% (37061.0 37061.0 0.0246444190249 0.0309024219911)</title>
+    <rect height="100%" width="100%" fill="rgb(57, 242, 168)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">__getitem__</text>
+</g></svg>
+<svg class="func_g" x="87.6140157933" y="168" width="2.08831553433" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/structures.py:59:__iter__ 0.26% (9265.0 9265.0 0.0119384771586 0.0499794018671)</title>
+    <rect height="100%" width="100%" fill="rgb(44, 255, 210)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">__iter__</text>
+</g></svg>
+<svg class="func_g" x="87.6140157933" y="144" width="1.35061594034" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/packages/ordered_dict.py:120:values 0.20% (9683.0 9683.0 0.0239359280164 0.0380409247085)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 115, 64)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">values</text>
+</g></svg>
+<svg class="func_g" x="93.6721780975" y="192" width="1" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/_internal_utils.py:14:to_native_string 0.11% (40000 40000 0.017027 0.021862)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 165, 95)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">to_native_string</text>
+</g></svg>
+<svg class="func_g" x="95.0230696986" y="192" width="9.06890657358" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/structures.py:42:__init__ 0.84% (10000 10000 0.031571 0.162949)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 115, 64)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">__init__</text>
+</g></svg>
+<svg class="func_g" x="95.0230696986" y="168" width="4.1753216019" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/_abcoll.py:548:update 0.43% (5245.0 5245.0 0.0229703838349 0.0837542262952)</title>
+    <rect height="100%" width="100%" fill="rgb(44, 255, 210)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">update</text>
+</g></svg>
+<svg class="func_g" x="95.0230696986" y="144" width="1" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/structures.py:48:__setitem__ 0.12% (10293.0 10293.0 0.0100365981831 0.0241703495059)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 90, 49)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">__setitem__</text>
+</g></svg>
+<svg class="func_g" x="97.30638449" y="144" width="1" height="23"><g>
+    <title>~:0:&lt;isinstance&gt; 0.11% (6550.0 6550.0 0.00454668434169 0.0219566609864)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 190, 110)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">&lt;isinstance&gt;</text>
+</g></svg>
+<svg class="func_g" x="100.1983913" y="168" width="1.94275710876" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/packages/ordered_dict.py:28:__init__ 0.25% (5245.0 5245.0 0.0256844867429 0.0476237737048)</title>
+    <rect height="100%" width="100%" fill="rgb(85, 218, 84)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">__init__</text>
+</g></svg>
+<svg class="func_g" x="100.1983913" y="144" width="1" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/packages/ordered_dict.py:142:update 0.11% (5436.0 5436.0 0.0133146291045 0.0210569567088)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 90, 49)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">update</text>
+</g></svg>
+<svg class="func_g" x="105.091976272" y="192" width="4.80960010274" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/structures.py:48:__setitem__ 0.48% (40000 40000 0.037044 0.094019)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 90, 49)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">__setitem__</text>
+</g></svg>
+<svg class="func_g" x="105.091976272" y="168" width="2.10062311656" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/packages/ordered_dict.py:44:__setitem__ 0.26% (41084.0 41084.0 0.050178580219 0.050178580219)</title>
+    <rect height="100%" width="100%" fill="rgb(99, 206, 42)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">__setitem__</text>
+</g></svg>
+<svg class="func_g" x="111.367857046" y="192" width="4.73304010394" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/utils.py:854:check_header_validity 0.48% (40000 40000 0.04078 0.09278)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 115, 64)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">check_header_validity</text>
+</g></svg>
+<svg class="func_g" x="111.680214426" y="168" width="1.90081448242" height="23"><g>
+    <title>~:0:&lt;method 'match' of '_sre.SRE_Pattern' objects&gt; 0.24% (40000 40000 0.046945 0.046945)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 90, 49)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">&lt;method 'match' of '_sre.SRE_Pattern' objects&gt;</text>
+</g></svg>
+<svg class="func_g" x="123.447220537" y="216" width="8.19066019508" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/models.py:444:prepare_body 0.77% (10000 10000 0.046446 0.148736)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 115, 64)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">prepare_body</text>
+</g></svg>
+<svg class="func_g" x="124.18013268" y="192" width="1.61830252559" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/utils.py:99:super_len 0.22% (10000 10000 0.019971 0.042373)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 190, 110)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">super_len</text>
+</g></svg>
+<svg class="func_g" x="127.418824542" y="192" width="1.34907579857" height="23"><g>
+    <title>~:0:&lt;isinstance&gt; 0.20% (10000 10000 0.014829 0.038016)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 190, 110)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">&lt;isinstance&gt;</text>
+</g></svg>
+<svg class="func_g" x="127.418824542" y="168" width="1" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/abc.py:128:__instancecheck__ 0.12% (9900.0 9900.0 0.0137183499023 0.023187)</title>
+    <rect height="100%" width="100%" fill="rgb(71, 230, 126)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">__instancecheck__</text>
+</g></svg>
+<svg class="func_g" x="132.637880732" y="216" width="10.230962536" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/models.py:526:prepare_auth 0.94% (10000 10000 0.02999 0.181755)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 240, 141)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">prepare_auth</text>
+</g></svg>
+<svg class="func_g" x="132.637880732" y="192" width="8.0925966615" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/utils.py:833:get_auth_from_url 0.76% (10000 10000 0.049198 0.147149)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 90, 49)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">get_auth_from_url</text>
+</g></svg>
+<svg class="func_g" x="132.637880732" y="168" width="1.10438040289" height="23"><g>
+    <title>/usr/lib64/python2.7/urllib.py:1221:unquote 0.18% (10000 10000 0.018072 0.034056)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 90, 49)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">unquote</text>
+</g></svg>
+<svg class="func_g" x="135.302341707" y="168" width="2.38810435373" height="23"><g>
+    <title>/usr/lib64/python2.7/urlparse.py:137:urlparse 0.28% (10000 10000 0.023044 0.054831)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 215, 125)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">urlparse</text>
+</g></svg>
+<svg class="func_g" x="135.302341707" y="144" width="1" height="23"><g>
+    <title>/usr/lib64/python2.7/urlparse.py:168:urlsplit 0.10% (10319.0 10319.0 0.0146007163005 0.019853947163)</title>
+    <rect height="100%" width="100%" fill="rgb(71, 230, 126)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">urlsplit</text>
+</g></svg>
+<svg class="func_g" x="143.868843268" y="216" width="29.91849908" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/models.py:548:prepare_cookies 2.58% (10000 10000 0.023967 0.500366)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 215, 125)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">prepare_cookies</text>
+</g></svg>
+<svg class="func_g" x="143.868843268" y="192" width="27.7310087511" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/cookies.py:136:get_cookie_header 2.39% (10000 10000 0.036817 0.464965)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 215, 125)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">get_cookie_header</text>
+</g></svg>
+<svg class="func_g" x="143.868843268" y="168" width="4.89833307956" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/cookies.py:38:__init__ 0.49% (10000 10000 0.024139 0.095455)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 115, 64)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">__init__</text>
+</g></svg>
+<svg class="func_g" x="143.868843268" y="144" width="3.40674162592" height="23"><g>
+    <title>/usr/lib64/python2.7/urlparse.py:137:urlparse 0.37% (10295.0 10295.0 0.0317030922608 0.071316)</title>
+    <rect height="100%" width="100%" fill="rgb(57, 242, 168)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">urlparse</text>
+</g></svg>
+<svg class="func_g" x="143.868843268" y="120" width="1" height="23"><g>
+    <title>/usr/lib64/python2.7/urlparse.py:168:urlsplit 0.13% (12860.0 12860.0 0.0181953889244 0.0247419566875)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 140, 79)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">urlsplit</text>
+</g></svg>
+<svg class="func_g" x="149.988823414" y="168" width="19.1875555193" height="23"><g>
+    <title>/usr/lib64/python2.7/cookielib.py:1328:add_cookie_header 1.68% (10000 10000 0.080663 0.326703)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 90, 49)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">add_cookie_header</text>
+</g></svg>
+<svg class="func_g" x="151.084823978" y="144" width="1.11649158914" height="23"><g>
+    <title>/usr/lib64/python2.7/cookielib.py:1269:_cookie_attrs 0.18% (10000 10000 0.019895 0.034252)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 240, 141)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">_cookie_attrs</text>
+</g></svg>
+<svg class="func_g" x="153.201315567" y="144" width="6.43713344287" height="23"><g>
+    <title>/usr/lib64/python2.7/cookielib.py:1707:clear_expired_cookies 0.62% (10000 10000 0.031276 0.120358)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 240, 141)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">clear_expired_cookies</text>
+</g></svg>
+<svg class="func_g" x="153.201315567" y="120" width="1.2484170108" height="23"><g>
+    <title>/usr/lib64/python2.7/cookielib.py:1196:deepvalues 0.19% (10000 10000 0.009129 0.036387)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 140, 79)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">deepvalues</text>
+</g></svg>
+<svg class="func_g" x="153.201315567" y="96" width="1" height="23"><g>
+    <title>/usr/lib64/python2.7/cookielib.py:1191:vals_sorted_by_key 0.14% (11122.0 11122.0 0.0156071090384 0.027258)</title>
+    <rect height="100%" width="100%" fill="rgb(71, 230, 126)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">vals_sorted_by_key</text>
+</g></svg>
+<svg class="func_g" x="155.887959787" y="120" width="1" height="23"><g>
+    <title>/usr/lib64/python2.7/threading.py:147:acquire 0.12% (10000 10000 0.017301 0.022886)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 115, 64)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">acquire</text>
+</g></svg>
+<svg class="func_g" x="157.302126157" y="120" width="1" height="23"><g>
+    <title>/usr/lib64/python2.7/threading.py:187:release 0.11% (10000 10000 0.016518 0.021053)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 215, 125)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">release</text>
+</g></svg>
+<svg class="func_g" x="160.63844901" y="144" width="1.47611967067" height="23"><g>
+    <title>/usr/lib64/python2.7/threading.py:147:acquire 0.21% (10000 10000 0.0281 0.040072)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 115, 64)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">acquire</text>
+</g></svg>
+<svg class="func_g" x="163.114568681" y="144" width="1" height="23"><g>
+    <title>/usr/lib64/python2.7/threading.py:187:release 0.16% (10000 10000 0.02446 0.030351)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 215, 125)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">release</text>
+</g></svg>
+<svg class="func_g" x="174.787342348" y="216" width="6.65260133296" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/models.py:568:prepare_hooks 0.64% (10000 10000 0.017941 0.123845)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 115, 64)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">prepare_hooks</text>
+</g></svg>
+<svg class="func_g" x="174.787342348" y="192" width="5.54399524863" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/models.py:171:register_hook 0.55% (10000 10000 0.030072 0.105904)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 240, 141)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">register_hook</text>
+</g></svg>
+<svg class="func_g" x="174.988907091" y="168" width="2.00987695045" height="23"><g>
+    <title>~:0:&lt;isinstance&gt; 0.25% (10000 10000 0.007991 0.04871)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 190, 110)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">&lt;isinstance&gt;</text>
+</g></svg>
+<svg class="func_g" x="174.988907091" y="144" width="1.51609894365" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/abc.py:128:__instancecheck__ 0.21% (17386.0 17386.0 0.0240909772576 0.040719)</title>
+    <rect height="100%" width="100%" fill="rgb(71, 230, 126)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">__instancecheck__</text>
+</g></svg>
+<svg class="func_g" x="177.998784041" y="168" width="1" height="23"><g>
+    <title>~:0:&lt;method 'extend' of 'list' objects&gt; 0.12% (10000 10000 0.020457 0.02386)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 190, 110)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">&lt;method 'extend' of 'list' objects&gt;</text>
+</g></svg>
+<svg class="func_g" x="186.15072464" y="240" width="71.8781363892" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/sessions.py:50:merge_setting 6.07% (30000 30000 0.112179 1.179415)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 115, 64)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">merge_setting</text>
+</g></svg>
+<svg class="func_g" x="186.15072464" y="216" width="5.06324098863" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/_abcoll.py:412:items 0.51% (7978.0 7978.0 0.0298285469002 0.0981237683195)</title>
+    <rect height="100%" width="100%" fill="rgb(57, 242, 168)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">items</text>
+</g></svg>
+<svg class="func_g" x="186.15072464" y="192" width="1" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/structures.py:53:__getitem__ 0.12% (27751.0 27751.0 0.0184537865278 0.0231397907186)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 190, 110)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">__getitem__</text>
+</g></svg>
+<svg class="func_g" x="187.580573187" y="192" width="1.31253638171" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/structures.py:59:__iter__ 0.19% (6938.0 6938.0 0.00893955376791 0.0374246685188)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 240, 141)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">__iter__</text>
+</g></svg>
+<svg class="func_g" x="187.580573187" y="168" width="1" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/packages/ordered_dict.py:120:values 0.15% (7251.0 7251.0 0.0179232671508 0.0284851147508)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 115, 64)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">values</text>
+</g></svg>
+<svg class="func_g" x="192.213965628" y="216" width="1.93809943409" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/_abcoll.py:548:update 0.24% (7978.0 7978.0 0.0158449445379 0.0475483967585)</title>
+    <rect height="100%" width="100%" fill="rgb(44, 255, 210)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">update</text>
+</g></svg>
+<svg class="func_g" x="195.152065062" y="216" width="14.9701630431" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/structures.py:42:__init__ 1.33% (7978.0 7978.0 0.0255034993504 0.258451310347)</title>
+    <rect height="100%" width="100%" fill="rgb(85, 218, 84)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">__init__</text>
+</g></svg>
+<svg class="func_g" x="195.152065062" y="192" width="8.17642100174" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/_abcoll.py:548:update 0.76% (9299.0 9299.0 0.0407290462032 0.14850556164)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 240, 141)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">update</text>
+</g></svg>
+<svg class="func_g" x="195.152065062" y="168" width="1.64819236756" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/structures.py:48:__setitem__ 0.22% (18251.0 18251.0 0.0177960052415 0.042856718845)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 90, 49)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">__setitem__</text>
+</g></svg>
+<svg class="func_g" x="195.152065062" y="144" width="1" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/packages/ordered_dict.py:44:__setitem__ 0.11% (18071.0 18071.0 0.0220712773655 0.0220712773655)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 90, 49)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">__setitem__</text>
+</g></svg>
+<svg class="func_g" x="199.200636227" y="168" width="1.40565251351" height="23"><g>
+    <title>~:0:&lt;isinstance&gt; 0.20% (11614.0 11614.0 0.00806177719777 0.0389316028071)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 190, 110)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">&lt;isinstance&gt;</text>
+</g></svg>
+<svg class="func_g" x="199.200636227" y="144" width="1" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/abc.py:128:__instancecheck__ 0.16% (13180.0 13180.0 0.0182638146001 0.0308698256093)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 165, 95)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">__instancecheck__</text>
+</g></svg>
+<svg class="func_g" x="204.328486064" y="192" width="4.21783576231" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/packages/ordered_dict.py:28:__init__ 0.43% (9299.0 9299.0 0.0455414526278 0.0844422493564)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 115, 64)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">__init__</text>
+</g></svg>
+<svg class="func_g" x="204.328486064" y="168" width="1.30707760459" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/packages/ordered_dict.py:142:update 0.19% (9639.0 9639.0 0.0236083187758 0.0373363270226)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 90, 49)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">update</text>
+</g></svg>
+<svg class="func_g" x="211.122228106" y="216" width="20.6549321396" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/utils.py:244:to_key_val_list 1.80% (47870.0 47870.0 0.0896858965455 0.350450122009)</title>
+    <rect height="100%" width="100%" fill="rgb(57, 242, 168)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">to_key_val_list</text>
+</g></svg>
+<svg class="func_g" x="211.122228106" y="192" width="5.87122786921" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/_abcoll.py:412:items 0.57% (6947.0 6947.0 0.0288680522622 0.111199731756)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 215, 125)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">items</text>
+</g></svg>
+<svg class="func_g" x="211.122228106" y="168" width="1" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/structures.py:53:__getitem__ 0.14% (33455.0 33455.0 0.0222465233479 0.0278956242239)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 190, 110)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">__getitem__</text>
+</g></svg>
+<svg class="func_g" x="212.845948006" y="168" width="1.78782322159" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/structures.py:59:__iter__ 0.23% (8364.0 8364.0 0.0107768663802 0.0451164188302)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 240, 141)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">__iter__</text>
+</g></svg>
+<svg class="func_g" x="212.845948006" y="144" width="1.12190160969" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/packages/ordered_dict.py:120:values 0.18% (8741.0 8741.0 0.0216069683337 0.03433955245)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 115, 64)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">values</text>
+</g></svg>
+<svg class="func_g" x="218.562888819" y="192" width="7.34072090595" height="23"><g>
+    <title>~:0:&lt;isinstance&gt; 0.70% (97260.0 97260.0 0.0611179613471 0.134981104549)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 190, 110)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">&lt;isinstance&gt;</text>
+</g></svg>
+<svg class="func_g" x="218.562888819" y="168" width="3.56413410412" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/abc.py:128:__instancecheck__ 0.38% (31537.0 31537.0 0.0437003684534 0.0738631432021)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 165, 95)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">__instancecheck__</text>
+</g></svg>
+<svg class="func_g" x="218.562888819" y="144" width="1" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/_weakrefset.py:70:__contains__ 0.12% (41241.0 41241.0 0.0237923136583 0.0237923136583)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 240, 141)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">__contains__</text>
+</g></svg>
+<svg class="func_g" x="232.777160245" y="216" width="7.05557973773" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/packages/ordered_dict.py:28:__init__ 0.67% (15957.0 15957.0 0.0718383935589 0.130366555007)</title>
+    <rect height="100%" width="100%" fill="rgb(85, 218, 84)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">__init__</text>
+</g></svg>
+<svg class="func_g" x="232.777160245" y="192" width="2.47111169615" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/packages/ordered_dict.py:142:update 0.29% (14502.0 14502.0 0.0355198764299 0.0561743398494)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 90, 49)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">update</text>
+</g></svg>
+<svg class="func_g" x="242.016025427" y="216" width="1.81179423835" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/packages/ordered_dict.py:142:update 0.23% (15957.0 15957.0 0.0284020231926 0.0455043510432)</title>
+    <rect height="100%" width="100%" fill="rgb(99, 206, 42)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">update</text>
+</g></svg>
+<svg class="func_g" x="244.827819665" y="216" width="6.26930277959" height="23"><g>
+    <title>~:0:&lt;isinstance&gt; 0.61% (47870.0 47870.0 0.029716850413 0.117641931621)</title>
+    <rect height="100%" width="100%" fill="rgb(57, 242, 168)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">&lt;isinstance&gt;</text>
+</g></svg>
+<svg class="func_g" x="244.827819665" y="192" width="4.43304609517" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/abc.py:128:__instancecheck__ 0.45% (37541.0 37541.0 0.0520199693451 0.0879250812084)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 165, 95)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">__instancecheck__</text>
+</g></svg>
+<svg class="func_g" x="244.827819665" y="168" width="1" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/_weakrefset.py:70:__contains__ 0.15% (49092.0 49092.0 0.0283218533609 0.0283218533609)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 240, 141)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">__contains__</text>
+</g></svg>
+<svg class="func_g" x="259.770856562" y="240" width="28.1967332959" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/utils.py:160:get_netrc_auth 2.43% (10000 10000 0.146515 0.472502)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 165, 95)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">get_netrc_auth</text>
+</g></svg>
+<svg class="func_g" x="259.770856562" y="216" width="9.28659896726" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/genericpath.py:23:exists 0.86% (20000 20000 0.061536 0.166472)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 140, 79)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">exists</text>
+</g></svg>
+<svg class="func_g" x="259.770856562" y="192" width="5.48418081857" height="23"><g>
+    <title>~:0:&lt;posix.stat&gt; 0.54% (20000 20000 0.104936 0.104936)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 215, 125)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">&lt;posix.stat&gt;</text>
+</g></svg>
+<svg class="func_g" x="270.057455529" y="216" width="7.87626368668" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/posixpath.py:251:expanduser 0.74% (20000 20000 0.102949 0.143648)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 165, 95)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">expanduser</text>
+</g></svg>
+<svg class="func_g" x="288.967589858" y="240" width="3.00781398083" height="23"><g>
+    <title>/usr/lib64/python2.7/cookielib.py:1233:__init__ 0.33% (10000 10000 0.024173 0.06486)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 165, 95)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">__init__</text>
+</g></svg>
+<svg class="func_g" x="289.654203481" y="216" width="1" height="23"><g>
+    <title>/usr/lib64/python2.7/threading.py:114:RLock 0.15% (6945.0 6945.0 0.00750852220098 0.0295752668214)</title>
+    <rect height="100%" width="100%" fill="rgb(57, 242, 168)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">RLock</text>
+</g></svg>
+<svg class="func_g" x="289.654203481" y="192" width="1" height="23"><g>
+    <title>/usr/lib64/python2.7/threading.py:132:__init__ 0.11% (6945.0 6945.0 0.0160546024875 0.0220667446204)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 90, 49)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">__init__</text>
+</g></svg>
+<svg class="func_g" x="303.45275399" y="264" width="752.228411257" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/sessions.py:589:send 62.77% (10000 10000 0.20822 12.189786)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 215, 125)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">send</text>
+</g></svg>
+<svg class="func_g" x="303.45275399" y="240" width="649.83481964" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/adapters.py:388:send 54.24% (10000 10000 0.129806 10.532711)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 115, 64)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">send</text>
+</g></svg>
+<svg class="func_g" x="303.45275399" y="216" width="1" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/adapters.py:201:cert_verify 0.11% (10000 10000 0.01651 0.02134)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 115, 64)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">cert_verify</text>
+</g></svg>
+<svg class="func_g" x="304.771390288" y="216" width="102.971073626" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/adapters.py:253:build_response 8.66% (10000 10000 0.100464 1.682604)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 90, 49)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">build_response</text>
+</g></svg>
+<svg class="func_g" x="304.771390288" y="192" width="30.2031737487" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/cookies.py:119:extract_cookies_to_jar 2.60% (10000 10000 0.065605 0.504973)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 190, 110)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">extract_cookies_to_jar</text>
+</g></svg>
+<svg class="func_g" x="304.771390288" y="168" width="5.65862665995" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/cookies.py:38:__init__ 0.55% (11419.0 11419.0 0.029824289791 0.107759124358)</title>
+    <rect height="100%" width="100%" fill="rgb(99, 206, 42)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">__init__</text>
+</g></svg>
+<svg class="func_g" x="304.771390288" y="144" width="3.81573110656" height="23"><g>
+    <title>/usr/lib64/python2.7/urlparse.py:137:urlparse 0.40% (11251.0 11251.0 0.0346454547452 0.077934834567)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 215, 125)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">urlparse</text>
+</g></svg>
+<svg class="func_g" x="304.771390288" y="120" width="1" height="23"><g>
+    <title>/usr/lib64/python2.7/urlparse.py:168:urlsplit 0.14% (14053.0 14053.0 0.0198841021048 0.0270382565106)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 140, 79)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">urlsplit</text>
+</g></svg>
+<svg class="func_g" x="311.650522303" y="168" width="19.0066096061" height="23"><g>
+    <title>/usr/lib64/python2.7/cookielib.py:1651:extract_cookies 1.67% (11419.0 11419.0 0.079738508951 0.323774682472)</title>
+    <rect height="100%" width="100%" fill="rgb(57, 242, 168)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">extract_cookies</text>
+</g></svg>
+<svg class="func_g" x="312.055052607" y="144" width="8.88802460355" height="23"><g>
+    <title>/usr/lib64/python2.7/cookielib.py:1571:make_cookies 0.82% (11419.0 11419.0 0.0366558706726 0.160021717289)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 190, 110)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">make_cookies</text>
+</g></svg>
+<svg class="func_g" x="312.188414246" y="120" width="6.48963196031" height="23"><g>
+    <title>/usr/lib64/python2.7/rfc822.py:300:getheaders 0.62% (22839.0 22839.0 0.02240918399 0.121207603763)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 215, 125)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">getheaders</text>
+</g></svg>
+<svg class="func_g" x="312.188414246" y="96" width="5.1049288938" height="23"><g>
+    <title>/usr/lib64/python2.7/rfc822.py:233:getallmatchingheaders 0.51% (22839.0 22839.0 0.0747557085872 0.0987984197734)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 240, 141)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">getallmatchingheaders</text>
+</g></svg>
+<svg class="func_g" x="321.943077211" y="144" width="1.63417460903" height="23"><g>
+    <title>/usr/lib64/python2.7/threading.py:147:acquire 0.22% (11419.0 11419.0 0.0296672747687 0.0426298640503)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 115, 64)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">acquire</text>
+</g></svg>
+<svg class="func_g" x="324.57725182" y="144" width="1" height="23"><g>
+    <title>/usr/lib64/python2.7/threading.py:187:release 0.16% (11419.0 11419.0 0.0247729737811 0.0314161366358)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 215, 125)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">release</text>
+</g></svg>
+<svg class="func_g" x="335.974564037" y="192" width="29.6007040245" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/models.py:588:__init__ 2.55% (10000 10000 0.099344 0.495223)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 215, 125)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">__init__</text>
+</g></svg>
+<svg class="func_g" x="335.974564037" y="168" width="11.9374657538" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/cookies.py:503:cookiejar_from_dict 1.08% (10000 10000 0.03898 0.209372)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 190, 110)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">cookiejar_from_dict</text>
+</g></svg>
+<svg class="func_g" x="335.974564037" y="144" width="1.85975509899" height="23"><g>
+    <title>/usr/lib64/python2.7/cookielib.py:1196:deepvalues 0.24% (10725.0 10725.0 0.0140479785241 0.0462805201557)</title>
+    <rect height="100%" width="100%" fill="rgb(85, 218, 84)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">deepvalues</text>
+</g></svg>
+<svg class="func_g" x="335.974564037" y="120" width="1" height="23"><g>
+    <title>/usr/lib64/python2.7/cookielib.py:1191:vals_sorted_by_key 0.17% (13151.0 13151.0 0.0184553816065 0.0322325416317)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 165, 95)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">vals_sorted_by_key</text>
+</g></svg>
+<svg class="func_g" x="338.834319136" y="144" width="6.07862699184" height="23"><g>
+    <title>/usr/lib64/python2.7/cookielib.py:1233:__init__ 0.59% (10725.0 10725.0 0.0421251670396 0.114556151779)</title>
+    <rect height="100%" width="100%" fill="rgb(71, 230, 126)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">__init__</text>
+</g></svg>
+<svg class="func_g" x="338.834319136" y="120" width="1" height="23"><g>
+    <title>/usr/lib64/python2.7/cookielib.py:864:__init__ 0.10% (12363.0 12363.0 0.0197811039469 0.0197811039469)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 240, 141)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">__init__</text>
+</g></svg>
+<svg class="func_g" x="340.056628494" y="120" width="2.25332914477" height="23"><g>
+    <title>/usr/lib64/python2.7/threading.py:114:RLock 0.27% (12363.0 12363.0 0.0133666688858 0.0526498807927)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 215, 125)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">RLock</text>
+</g></svg>
+<svg class="func_g" x="340.056628494" y="96" width="1.42737906094" height="23"><g>
+    <title>/usr/lib64/python2.7/threading.py:132:__init__ 0.20% (12363.0 12363.0 0.0285803983526 0.0392832119069)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 90, 49)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">__init__</text>
+</g></svg>
+<svg class="func_g" x="348.912029791" y="168" width="10.5245970108" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/structures.py:42:__init__ 0.96% (10000 10000 0.03598 0.186507)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 115, 64)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">__init__</text>
+</g></svg>
+<svg class="func_g" x="348.912029791" y="144" width="4.92965058662" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/_abcoll.py:548:update 0.49% (6009.0 6009.0 0.0263184320625 0.0959618233002)</title>
+    <rect height="100%" width="100%" fill="rgb(44, 255, 210)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">update</text>
+</g></svg>
+<svg class="func_g" x="348.912029791" y="120" width="1" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/structures.py:48:__setitem__ 0.14% (11793.0 11793.0 0.0114994825215 0.0276932987264)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 90, 49)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">__setitem__</text>
+</g></svg>
+<svg class="func_g" x="351.528149123" y="120" width="1" height="23"><g>
+    <title>~:0:&lt;isinstance&gt; 0.13% (7505.0 7505.0 0.00520938630441 0.0251569540433)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 190, 110)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">&lt;isinstance&gt;</text>
+</g></svg>
+<svg class="func_g" x="351.528149123" y="96" width="1" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/abc.py:128:__instancecheck__ 0.10% (8517.0 8517.0 0.0118017731463 0.0199475677389)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 165, 95)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">__instancecheck__</text>
+</g></svg>
+<svg class="func_g" x="354.841680378" y="144" width="2.37167866241" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/packages/ordered_dict.py:28:__init__ 0.28% (6009.0 6009.0 0.0294281290318 0.0545651766998)</title>
+    <rect height="100%" width="100%" fill="rgb(85, 218, 84)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">__init__</text>
+</g></svg>
+<svg class="func_g" x="354.841680378" y="120" width="1" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/packages/ordered_dict.py:142:update 0.12% (6228.0 6228.0 0.0152553028301 0.0241261133714)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 90, 49)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">update</text>
+</g></svg>
+<svg class="func_g" x="366.575268062" y="192" width="24.2311848834" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/structures.py:42:__init__ 2.10% (10000 10000 0.029646 0.408326)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 115, 64)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">__init__</text>
+</g></svg>
+<svg class="func_g" x="366.575268062" y="168" width="13.9171914948" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/_abcoll.py:548:update 1.24% (15117.0 15117.0 0.0662091442295 0.241410665511)</title>
+    <rect height="100%" width="100%" fill="rgb(44, 255, 210)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">update</text>
+</g></svg>
+<svg class="func_g" x="366.575268062" y="144" width="3.30490194973" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/structures.py:48:__setitem__ 0.36% (29669.0 29669.0 0.0289291890575 0.0696678892272)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 90, 49)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">__setitem__</text>
+</g></svg>
+<svg class="func_g" x="366.575268062" y="120" width="1.21703125028" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/packages/ordered_dict.py:44:__setitem__ 0.18% (29376.0 29376.0 0.0358790721279 0.0358790721279)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 90, 49)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">__setitem__</text>
+</g></svg>
+<svg class="func_g" x="373.156626015" y="144" width="2.91062912297" height="23"><g>
+    <title>~:0:&lt;isinstance&gt; 0.33% (18880.0 18880.0 0.0131052263431 0.0632872199482)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 190, 110)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">&lt;isinstance&gt;</text>
+</g></svg>
+<svg class="func_g" x="373.156626015" y="120" width="2.10083403571" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/abc.py:128:__instancecheck__ 0.26% (21426.0 21426.0 0.0296896600279 0.050181993605)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 165, 95)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">__instancecheck__</text>
+</g></svg>
+<svg class="func_g" x="381.492459557" y="168" width="7.48211467632" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/packages/ordered_dict.py:28:__init__ 0.71% (15117.0 15117.0 0.0740321929074 0.137269334489)</title>
+    <rect height="100%" width="100%" fill="rgb(85, 218, 84)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">__init__</text>
+</g></svg>
+<svg class="func_g" x="381.492459557" y="144" width="2.75038573477" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/packages/ordered_dict.py:142:update 0.31% (15668.0 15668.0 0.0383776868981 0.0606939393695)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 90, 49)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">update</text>
+</g></svg>
+<svg class="func_g" x="391.806452945" y="192" width="5.91270671985" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/utils.py:410:get_encoding_from_headers 0.58% (10000 10000 0.031335 0.111871)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 115, 64)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">get_encoding_from_headers</text>
+</g></svg>
+<svg class="func_g" x="392.98574881" y="168" width="2.79716584854" height="23"><g>
+    <title>/usr/lib64/python2.7/cgi.py:303:parse_header 0.32% (10000 10000 0.024512 0.061451)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 90, 49)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">parse_header</text>
+</g></svg>
+<svg class="func_g" x="392.98574881" y="144" width="1.28252606596" height="23"><g>
+    <title>/usr/lib64/python2.7/cgi.py:291:_parseparam 0.19% (20000 20000 0.029532 0.036939)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 190, 110)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">_parseparam</text>
+</g></svg>
+<svg class="func_g" x="399.282638784" y="192" width="2.25197709194" height="23"><g>
+    <title>~:0:&lt;method 'decode' of 'str' objects&gt; 0.27% (10000 10000 0.021296 0.052628)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 190, 110)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">&lt;method 'decode' of 'str' objects&gt;</text>
+</g></svg>
+<svg class="func_g" x="399.284039599" y="168" width="1" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/encodings/utf_8.py:15:decode 0.16% (10795.0 10795.0 0.0118018567393 0.0313093300717)</title>
+    <rect height="100%" width="100%" fill="rgb(71, 230, 126)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">decode</text>
+</g></svg>
+<svg class="func_g" x="399.284039599" y="144" width="1" height="23"><g>
+    <title>~:0:&lt;_codecs.utf_8_decode&gt; 0.10% (10795.0 10795.0 0.0195074733324 0.0195074733324)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 240, 141)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">&lt;_codecs.utf_8_decode&gt;</text>
+</g></svg>
+<svg class="func_g" x="408.742463915" y="216" width="64.5792929199" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/adapters.py:290:get_connection 5.46% (10000 10000 0.044752 1.061295)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 165, 95)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">get_connection</text>
+</g></svg>
+<svg class="func_g" x="408.742463915" y="192" width="9.5191831767" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/utils.py:698:select_proxy 0.88% (10000 10000 0.046678 0.170236)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 240, 141)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">select_proxy</text>
+</g></svg>
+<svg class="func_g" x="408.742463915" y="168" width="3.25210517954" height="23"><g>
+    <title>/usr/lib64/python2.7/urlparse.py:95:hostname 0.35% (32144.0 32144.0 0.0461122551153 0.0688134587245)</title>
+    <rect height="100%" width="100%" fill="rgb(85, 218, 84)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">hostname</text>
+</g></svg>
+<svg class="func_g" x="412.994569094" y="168" width="2.38276191641" height="23"><g>
+    <title>/usr/lib64/python2.7/urlparse.py:137:urlparse 0.28% (10715.0 10715.0 0.0231956863328 0.0547445412755)</title>
+    <rect height="100%" width="100%" fill="rgb(57, 242, 168)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">urlparse</text>
+</g></svg>
+<svg class="func_g" x="412.994569094" y="144" width="1" height="23"><g>
+    <title>/usr/lib64/python2.7/urlparse.py:168:urlsplit 0.10% (10242.0 10242.0 0.0144913291794 0.0197052033563)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 140, 79)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">urlsplit</text>
+</g></svg>
+<svg class="func_g" x="419.261647091" y="192" width="46.9161782328" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/poolmanager.py:266:connection_from_url 3.99% (10000 10000 0.04011 0.775446)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 115, 64)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">connection_from_url</text>
+</g></svg>
+<svg class="func_g" x="419.261647091" y="168" width="34.6350028319" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/poolmanager.py:206:connection_from_host 2.97% (10000 10000 0.027676 0.576695)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 115, 64)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">connection_from_host</text>
+</g></svg>
+<svg class="func_g" x="419.261647091" y="144" width="31.9757941568" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/poolmanager.py:229:connection_from_context 2.75% (10000 10000 0.040061 0.53366)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 190, 110)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">connection_from_context</text>
+</g></svg>
+<svg class="func_g" x="419.261647091" y="120" width="11.2310622782" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/poolmanager.py:57:_default_key_normalizer 1.02% (10000 10000 0.156403 0.19794)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 240, 141)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">_default_key_normalizer</text>
+</g></svg>
+<svg class="func_g" x="431.49270937" y="120" width="17.1704868826" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/poolmanager.py:242:connection_from_pool_key 1.51% (10000 10000 0.03283 0.29406)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 165, 95)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">connection_from_pool_key</text>
+</g></svg>
+<svg class="func_g" x="431.49270937" y="96" width="11.0925869293" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/_abcoll.py:379:get 1.01% (10000 10000 0.013255 0.195699)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 165, 95)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">get</text>
+</g></svg>
+<svg class="func_g" x="431.934972773" y="72" width="6.98498806577" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/_collections.py:50:__getitem__ 0.67% (7083.0 7083.0 0.0295252701664 0.129224142743)</title>
+    <rect height="100%" width="100%" fill="rgb(85, 218, 84)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">__getitem__</text>
+</g></svg>
+<svg class="func_g" x="432.943447127" y="48" width="2.15514782433" height="23"><g>
+    <title>/usr/lib64/python2.7/collections.py:149:pop 0.26% (7083.0 7083.0 0.0286073200612 0.0510609746023)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 190, 110)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">pop</text>
+</g></svg>
+<svg class="func_g" x="432.943447127" y="24" width="1" height="23"><g>
+    <title>/usr/lib64/python2.7/collections.py:81:__delitem__ 0.12% (7082.0 7082.0 0.0188123107981 0.0224536545411)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 115, 64)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">__delitem__</text>
+</g></svg>
+<svg class="func_g" x="436.845475207" y="48" width="1" height="23"><g>
+    <title>/usr/lib64/python2.7/threading.py:215:__exit__ 0.10% (7083.0 7083.0 0.00556365592316 0.0202303170563)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 115, 64)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">__exit__</text>
+</g></svg>
+<svg class="func_g" x="439.919960839" y="72" width="1.84628559383" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/_collections.py:150:__getitem__ 0.24% (28332.0 28332.0 0.039318154545 0.0460625379568)</title>
+    <rect height="100%" width="100%" fill="rgb(71, 230, 126)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">__getitem__</text>
+</g></svg>
+<svg class="func_g" x="443.596109858" y="96" width="1.40536809793" height="23"><g>
+    <title>/usr/lib64/python2.7/threading.py:147:acquire 0.20% (10000 10000 0.027812 0.038927)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 115, 64)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">acquire</text>
+</g></svg>
+<svg class="func_g" x="446.001477956" y="96" width="1" height="23"><g>
+    <title>/usr/lib64/python2.7/threading.py:215:__exit__ 0.14% (10000 10000 0.004566 0.026429)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 115, 64)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">__exit__</text>
+</g></svg>
+<svg class="func_g" x="446.001477956" y="72" width="1" height="23"><g>
+    <title>/usr/lib64/python2.7/threading.py:187:release 0.11% (10272.0 10272.0 0.0174058690924 0.021863)</title>
+    <rect height="100%" width="100%" fill="rgb(57, 242, 168)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">release</text>
+</g></svg>
+<svg class="func_g" x="454.896649923" y="168" width="8.80270764312" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/util/url.py:132:parse_url 0.82% (10000 10000 0.065433 0.158641)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 240, 141)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">parse_url</text>
+</g></svg>
+<svg class="func_g" x="454.896649923" y="144" width="1.96036686843" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/util/url.py:22:__new__ 0.25% (7874.0 7874.0 0.0301858451817 0.04790875924)</title>
+    <rect height="100%" width="100%" fill="rgb(71, 230, 126)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">__new__</text>
+</g></svg>
+<svg class="func_g" x="457.857016792" y="144" width="1" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/util/url.py:99:split_first 0.16% (7874.0 7874.0 0.0216214433265 0.0308086964544)</title>
+    <rect height="100%" width="100%" fill="rgb(57, 242, 168)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">split_first</text>
+</g></svg>
+<svg class="func_g" x="467.177825324" y="192" width="1.10209410752" height="23"><g>
+    <title>/usr/lib64/python2.7/urlparse.py:133:geturl 0.18% (10000 10000 0.007553 0.034019)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 90, 49)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">geturl</text>
+</g></svg>
+<svg class="func_g" x="467.177825324" y="168" width="1" height="23"><g>
+    <title>/usr/lib64/python2.7/urlparse.py:223:urlunparse 0.14% (10000 10000 0.011893 0.026466)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 90, 49)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">urlunparse</text>
+</g></svg>
+<svg class="func_g" x="469.279919432" y="192" width="1.2765322646" height="23"><g>
+    <title>/usr/lib64/python2.7/urlparse.py:137:urlparse 0.19% (10000 10000 0.014935 0.036842)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 215, 125)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">urlparse</text>
+</g></svg>
+<svg class="func_g" x="474.321756835" y="216" width="14.9915238174" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/adapters.py:323:request_url 1.33% (10000 10000 0.036051 0.258797)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 140, 79)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">request_url</text>
+</g></svg>
+<svg class="func_g" x="474.321756835" y="192" width="1.42143395724" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/models.py:61:path_url 0.20% (10000 10000 0.023879 0.039187)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 90, 49)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">path_url</text>
+</g></svg>
+<svg class="func_g" x="476.743190792" y="192" width="8.24312140491" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/utils.py:698:select_proxy 0.77% (10000 10000 0.04251 0.149585)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 240, 141)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">select_proxy</text>
+</g></svg>
+<svg class="func_g" x="476.743190792" y="168" width="2.68486186325" height="23"><g>
+    <title>/usr/lib64/python2.7/urlparse.py:95:hostname 0.31% (27856.0 27856.0 0.0399607448847 0.0596335412755)</title>
+    <rect height="100%" width="100%" fill="rgb(85, 218, 84)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">hostname</text>
+</g></svg>
+<svg class="func_g" x="480.428052655" y="168" width="1.93149154405" height="23"><g>
+    <title>/usr/lib64/python2.7/urlparse.py:137:urlparse 0.24% (9285.0 9285.0 0.0201013136672 0.0474414587245)</title>
+    <rect height="100%" width="100%" fill="rgb(57, 242, 168)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">urlparse</text>
+</g></svg>
+<svg class="func_g" x="485.986312197" y="192" width="1.09931347803" height="23"><g>
+    <title>/usr/lib64/python2.7/urlparse.py:137:urlparse 0.17% (10000 10000 0.013803 0.033974)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 215, 125)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">urlparse</text>
+</g></svg>
+<svg class="func_g" x="490.411591353" y="216" width="452.190146705" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/connectionpool.py:447:urlopen 37.77% (10000 10000 0.205051 7.334151)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 215, 125)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">urlopen</text>
+</g></svg>
+<svg class="func_g" x="490.411591353" y="192" width="1.87214310273" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/_abcoll.py:548:update 0.24% (10000 10000 0.019652 0.046481)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 240, 141)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">update</text>
+</g></svg>
+<svg class="func_g" x="493.283734455" y="192" width="23.3769137103" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/structures.py:82:copy 2.03% (10000 10000 0.020912 0.394501)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 90, 49)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">copy</text>
+</g></svg>
+<svg class="func_g" x="493.283734455" y="168" width="19.5982236" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/structures.py:42:__init__ 1.72% (10000 10000 0.033413 0.333349)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 115, 64)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">__init__</text>
+</g></svg>
+<svg class="func_g" x="493.283734455" y="144" width="10.8152602413" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/_abcoll.py:548:update 0.98% (11974.0 11974.0 0.0524413908409 0.191210915207)</title>
+    <rect height="100%" width="100%" fill="rgb(44, 255, 210)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">update</text>
+</g></svg>
+<svg class="func_g" x="493.283734455" y="120" width="2.40972607794" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/structures.py:48:__setitem__ 0.28% (23499.0 23499.0 0.0229135556384 0.0551809127053)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 90, 49)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">__setitem__</text>
+</g></svg>
+<svg class="func_g" x="493.283734455" y="96" width="1" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/packages/ordered_dict.py:44:__setitem__ 0.15% (23268.0 23268.0 0.0284182565167 0.0284182565167)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 90, 49)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">__setitem__</text>
+</g></svg>
+<svg class="func_g" x="498.496542576" y="120" width="2.09743967632" height="23"><g>
+    <title>~:0:&lt;isinstance&gt; 0.26% (14954.0 14954.0 0.0103800812519 0.0501270613773)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 190, 110)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">&lt;isinstance&gt;</text>
+</g></svg>
+<svg class="func_g" x="498.496542576" y="96" width="1.45603611845" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/abc.py:128:__instancecheck__ 0.20% (16971.0 16971.0 0.0235158917031 0.0397469801255)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 165, 95)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">__instancecheck__</text>
+</g></svg>
+<svg class="func_g" x="505.098994697" y="144" width="5.71831506168" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/packages/ordered_dict.py:28:__init__ 0.56% (11974.0 11974.0 0.058637688317 0.108725084793)</title>
+    <rect height="100%" width="100%" fill="rgb(85, 218, 84)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">__init__</text>
+</g></svg>
+<svg class="func_g" x="505.098994697" y="120" width="1.97051784024" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/packages/ordered_dict.py:142:update 0.25% (12410.0 12410.0 0.0303973008806 0.0480730363334)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 90, 49)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">update</text>
+</g></svg>
+<svg class="func_g" x="513.881958055" y="168" width="1.48650068746" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/packages/ordered_dict.py:120:values 0.21% (10000 10000 0.026196 0.04024)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 115, 64)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">values</text>
+</g></svg>
+<svg class="func_g" x="517.660648166" y="192" width="50.0138612836" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/connectionpool.py:215:_get_conn 4.25% (10000 10000 0.035518 0.825577)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 240, 141)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">_get_conn</text>
+</g></svg>
+<svg class="func_g" x="517.662872669" y="168" width="40.9295447188" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/util/connection.py:7:is_connection_dropped 3.49% (9999 9999 0.029162 0.678562)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 190, 110)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">is_connection_dropped</text>
+</g></svg>
+<svg class="func_g" x="517.662872669" y="144" width="38.7801799098" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/util/wait.py:29:wait_for_read 3.32% (9999 9999 0.016008 0.643778)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 190, 110)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">wait_for_read</text>
+</g></svg>
+<svg class="func_g" x="517.662872669" y="120" width="37.7910173103" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/util/wait.py:9:_wait_for_io_events 3.23% (9999 9999 0.077308 0.62777)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 140, 79)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">_wait_for_io_events</text>
+</g></svg>
+<svg class="func_g" x="517.798876348" y="96" width="4.61897250282" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/util/selectors.py:281:__exit__ 0.47% (9999 9999 0.009864 0.090934)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 90, 49)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">__exit__</text>
+</g></svg>
+<svg class="func_g" x="517.798876348" y="72" width="4.0094585172" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/util/selectors.py:451:close 0.42% (9999 9999 0.022452 0.08107)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 140, 79)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">close</text>
+</g></svg>
+<svg class="func_g" x="517.798876348" y="48" width="1" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/util/selectors.py:250:close 0.11% (9999 9999 0.015171 0.021336)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 215, 125)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">close</text>
+</g></svg>
+<svg class="func_g" x="519.11726548" y="48" width="1.30372064189" height="23"><g>
+    <title>~:0:&lt;method 'close' of 'select.epoll' objects&gt; 0.19% (9999 9999 0.037282 0.037282)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 140, 79)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">&lt;method 'close' of 'select.epoll' objects&gt;</text>
+</g></svg>
+<svg class="func_g" x="523.41784885" y="96" width="13.2455974525" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/util/selectors.py:399:register 1.19% (9999 9999 0.040869 0.230542)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 115, 64)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">register</text>
+</g></svg>
+<svg class="func_g" x="523.41784885" y="72" width="2.8475261383" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/util/selectors.py:71:_syscall_wrapper 0.32% (9999 9999 0.03002 0.062266)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 115, 64)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">_syscall_wrapper</text>
+</g></svg>
+<svg class="func_g" x="527.265374989" y="72" width="6.87270360554" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/util/selectors.py:192:register 0.66% (9999 9999 0.043627 0.127407)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 140, 79)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">register</text>
+</g></svg>
+<svg class="func_g" x="527.265374989" y="48" width="3.32029494446" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/util/selectors.py:172:_fileobj_lookup 0.36% (9999 9999 0.010278 0.069917)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 140, 79)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">_fileobj_lookup</text>
+</g></svg>
+<svg class="func_g" x="527.265374989" y="24" width="2.68519916748" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/util/selectors.py:41:_fileobj_to_fd 0.31% (9999 9999 0.029725 0.059639)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 190, 110)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">_fileobj_to_fd</text>
+</g></svg>
+<svg class="func_g" x="527.265374989" y="0" width="1" height="23"><g>
+    <title>/usr/lib64/python2.7/socket.py:227:meth 0.13% (9999 9999 0.016095 0.02536)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 165, 95)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">meth</text>
+</g></svg>
+<svg class="func_g" x="537.663446303" y="96" width="5.68358284935" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/util/selectors.py:418:select 0.56% (9999 9999 0.044928 0.108163)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 165, 95)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">select</text>
+</g></svg>
+<svg class="func_g" x="537.663446303" y="72" width="2.45218241568" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/util/selectors.py:71:_syscall_wrapper 0.29% (9999 9999 0.031736 0.055868)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 115, 64)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">_syscall_wrapper</text>
+</g></svg>
+<svg class="func_g" x="544.347029152" y="96" width="5.59812483616" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/util/selectors.py:565:DefaultSelector 0.55% (9999 9999 0.016148 0.10678)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 215, 125)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">DefaultSelector</text>
+</g></svg>
+<svg class="func_g" x="544.347029152" y="72" width="4.59913734574" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/util/selectors.py:392:__init__ 0.47% (9999 9999 0.06861 0.090613)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 115, 64)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">__init__</text>
+</g></svg>
+<svg class="func_g" x="544.347029152" y="48" width="1" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/util/selectors.py:165:__init__ 0.11% (9999 9999 0.017323 0.022003)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 165, 95)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">__init__</text>
+</g></svg>
+<svg class="func_g" x="559.592417388" y="168" width="5.88737209555" height="23"><g>
+    <title>/usr/lib64/python2.7/Queue.py:150:get 0.57% (10000 10000 0.043216 0.111461)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 190, 110)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">get</text>
+</g></svg>
+<svg class="func_g" x="560.653752771" y="144" width="1.75467695445" height="23"><g>
+    <title>/usr/lib64/python2.7/threading.py:373:notify 0.23% (10000 10000 0.026829 0.04458)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 215, 125)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">notify</text>
+</g></svg>
+<svg class="func_g" x="568.674509449" y="192" width="2.80563132056" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/connectionpool.py:293:_get_timeout 0.32% (10000 10000 0.016908 0.061588)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 165, 95)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">_get_timeout</text>
+</g></svg>
+<svg class="func_g" x="568.674509449" y="168" width="1.65243487296" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/util/timeout.py:156:clone 0.22% (10395.0 10395.0 0.0186527448905 0.042925376947)</title>
+    <rect height="100%" width="100%" fill="rgb(57, 242, 168)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">clone</text>
+</g></svg>
+<svg class="func_g" x="568.674509449" y="144" width="1" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/util/timeout.py:93:__init__ 0.12% (10395.0 10395.0 0.0175020531134 0.0242726320565)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 240, 141)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">__init__</text>
+</g></svg>
+<svg class="func_g" x="572.48014077" y="192" width="278.539649279" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/connectionpool.py:322:_make_request 23.29% (10000 10000 0.170128 4.523898)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 215, 125)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">_make_request</text>
+</g></svg>
+<svg class="func_g" x="572.613796361" y="168" width="2.45514842048" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/connectionpool.py:293:_get_timeout 0.29% (10000 10000 0.014629 0.055916)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 165, 95)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">_get_timeout</text>
+</g></svg>
+<svg class="func_g" x="572.613796361" y="144" width="1.45100892122" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/util/timeout.py:156:clone 0.20% (9605.0 9605.0 0.0172362551095 0.039665623053)</title>
+    <rect height="100%" width="100%" fill="rgb(57, 242, 168)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">clone</text>
+</g></svg>
+<svg class="func_g" x="572.613796361" y="120" width="1" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/util/timeout.py:93:__init__ 0.12% (9605.0 9605.0 0.0161729468866 0.0224293679435)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 240, 141)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">__init__</text>
+</g></svg>
+<svg class="func_g" x="576.068944781" y="168" width="1.87103085093" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/util/response.py:38:assert_header_parsing 0.24% (10000 10000 0.020793 0.046463)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 165, 95)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">assert_header_parsing</text>
+</g></svg>
+<svg class="func_g" x="576.068944781" y="144" width="1" height="23"><g>
+    <title>~:0:&lt;getattr&gt; 0.12% (20000 20000 0.022758 0.022758)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 165, 95)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">&lt;getattr&gt;</text>
+</g></svg>
+<svg class="func_g" x="580.347530284" y="168" width="74.4220416278" height="23"><g>
+    <title>/usr/lib64/python2.7/httplib.py:1040:request 6.29% (10000 10000 0.020359 1.220584)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 240, 141)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">request</text>
+</g></svg>
+<svg class="func_g" x="580.347530284" y="144" width="73.1640230518" height="23"><g>
+    <title>/usr/lib64/python2.7/httplib.py:1067:_send_request 6.18% (10000 10000 0.138776 1.200225)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 240, 141)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">_send_request</text>
+</g></svg>
+<svg class="func_g" x="580.347530284" y="120" width="7.9124736619" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/_abcoll.py:403:iteritems 0.74% (50000 50000 0.051659 0.144234)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 240, 141)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">iteritems</text>
+</g></svg>
+<svg class="func_g" x="580.347530284" y="96" width="1.32392654957" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/structures.py:53:__getitem__ 0.19% (40000 40000 0.030533 0.037609)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 190, 110)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">__getitem__</text>
+</g></svg>
+<svg class="func_g" x="582.671456833" y="96" width="1.71797264509" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/structures.py:59:__iter__ 0.23% (10000 10000 0.011014 0.043986)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 240, 141)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">__iter__</text>
+</g></svg>
+<svg class="func_g" x="582.671456833" y="72" width="1.03739812791" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/packages/ordered_dict.py:120:values 0.17% (8393.0 8393.0 0.0207464835465 0.032972)</title>
+    <rect height="100%" width="100%" fill="rgb(99, 206, 42)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">values</text>
+</g></svg>
+<svg class="func_g" x="589.260003945" y="120" width="2.31908295045" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/structures.py:59:__iter__ 0.28% (10000 10000 0.013428 0.053714)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 240, 141)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">__iter__</text>
+</g></svg>
+<svg class="func_g" x="589.260003945" y="96" width="1.48934310872" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/packages/ordered_dict.py:120:values 0.21% (10254.0 10254.0 0.0253485635131 0.040286)</title>
+    <rect height="100%" width="100%" fill="rgb(99, 206, 42)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">values</text>
+</g></svg>
+<svg class="func_g" x="593.277828192" y="120" width="16.0584204593" height="23"><g>
+    <title>/usr/lib64/python2.7/httplib.py:888:putrequest 1.42% (10000 10000 0.138584 0.276063)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 115, 64)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">putrequest</text>
+</g></svg>
+<svg class="func_g" x="594.112078833" y="96" width="4.51299962312" height="23"><g>
+    <title>/usr/lib64/python2.7/httplib.py:1005:putheader 0.46% (10000 10000 0.046305 0.089219)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 240, 141)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">putheader</text>
+</g></svg>
+<svg class="func_g" x="599.625078456" y="96" width="1" height="23"><g>
+    <title>~:0:&lt;method 'encode' of 'str' objects&gt; 0.14% (10000 10000 0.027393 0.027393)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 115, 64)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">&lt;method 'encode' of 'str' objects&gt;</text>
+</g></svg>
+<svg class="func_g" x="610.336248652" y="120" width="9.67353900963" height="23"><g>
+    <title>/usr/lib64/python2.7/httplib.py:1005:putheader 0.89% (40000 40000 0.097255 0.172734)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 240, 141)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">putheader</text>
+</g></svg>
+<svg class="func_g" x="610.336248652" y="96" width="1" height="23"><g>
+    <title>/usr/lib64/python2.7/httplib.py:860:_output 0.11% (31876.0 31876.0 0.0156883196811 0.0217716237446)</title>
+    <rect height="100%" width="100%" fill="rgb(71, 230, 126)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">_output</text>
+</g></svg>
+<svg class="func_g" x="611.992059712" y="96" width="1" height="23"><g>
+    <title>~:0:&lt;method 'match' of '_sre.SRE_Pattern' objects&gt; 0.16% (31876.0 31876.0 0.0311751801204 0.0311751801204)</title>
+    <rect height="100%" width="100%" fill="rgb(99, 206, 42)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">&lt;method 'match' of '_sre.SRE_Pattern' objects&gt;</text>
+</g></svg>
+<svg class="func_g" x="621.009787661" y="120" width="21.5819864745" height="23"><g>
+    <title>/usr/lib64/python2.7/httplib.py:1025:endheaders 1.88% (10000 10000 0.033183 0.365453)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 190, 110)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">endheaders</text>
+</g></svg>
+<svg class="func_g" x="621.009787661" y="96" width="19.5315502838" height="23"><g>
+    <title>/usr/lib64/python2.7/httplib.py:867:_send_output 1.71% (10000 10000 0.048696 0.33227)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 215, 125)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">_send_output</text>
+</g></svg>
+<svg class="func_g" x="621.009787661" y="72" width="15.5443129613" height="23"><g>
+    <title>/usr/lib64/python2.7/httplib.py:840:send 1.38% (10000 10000 0.039182 0.267743)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 140, 79)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">send</text>
+</g></svg>
+<svg class="func_g" x="621.017017298" y="48" width="12.5209654057" height="23"><g>
+    <title>/usr/lib64/python2.7/socket.py:227:meth 1.13% (10000 10000 0.01757 0.218815)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 165, 95)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">meth</text>
+</g></svg>
+<svg class="func_g" x="621.982884496" y="24" width="9.58604251543" height="23"><g>
+    <title>~:0:&lt;method 'sendall' of '_socket.socket' objects&gt; 0.88% (8726.0 8726.0 0.171318010475 0.171318010475)</title>
+    <rect height="100%" width="100%" fill="rgb(57, 242, 168)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">&lt;method 'sendall' of '_socket.socket' objects&gt;</text>
+</g></svg>
+<svg class="func_g" x="655.769571911" y="168" width="178.667470698" height="23"><g>
+    <title>/usr/lib64/python2.7/httplib.py:1084:getresponse 14.97% (10000 10000 0.082219 2.907628)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 165, 95)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">getresponse</text>
+</g></svg>
+<svg class="func_g" x="655.769571911" y="144" width="5.04335835574" height="23"><g>
+    <title>/usr/lib64/python2.7/httplib.py:364:__init__ 0.50% (10000 10000 0.03411 0.097802)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 190, 110)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">__init__</text>
+</g></svg>
+<svg class="func_g" x="655.769571911" y="120" width="2.93564119746" height="23"><g>
+    <title>/usr/lib64/python2.7/socket.py:216:makefile 0.33% (10000 10000 0.022128 0.063692)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 215, 125)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">makefile</text>
+</g></svg>
+<svg class="func_g" x="655.769571911" y="96" width="1.56831298642" height="23"><g>
+    <title>/usr/lib64/python2.7/socket.py:250:__init__ 0.21% (10000 10000 0.035616 0.041564)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 90, 49)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">__init__</text>
+</g></svg>
+<svg class="func_g" x="661.812930267" y="144" width="167.543655085" height="23"><g>
+    <title>/usr/lib64/python2.7/httplib.py:431:begin 14.05% (10000 10000 0.135588 2.727607)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 215, 125)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">begin</text>
+</g></svg>
+<svg class="func_g" x="661.812930267" y="120" width="101.331738059" height="23"><g>
+    <title>/usr/lib64/python2.7/httplib.py:392:_read_status 8.53% (10000 10000 0.095238 1.656074)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 115, 64)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">_read_status</text>
+</g></svg>
+<svg class="func_g" x="661.812930267" y="96" width="94.1358396726" height="23"><g>
+    <title>/usr/lib64/python2.7/socket.py:410:readline 7.93% (10000 10000 0.110903 1.53962)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 165, 95)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">readline</text>
+</g></svg>
+<svg class="func_g" x="665.633931414" y="72" width="78.1921150572" height="23"><g>
+    <title>~:0:&lt;method 'recv' of '_socket.socket' objects&gt; 6.60% (9300.0 9300.0 1.28159655293 1.28159655293)</title>
+    <rect height="100%" width="100%" fill="rgb(99, 206, 42)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">&lt;method 'recv' of '_socket.socket' objects&gt;</text>
+</g></svg>
+<svg class="func_g" x="744.826046472" y="72" width="1" height="23"><g>
+    <title>~:0:&lt;method 'seek' of 'cStringIO.StringO' objects&gt; 0.14% (93003.0 93003.0 0.0272582365601 0.0272582365601)</title>
+    <rect height="100%" width="100%" fill="rgb(44, 255, 210)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">&lt;method 'seek' of 'cStringIO.StringO' objects&gt;</text>
+</g></svg>
+<svg class="func_g" x="747.017307789" y="72" width="2.07856986062" height="23"><g>
+    <title>~:0:&lt;method 'write' of 'cStringIO.StringO' objects&gt; 0.26% (46501.0 46501.0 0.0498216838692 0.0498216838692)</title>
+    <rect height="100%" width="100%" fill="rgb(57, 242, 168)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">&lt;method 'write' of 'cStringIO.StringO' objects&gt;</text>
+</g></svg>
+<svg class="func_g" x="764.144668326" y="120" width="1.45789109953" height="23"><g>
+    <title>/usr/lib64/python2.7/httplib.py:517:_check_close 0.20% (10000 10000 0.021205 0.039777)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 190, 110)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">_check_close</text>
+</g></svg>
+<svg class="func_g" x="766.602559425" y="120" width="52.7763240006" height="23"><g>
+    <title>/usr/lib64/python2.7/mimetools.py:24:__init__ 4.48% (10000 10000 0.061824 0.870283)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 190, 110)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">__init__</text>
+</g></svg>
+<svg class="func_g" x="766.602559425" y="96" width="3.69277571345" height="23"><g>
+    <title>/usr/lib64/python2.7/mimetools.py:33:parsetype 0.39% (10000 10000 0.053312 0.075945)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 90, 49)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">parsetype</text>
+</g></svg>
+<svg class="func_g" x="771.755436633" y="96" width="42.305029443" height="23"><g>
+    <title>/usr/lib64/python2.7/rfc822.py:88:__init__ 3.61% (10000 10000 0.027688 0.700822)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 90, 49)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">__init__</text>
+</g></svg>
+<svg class="func_g" x="771.755436633" y="72" width="40.5941390097" height="23"><g>
+    <title>/usr/lib64/python2.7/httplib.py:271:readheaders 3.47% (10000 10000 0.259712 0.673134)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 165, 95)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">readheaders</text>
+</g></svg>
+<svg class="func_g" x="771.755436633" y="48" width="1.21307212031" height="23"><g>
+    <title>/usr/lib64/python2.7/httplib.py:257:addheader 0.18% (30000 30000 0.027135 0.035815)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 115, 64)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">addheader</text>
+</g></svg>
+<svg class="func_g" x="773.968508753" y="48" width="2.22213166868" height="23"><g>
+    <title>/usr/lib64/python2.7/rfc822.py:202:isheader 0.27% (30000 30000 0.035773 0.052145)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 240, 141)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">isheader</text>
+</g></svg>
+<svg class="func_g" x="778.809955457" y="48" width="14.5483532674" height="23"><g>
+    <title>/usr/lib64/python2.7/socket.py:410:readline 1.30% (40000 40000 0.144136 0.251625)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 165, 95)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">readline</text>
+</g></svg>
+<svg class="func_g" x="779.097427078" y="24" width="4.95798975962" height="23"><g>
+    <title>~:0:&lt;method 'recv' of '_socket.socket' objects&gt; 0.50% (700.0 700.0 0.0964204470709 0.0964204470709)</title>
+    <rect height="100%" width="100%" fill="rgb(99, 206, 42)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">&lt;method 'recv' of '_socket.socket' objects&gt;</text>
+</g></svg>
+<svg class="func_g" x="794.358308724" y="48" width="1" height="23"><g>
+    <title>~:0:&lt;hasattr&gt; 0.10% (10000 10000 0.019713 0.019713)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 90, 49)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">&lt;hasattr&gt;</text>
+</g></svg>
+<svg class="func_g" x="815.060466076" y="96" width="1" height="23"><g>
+    <title>/usr/lib64/python2.7/rfc822.py:290:getheader 0.12% (20000 20000 0.015756 0.024246)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 90, 49)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">getheader</text>
+</g></svg>
+<svg class="func_g" x="835.437042609" y="168" width="2.43271800921" height="23"><g>
+    <title>/usr/lib64/python2.7/logging/__init__.py:1145:debug 0.29% (10000 10000 0.012541 0.055553)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 165, 95)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">debug</text>
+</g></svg>
+<svg class="func_g" x="835.437042609" y="144" width="1.65778746444" height="23"><g>
+    <title>/usr/lib64/python2.7/logging/__init__.py:1360:isEnabledFor 0.22% (10000.0 10000.0 0.0151062439501 0.043012)</title>
+    <rect height="100%" width="100%" fill="rgb(71, 230, 126)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">isEnabledFor</text>
+</g></svg>
+<svg class="func_g" x="835.437042609" y="120" width="1" height="23"><g>
+    <title>/usr/lib64/python2.7/logging/__init__.py:1346:getEffectiveLevel 0.14% (10000.0 10000.0 0.0279057560499 0.0279057560499)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 165, 95)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">getEffectiveLevel</text>
+</g></svg>
+<svg class="func_g" x="838.869760618" y="168" width="1.07132180776" height="23"><g>
+    <title>/usr/lib64/python2.7/socket.py:227:meth 0.17% (10000 10000 0.013438 0.033521)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 165, 95)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">meth</text>
+</g></svg>
+<svg class="func_g" x="852.019790049" y="192" width="71.0058220202" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/response.py:441:from_httplib 6.00% (10000 10000 0.088591 1.165298)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 115, 64)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">from_httplib</text>
+</g></svg>
+<svg class="func_g" x="852.019790049" y="168" width="36.06134218" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/_collections.py:302:from_httplib 3.09% (10000 10000 0.064435 0.599778)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 140, 79)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">from_httplib</text>
+</g></svg>
+<svg class="func_g" x="852.019790049" y="144" width="30.2956760233" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/_collections.py:135:__init__ 2.61% (10000 10000 0.078907 0.50647)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 215, 125)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">__init__</text>
+</g></svg>
+<svg class="func_g" x="852.019790049" y="120" width="14.2547805844" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/_collections.py:224:extend 1.27% (10000 10000 0.049519 0.246874)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 190, 110)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">extend</text>
+</g></svg>
+<svg class="func_g" x="852.019790049" y="96" width="6.88191057877" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/_collections.py:208:add 0.66% (30000 30000 0.040488 0.127556)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 165, 95)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">add</text>
+</g></svg>
+<svg class="func_g" x="852.019790049" y="72" width="4.04084873463" height="23"><g>
+    <title>/usr/lib64/python2.7/collections.py:163:setdefault 0.42% (30000 30000 0.039566 0.081578)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 215, 125)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">setdefault</text>
+</g></svg>
+<svg class="func_g" x="852.019790049" y="48" width="1.59599569785" height="23"><g>
+    <title>/usr/lib64/python2.7/collections.py:71:__setitem__ 0.22% (30000 30000 0.042012 0.042012)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 190, 110)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">__setitem__</text>
+</g></svg>
+<svg class="func_g" x="860.448434179" y="96" width="2.52157456956" height="23"><g>
+    <title>~:0:&lt;isinstance&gt; 0.29% (20000 20000 0.009545 0.056991)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 190, 110)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">&lt;isinstance&gt;</text>
+</g></svg>
+<svg class="func_g" x="860.448434179" y="72" width="1.93177215748" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/abc.py:128:__instancecheck__ 0.24% (20258.0 20258.0 0.0280709375712 0.047446)</title>
+    <rect height="100%" width="100%" fill="rgb(71, 230, 126)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">__instancecheck__</text>
+</g></svg>
+<svg class="func_g" x="867.274570633" y="120" width="7.57453449044" height="23"><g>
+    <title>/usr/lib64/python2.7/collections.py:50:__init__ 0.71% (10000 10000 0.094063 0.138765)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 165, 95)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">__init__</text>
+</g></svg>
+<svg class="func_g" x="868.450900494" y="96" width="1" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/abc.py:148:__subclasscheck__ 0.12% (10000 10000 0.013344 0.024233)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 115, 64)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">__subclasscheck__</text>
+</g></svg>
+<svg class="func_g" x="875.849105124" y="120" width="1.59055802239" height="23"><g>
+    <title>~:0:&lt;isinstance&gt; 0.22% (10000 10000 0.007335 0.041924)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 190, 110)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">&lt;isinstance&gt;</text>
+</g></svg>
+<svg class="func_g" x="875.849105124" y="96" width="1.13731541448" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/abc.py:128:__instancecheck__ 0.18% (14768.0 14768.0 0.0204642258494 0.034589)</title>
+    <rect height="100%" width="100%" fill="rgb(71, 230, 126)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">__instancecheck__</text>
+</g></svg>
+<svg class="func_g" x="889.081132229" y="168" width="23.8566031943" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/response.py:113:__init__ 2.07% (10000 10000 0.14719 0.402264)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 165, 95)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">__init__</text>
+</g></svg>
+<svg class="func_g" x="889.081132229" y="144" width="5.80500367069" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/_abcoll.py:379:get 0.57% (10000 10000 0.091973 0.110128)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 165, 95)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">get</text>
+</g></svg>
+<svg class="func_g" x="896.701601843" y="144" width="5.82879350082" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/response.py:202:_init_length 0.57% (10000 10000 0.072379 0.110513)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 90, 49)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">_init_length</text>
+</g></svg>
+<svg class="func_g" x="896.701601843" y="120" width="1" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/_abcoll.py:379:get 0.16% (10000 10000 0.009018 0.030523)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 165, 95)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">get</text>
+</g></svg>
+<svg class="func_g" x="914.087889416" y="168" width="3.46352825941" height="23"><g>
+    <title>~:0:&lt;isinstance&gt; 0.37% (10000 10000 0.011808 0.072235)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 190, 110)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">&lt;isinstance&gt;</text>
+</g></svg>
+<svg class="func_g" x="914.087889416" y="144" width="2.73389107955" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/abc.py:128:__instancecheck__ 0.31% (25800.0 25800.0 0.0357510126168 0.060427)</title>
+    <rect height="100%" width="100%" fill="rgb(71, 230, 126)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">__instancecheck__</text>
+</g></svg>
+<svg class="func_g" x="914.087889416" y="120" width="1" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/_weakrefset.py:70:__contains__ 0.10% (33739.0 33739.0 0.0194643508942 0.0194643508942)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 240, 141)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">__contains__</text>
+</g></svg>
+<svg class="func_g" x="924.025612069" y="192" width="2.10126697323" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/response.py:474:getheader 0.26% (10000 10000 0.016677 0.050189)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 90, 49)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">getheader</text>
+</g></svg>
+<svg class="func_g" x="924.025612069" y="168" width="1.07076568186" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/_abcoll.py:379:get 0.17% (10000 10000 0.020956 0.033512)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 165, 95)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">get</text>
+</g></svg>
+<svg class="func_g" x="927.126879043" y="192" width="1" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/util/request.py:77:set_file_position 0.10% (10000 10000 0.009217 0.019848)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 215, 125)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">set_file_position</text>
+</g></svg>
+<svg class="func_g" x="928.353322026" y="192" width="1.03702737731" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/util/retry.py:294:is_retry 0.17% (10000 10000 0.013408 0.032966)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 115, 64)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">is_retry</text>
+</g></svg>
+<svg class="func_g" x="928.353322026" y="168" width="1" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/util/retry.py:285:_is_method_retryable 0.10% (10000 10000 0.016987 0.019558)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 115, 64)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">_is_method_retryable</text>
+</g></svg>
+<svg class="func_g" x="943.601738058" y="216" width="1" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/util/timeout.py:93:__init__ 0.17% (10000 10000 0.023218 0.032353)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 240, 141)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">__init__</text>
+</g></svg>
+<svg class="func_g" x="954.287573629" y="240" width="22.6328790488" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/cookies.py:119:extract_cookies_to_jar 1.97% (10000 10000 0.052308 0.38246)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 190, 110)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">extract_cookies_to_jar</text>
+</g></svg>
+<svg class="func_g" x="954.287573629" y="216" width="4.00345703154" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/cookies.py:38:__init__ 0.42% (8581.0 8581.0 0.022410710209 0.080972875642)</title>
+    <rect height="100%" width="100%" fill="rgb(99, 206, 42)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">__init__</text>
+</g></svg>
+<svg class="func_g" x="954.287573629" y="192" width="2.61865965726" height="23"><g>
+    <title>/usr/lib64/python2.7/urlparse.py:137:urlparse 0.30% (8454.0 8454.0 0.0260334529939 0.058562165433)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 215, 125)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">urlparse</text>
+</g></svg>
+<svg class="func_g" x="954.287573629" y="168" width="1" height="23"><g>
+    <title>/usr/lib64/python2.7/urlparse.py:168:urlsplit 0.10% (10560.0 10560.0 0.0149414069256 0.0203172157815)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 140, 79)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">urlsplit</text>
+</g></svg>
+<svg class="func_g" x="959.456723847" y="216" width="14.0334620971" height="23"><g>
+    <title>/usr/lib64/python2.7/cookielib.py:1651:extract_cookies 1.25% (8581.0 8581.0 0.059917491049 0.243292317528)</title>
+    <rect height="100%" width="100%" fill="rgb(57, 242, 168)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">extract_cookies</text>
+</g></svg>
+<svg class="func_g" x="959.760697939" y="192" width="6.43010665071" height="23"><g>
+    <title>/usr/lib64/python2.7/cookielib.py:1571:make_cookies 0.62% (8581.0 8581.0 0.0275441293274 0.120244282711)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 190, 110)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">make_cookies</text>
+</g></svg>
+<svg class="func_g" x="959.860909178" y="168" width="4.62789500137" height="23"><g>
+    <title>/usr/lib64/python2.7/rfc822.py:300:getheaders 0.47% (17161.0 17161.0 0.01683881601 0.0910783962366)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 215, 125)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">getheaders</text>
+</g></svg>
+<svg class="func_g" x="959.860909178" y="144" width="3.58739481288" height="23"><g>
+    <title>/usr/lib64/python2.7/rfc822.py:233:getallmatchingheaders 0.38% (17161.0 17161.0 0.0561732914128 0.0742395802266)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 240, 141)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">getallmatchingheaders</text>
+</g></svg>
+<svg class="func_g" x="967.19080459" y="192" width="1" height="23"><g>
+    <title>/usr/lib64/python2.7/threading.py:147:acquire 0.16% (8581.0 8581.0 0.0222927252313 0.0320331359497)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 115, 64)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">acquire</text>
+</g></svg>
+<svg class="func_g" x="969.17018865" y="192" width="1" height="23"><g>
+    <title>/usr/lib64/python2.7/threading.py:187:release 0.12% (8581.0 8581.0 0.0186150262189 0.0236068633642)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 215, 125)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">release</text>
+</g></svg>
+<svg class="func_g" x="978.725908356" y="240" width="52.3274686081" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/models.py:810:content 4.44% (10000 10000 0.054499 0.863019)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 140, 79)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">content</text>
+</g></svg>
+<svg class="func_g" x="978.725908356" y="216" width="1" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/models.py:724:iter_content 0.16% (10000.0 10000.0 0.028783 0.031213)</title>
+    <rect height="100%" width="100%" fill="rgb(44, 255, 210)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">iter_content</text>
+</g></svg>
+<svg class="func_g" x="980.872554327" y="216" width="46.8132331497" height="23"><g>
+    <title>~:0:&lt;method 'join' of 'str' objects&gt; 3.98% (10000.0 10000.0 0.028491 0.77378)</title>
+    <rect height="100%" width="100%" fill="rgb(71, 230, 126)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">&lt;method 'join' of 'str' objects&gt;</text>
+</g></svg>
+<svg class="func_g" x="980.872554327" y="192" width="45.0527239278" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/models.py:741:generate 3.84% (20000.0 20000.0 0.03301 0.745289)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 240, 141)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">generate</text>
+</g></svg>
+<svg class="func_g" x="980.872554327" y="168" width="42.7318251748" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/response.py:415:stream 3.64% (20000.0 20000.0 0.036578 0.707729)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 140, 79)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">stream</text>
+</g></svg>
+<svg class="func_g" x="980.872554327" y="144" width="38.9226099318" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/response.py:346:read 3.33% (10000.0 10000.0 0.104137 0.646083)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 115, 64)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">read</text>
+</g></svg>
+<svg class="func_g" x="980.872554327" y="120" width="3.18107809434" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/response.py:250:_init_decoder 0.35% (10000.0 10000.0 0.032248 0.067664)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 215, 125)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">_init_decoder</text>
+</g></svg>
+<svg class="func_g" x="980.872554327" y="96" width="1.09597672263" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/_abcoll.py:379:get 0.17% (10000.0 10000.0 0.021103 0.03392)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 165, 95)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">get</text>
+</g></svg>
+<svg class="func_g" x="986.46705729" y="120" width="13.1161437015" height="23"><g>
+    <title>/usr/lib64/python2.7/contextlib.py:21:__exit__ 1.18% (10000.0 10000.0 0.033749 0.228447)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 190, 110)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">__exit__</text>
+</g></svg>
+<svg class="func_g" x="986.673244989" y="96" width="10.8245456723" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/response.py:289:_error_catcher 0.99% (9829.0 9829.0 0.0358714992756 0.191361184918)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 115, 64)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">_error_catcher</text>
+</g></svg>
+<svg class="func_g" x="986.673244989" y="72" width="8.44697983195" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/response.py:174:release_conn 0.79% (9829.0 9829.0 0.0259416486802 0.15288411958)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 165, 95)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">release_conn</text>
+</g></svg>
+<svg class="func_g" x="986.673244989" y="48" width="6.84399953183" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/connectionpool.py:253:_put_conn 0.65% (9829.0 9829.0 0.0212779704583 0.1269424709)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 215, 125)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">_put_conn</text>
+</g></svg>
+<svg class="func_g" x="986.673244989" y="24" width="5.52919614782" height="23"><g>
+    <title>/usr/lib64/python2.7/Queue.py:107:put 0.54% (9829.0 9829.0 0.0483322184529 0.105664500442)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 140, 79)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">put</text>
+</g></svg>
+<svg class="func_g" x="987.591180483" y="0" width="1.28403663814" height="23"><g>
+    <title>/usr/lib64/python2.7/threading.py:373:notify 0.19% (9831.0 9831.0 0.0220501977699 0.0369634461725)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 215, 125)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">notify</text>
+</g></svg>
+<svg class="func_g" x="1000.58320099" y="120" width="1" height="23"><g>
+    <title>/usr/lib64/python2.7/contextlib.py:82:helper 0.12% (10000.0 10000.0 0.018183 0.023301)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 240, 141)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">helper</text>
+</g></svg>
+<svg class="func_g" x="1002.02301094" y="120" width="11.1988687678" height="23"><g>
+    <title>/usr/lib64/python2.7/httplib.py:564:read 1.02% (10000.0 10000.0 0.057189 0.197419)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 190, 110)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">read</text>
+</g></svg>
+<svg class="func_g" x="1002.02301094" y="96" width="1.23908645404" height="23"><g>
+    <title>/usr/lib64/python2.7/httplib.py:547:close 0.19% (10000.0 10000.0 0.013465 0.036236)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 140, 79)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">close</text>
+</g></svg>
+<svg class="func_g" x="1002.02301094" y="72" width="1" height="23"><g>
+    <title>/usr/lib64/python2.7/socket.py:280:close 0.12% (10000.0 10000.0 0.0163 0.022771)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 140, 79)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">close</text>
+</g></svg>
+<svg class="func_g" x="1004.93550407" y="96" width="4.66729366429" height="23"><g>
+    <title>/usr/lib64/python2.7/socket.py:340:read 0.47% (10000.0 10000.0 0.049041 0.091716)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 140, 79)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">read</text>
+</g></svg>
+<svg class="func_g" x="1020.79516426" y="144" width="1" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/util/response.py:7:is_fp_closed 0.13% (20000.0 20000.0 0.019245 0.025068)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 90, 49)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">is_fp_closed</text>
+</g></svg>
+<svg class="func_g" x="1032.05337696" y="240" width="5.03161792009" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/sessions.py:119:resolve_redirects 0.50% (10000 10000 0.012369 0.097612)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 165, 95)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">resolve_redirects</text>
+</g></svg>
+<svg class="func_g" x="1032.05337696" y="216" width="4.26731555917" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/sessions.py:98:get_redirect_target 0.44% (10000 10000 0.013923 0.085243)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 190, 110)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">get_redirect_target</text>
+</g></svg>
+<svg class="func_g" x="1032.05337696" y="192" width="3.40698879298" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/models.py:702:is_redirect 0.37% (10000 10000 0.026058 0.07132)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 115, 64)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">is_redirect</text>
+</g></svg>
+<svg class="func_g" x="1032.05337696" y="168" width="1.79681893926" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/_abcoll.py:386:__contains__ 0.23% (10000 10000 0.029347 0.045262)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 90, 49)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">__contains__</text>
+</g></svg>
+<svg class="func_g" x="1038.08499488" y="240" width="3.57753406876" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/sessions.py:691:get_adapter 0.38% (10000 10000 0.029285 0.07408)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 115, 64)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">get_adapter</text>
+</g></svg>
+<svg class="func_g" x="1038.08499488" y="216" width="1.17828335572" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/packages/ordered_dict.py:124:items 0.18% (10000 10000 0.022034 0.035252)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 165, 95)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">items</text>
+</g></svg>
+<svg class="func_g" x="1056.68116525" y="264" width="121.053754409" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/sessions.py:662:merge_environment_settings 10.17% (10000 10000 0.074779 1.975243)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 90, 49)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">merge_environment_settings</text>
+</g></svg>
+<svg class="func_g" x="1057.7547354" y="240" width="19.4957110592" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/sessions.py:50:merge_setting 1.71% (40000 40000 0.061256 0.33169)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 115, 64)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">merge_setting</text>
+</g></svg>
+<svg class="func_g" x="1057.7547354" y="216" width="1" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/_abcoll.py:412:items 0.13% (2022.0 2022.0 0.00755845309979 0.0248642316805)</title>
+    <rect height="100%" width="100%" fill="rgb(57, 242, 168)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">items</text>
+</g></svg>
+<svg class="func_g" x="1060.03564468" y="216" width="3.04678540865" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/structures.py:42:__init__ 0.34% (2022.0 2022.0 0.00646250064964 0.0654906896529)</title>
+    <rect height="100%" width="100%" fill="rgb(85, 218, 84)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">__init__</text>
+</g></svg>
+<svg class="func_g" x="1060.03564468" y="192" width="1.32527410731" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/_abcoll.py:548:update 0.19% (2356.0 2356.0 0.0103206028291 0.0376308080468)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 240, 141)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">update</text>
+</g></svg>
+<svg class="func_g" x="1062.36091879" y="192" width="1" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/packages/ordered_dict.py:28:__init__ 0.11% (2356.0 2356.0 0.0115400503731 0.0213973809565)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 115, 64)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">__init__</text>
+</g></svg>
+<svg class="func_g" x="1064.08243009" y="216" width="4.48728670906" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/utils.py:244:to_key_val_list 0.46% (12130.0 12130.0 0.0227261034545 0.0888028779908)</title>
+    <rect height="100%" width="100%" fill="rgb(57, 242, 168)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">to_key_val_list</text>
+</g></svg>
+<svg class="func_g" x="1064.08243009" y="192" width="1" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/_abcoll.py:412:items 0.15% (1760.0 1760.0 0.00731506700061 0.0281776366781)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 215, 125)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">items</text>
+</g></svg>
+<svg class="func_g" x="1065.9678684" y="192" width="1.11351052389" height="23"><g>
+    <title>~:0:&lt;isinstance&gt; 0.18% (24645.0 24645.0 0.0154870851048 0.034203756271)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 190, 110)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">&lt;isinstance&gt;</text>
+</g></svg>
+<svg class="func_g" x="1069.5697168" y="216" width="1.04125671435" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/packages/ordered_dict.py:28:__init__ 0.17% (4043.0 4043.0 0.0182036064411 0.0330344449932)</title>
+    <rect height="100%" width="100%" fill="rgb(85, 218, 84)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">__init__</text>
+</g></svg>
+<svg class="func_g" x="1072.62331322" y="216" width="1" height="23"><g>
+    <title>~:0:&lt;isinstance&gt; 0.15% (12130.0 12130.0 0.00753014958697 0.0298100683786)</title>
+    <rect height="100%" width="100%" fill="rgb(57, 242, 168)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">&lt;isinstance&gt;</text>
+</g></svg>
+<svg class="func_g" x="1072.62331322" y="192" width="1" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/abc.py:128:__instancecheck__ 0.11% (9513.0 9513.0 0.0131816846413 0.0222799187916)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 165, 95)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">__instancecheck__</text>
+</g></svg>
+<svg class="func_g" x="1078.25044646" y="240" width="94.6445094952" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/utils.py:686:get_environ_proxies 7.97% (10000 10000 0.016512 1.547852)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 90, 49)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">get_environ_proxies</text>
+</g></svg>
+<svg class="func_g" x="1078.25044646" y="216" width="57.6531773867" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/utils.py:629:should_bypass_proxies 4.89% (10000 10000 0.087472 0.949207)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 140, 79)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">should_bypass_proxies</text>
+</g></svg>
+<svg class="func_g" x="1078.25044646" y="192" width="2.81014211952" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/utils.py:635:&lt;lambda&gt; 0.32% (10000 10000 0.029496 0.061661)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 240, 141)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">&lt;lambda&gt;</text>
+</g></svg>
+<svg class="func_g" x="1078.25044646" y="168" width="1" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/UserDict.py:91:get 0.15% (20000 20000 0.020083 0.028161)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 190, 110)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">get</text>
+</g></svg>
+<svg class="func_g" x="1083.06989529" y="192" width="1" height="23"><g>
+    <title>/usr/lib64/python2.7/contextlib.py:21:__exit__ 0.14% (10000 10000 0.023712 0.027107)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 190, 110)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">__exit__</text>
+</g></svg>
+<svg class="func_g" x="1084.74488471" y="192" width="1" height="23"><g>
+    <title>/usr/lib64/python2.7/contextlib.py:82:helper 0.11% (10000 10000 0.017788 0.022055)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 240, 141)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">helper</text>
+</g></svg>
+<svg class="func_g" x="1086.10770212" y="192" width="41.3230346884" height="23"><g>
+    <title>/usr/lib64/python2.7/urllib.py:1408:proxy_bypass_environment 3.53% (10000 10000 0.03473 0.68493)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 115, 64)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">proxy_bypass_environment</text>
+</g></svg>
+<svg class="func_g" x="1086.10770212" y="168" width="39.1770066348" height="23"><g>
+    <title>/usr/lib64/python2.7/urllib.py:1372:getproxies_environment 3.35% (10000 10000 0.429353 0.6502)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 165, 95)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">getproxies_environment</text>
+</g></svg>
+<svg class="func_g" x="1086.10770212" y="144" width="2.91175838685" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/UserDict.py:57:items 0.33% (21878.0 21878.0 0.0110115299675 0.0633054952611)</title>
+    <rect height="100%" width="100%" fill="rgb(71, 230, 126)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">items</text>
+</g></svg>
+<svg class="func_g" x="1086.10770212" y="120" width="2.23133649733" height="23"><g>
+    <title>~:0:&lt;method 'items' of 'dict' objects&gt; 0.27% (21878.0 21878.0 0.0522939652936 0.0522939652936)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 215, 125)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">&lt;method 'items' of 'dict' objects&gt;</text>
+</g></svg>
+<svg class="func_g" x="1090.2231511" y="144" width="8.53107729463" height="23"><g>
+    <title>~:0:&lt;method 'lower' of 'str' objects&gt; 0.79% (1028246.0 1028246.0 0.154245101266 0.154245101266)</title>
+    <rect height="100%" width="100%" fill="rgb(99, 206, 42)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">&lt;method 'lower' of 'str' objects&gt;</text>
+</g></svg>
+<svg class="func_g" x="1128.43073681" y="192" width="2.06783762751" height="23"><g>
+    <title>/usr/lib64/python2.7/urlparse.py:137:urlparse 0.26% (10000 10000 0.020603 0.049648)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 215, 125)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">urlparse</text>
+</g></svg>
+<svg class="func_g" x="1136.90362385" y="216" width="34.9710264586" height="23"><g>
+    <title>/usr/lib64/python2.7/urllib.py:1372:getproxies_environment 3.00% (10000 10000 0.399193 0.582133)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 165, 95)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">getproxies_environment</text>
+</g></svg>
+<svg class="func_g" x="1136.90362385" y="192" width="2.24032963676" height="23"><g>
+    <title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/UserDict.py:57:items 0.27% (18122.0 18122.0 0.00912147003247 0.0524395047389)</title>
+    <rect height="100%" width="100%" fill="rgb(71, 230, 126)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">items</text>
+</g></svg>
+<svg class="func_g" x="1136.90362385" y="168" width="1.67669788958" height="23"><g>
+    <title>~:0:&lt;method 'items' of 'dict' objects&gt; 0.22% (18122.0 18122.0 0.0433180347064 0.0433180347064)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 215, 125)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">&lt;method 'items' of 'dict' objects&gt;</text>
+</g></svg>
+<svg class="func_g" x="1140.31268187" y="192" width="6.89512775939" height="23"><g>
+    <title>~:0:&lt;method 'lower' of 'str' objects&gt; 0.66% (851754.0 851754.0 0.127769898734 0.127769898734)</title>
+    <rect height="100%" width="100%" fill="rgb(99, 206, 42)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">&lt;method 'lower' of 'str' objects&gt;</text>
+</g></svg>
+</svg>

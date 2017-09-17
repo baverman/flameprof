@@ -1,0 +1,1822 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" width="1200" height="342" onload="init(evt)" viewBox="0 0 1200 342" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<!-- Flame graph stack visualization. See https://github.com/brendangregg/FlameGraph for latest version, and http://www.brendangregg.com/flamegraphs.html for examples. -->
+<!-- NOTES:  -->
+<defs >
+	<linearGradient id="background" y1="0" y2="1" x1="0" x2="0" >
+		<stop stop-color="#eeeeee" offset="5%" />
+		<stop stop-color="#eeeeb0" offset="95%" />
+	</linearGradient>
+</defs>
+<style type="text/css">
+	.func_g:hover { stroke:black; stroke-width:0.5; cursor:pointer; }
+</style>
+<script type="text/ecmascript">
+<![CDATA[
+	var details, searchbtn, matchedtxt, svg;
+	function init(evt) {
+		details = document.getElementById("details").firstChild;
+		searchbtn = document.getElementById("search");
+		matchedtxt = document.getElementById("matched");
+		svg = document.getElementsByTagName("svg")[0];
+		searching = 0;
+	}
+
+	// mouse-over for info
+	function s(node) {		// show
+		info = g_to_text(node);
+		details.nodeValue = "Function: " + info;
+	}
+	function c() {			// clear
+		details.nodeValue = ' ';
+	}
+
+	// ctrl-F for search
+	window.addEventListener("keydown",function (e) {
+		if (e.keyCode === 114 || (e.ctrlKey && e.keyCode === 70)) {
+			e.preventDefault();
+			search_prompt();
+		}
+	})
+
+	// functions
+	function find_child(parent, name, attr) {
+		var children = parent.childNodes;
+		for (var i=0; i<children.length;i++) {
+			if (children[i].tagName == name)
+				return (attr != undefined) ? children[i].attributes[attr].value : children[i];
+		}
+		return;
+	}
+	function orig_save(e, attr, val) {
+		if (e.attributes["_orig_"+attr] != undefined) return;
+		if (e.attributes[attr] == undefined) return;
+		if (val == undefined) val = e.attributes[attr].value;
+		e.setAttribute("_orig_"+attr, val);
+	}
+	function orig_load(e, attr) {
+		if (e.attributes["_orig_"+attr] == undefined) return;
+		e.attributes[attr].value = e.attributes["_orig_"+attr].value;
+		e.removeAttribute("_orig_"+attr);
+	}
+	function g_to_text(e) {
+		var text = find_child(e, "title").firstChild.nodeValue;
+		return (text)
+	}
+	function g_to_func(e) {
+		var func = g_to_text(e);
+		// if there's any manipulation we want to do to the function
+		// name before it's searched, do it here before returning.
+		return (func);
+	}
+	function update_text(e) {
+		var r = find_child(e, "rect");
+		var t = find_child(e, "text");
+		var w = parseFloat(r.attributes["width"].value) -3;
+		var txt = find_child(e, "title").textContent.replace(/\([^(]*\)$/,"");
+		t.attributes["x"].value = parseFloat(r.attributes["x"].value) +3;
+
+		// Smaller than this size won't fit anything
+		if (w < 2*12*0.59) {
+			t.textContent = "";
+			return;
+		}
+
+		t.textContent = txt;
+		// Fit in full text width
+		if (/^ *$/.test(txt) || t.getSubStringLength(0, txt.length) < w)
+			return;
+
+		for (var x=txt.length-2; x>0; x--) {
+			if (t.getSubStringLength(0, x+2) <= w) {
+				t.textContent = txt.substring(0,x) + "..";
+				return;
+			}
+		}
+		t.textContent = "";
+	}
+
+	// zoom
+	function zoom_reset(e) {
+		if (e.attributes != undefined) {
+			orig_load(e, "x");
+			orig_load(e, "width");
+		}
+		if (e.childNodes == undefined) return;
+		for(var i=0, c=e.childNodes; i<c.length; i++) {
+			zoom_reset(c[i]);
+		}
+	}
+	function zoom_child(e, x, ratio) {
+		if (e.attributes != undefined) {
+			if (e.attributes["x"] != undefined) {
+				orig_save(e, "x");
+				e.attributes["x"].value = (parseFloat(e.attributes["x"].value) - x - 10) * ratio + 10;
+				if(e.tagName == "text") e.attributes["x"].value = find_child(e.parentNode, "rect", "x") + 3;
+			}
+			if (e.attributes["width"] != undefined) {
+				orig_save(e, "width");
+				e.attributes["width"].value = parseFloat(e.attributes["width"].value) * ratio;
+			}
+		}
+
+		if (e.childNodes == undefined) return;
+		for(var i=0, c=e.childNodes; i<c.length; i++) {
+			zoom_child(c[i], x-10, ratio);
+		}
+	}
+	function zoom_parent(e) {
+		if (e.attributes) {
+			if (e.attributes["x"] != undefined) {
+				orig_save(e, "x");
+				e.attributes["x"].value = 10;
+			}
+			if (e.attributes["width"] != undefined) {
+				orig_save(e, "width");
+				e.attributes["width"].value = parseInt(svg.width.baseVal.value) - (10*2);
+			}
+		}
+		if (e.childNodes == undefined) return;
+		for(var i=0, c=e.childNodes; i<c.length; i++) {
+			zoom_parent(c[i]);
+		}
+	}
+	function zoom(node) {
+		var attr = find_child(node, "rect").attributes;
+		var width = parseFloat(attr["width"].value);
+		var xmin = parseFloat(attr["x"].value);
+		var xmax = parseFloat(xmin + width);
+		var ymin = parseFloat(attr["y"].value);
+		var ratio = (svg.width.baseVal.value - 2*10) / width;
+
+		// XXX: Workaround for JavaScript float issues (fix me)
+		var fudge = 0.0001;
+
+		var unzoombtn = document.getElementById("unzoom");
+		unzoombtn.style["opacity"] = "1.0";
+
+		var el = document.getElementsByTagName("g");
+		for(var i=0;i<el.length;i++){
+			var e = el[i];
+			var a = find_child(e, "rect").attributes;
+			var ex = parseFloat(a["x"].value);
+			var ew = parseFloat(a["width"].value);
+			// Is it an ancestor
+			if (0 == 0) {
+				var upstack = parseFloat(a["y"].value) > ymin;
+			} else {
+				var upstack = parseFloat(a["y"].value) < ymin;
+			}
+			if (upstack) {
+				// Direct ancestor
+				if (ex <= xmin && (ex+ew+fudge) >= xmax) {
+					e.style["opacity"] = "0.5";
+					zoom_parent(e);
+					e.onclick = function(e){unzoom(); zoom(this);};
+					update_text(e);
+				}
+				// not in current path
+				else
+					e.style["display"] = "none";
+			}
+			// Children maybe
+			else {
+				// no common path
+				if (ex < xmin || ex + fudge >= xmax) {
+					e.style["display"] = "none";
+				}
+				else {
+					zoom_child(e, xmin, ratio);
+					e.onclick = function(e){zoom(this);};
+					update_text(e);
+				}
+			}
+		}
+	}
+	function unzoom() {
+		var unzoombtn = document.getElementById("unzoom");
+		unzoombtn.style["opacity"] = "0.0";
+
+		var el = document.getElementsByTagName("g");
+		for(i=0;i<el.length;i++) {
+			el[i].style["display"] = "block";
+			el[i].style["opacity"] = "1";
+			zoom_reset(el[i]);
+			update_text(el[i]);
+		}
+	}
+
+	// search
+	function reset_search() {
+		var el = document.getElementsByTagName("rect");
+		for (var i=0; i < el.length; i++) {
+			orig_load(el[i], "fill")
+		}
+	}
+	function search_prompt() {
+		if (!searching) {
+			var term = prompt("Enter a search term (regexp " +
+			    "allowed, eg: ^ext4_)", "");
+			if (term != null) {
+				search(term)
+			}
+		} else {
+			reset_search();
+			searching = 0;
+			searchbtn.style["opacity"] = "0.1";
+			searchbtn.firstChild.nodeValue = "Search"
+			matchedtxt.style["opacity"] = "0.0";
+			matchedtxt.firstChild.nodeValue = ""
+		}
+	}
+	function search(term) {
+		var re = new RegExp(term);
+		var el = document.getElementsByTagName("g");
+		var matches = new Object();
+		var maxwidth = 0;
+		for (var i = 0; i < el.length; i++) {
+			var e = el[i];
+			if (e.attributes["class"].value != "func_g")
+				continue;
+			var func = g_to_func(e);
+			var rect = find_child(e, "rect");
+			if (rect == null) {
+				// the rect might be wrapped in an anchor
+				// if nameattr href is being used
+				if (rect = find_child(e, "a")) {
+				    rect = find_child(r, "rect");
+				}
+			}
+			if (func == null || rect == null)
+				continue;
+
+			// Save max width. Only works as we have a root frame
+			var w = parseFloat(rect.attributes["width"].value);
+			if (w > maxwidth)
+				maxwidth = w;
+
+			if (func.match(re)) {
+				// highlight
+				var x = parseFloat(rect.attributes["x"].value);
+				orig_save(rect, "fill");
+				rect.attributes["fill"].value =
+				    "rgb(230,0,230)";
+
+				// remember matches
+				if (matches[x] == undefined) {
+					matches[x] = w;
+				} else {
+					if (w > matches[x]) {
+						// overwrite with parent
+						matches[x] = w;
+					}
+				}
+				searching = 1;
+			}
+		}
+		if (!searching)
+			return;
+
+		searchbtn.style["opacity"] = "1.0";
+		searchbtn.firstChild.nodeValue = "Reset Search"
+
+		// calculate percent matched, excluding vertical overlap
+		var count = 0;
+		var lastx = -1;
+		var lastw = 0;
+		var keys = Array();
+		for (k in matches) {
+			if (matches.hasOwnProperty(k))
+				keys.push(k);
+		}
+		// sort the matched frames by their x location
+		// ascending, then width descending
+		keys.sort(function(a, b){
+			return a - b;
+		});
+		// Step through frames saving only the biggest bottom-up frames
+		// thanks to the sort order. This relies on the tree property
+		// where children are always smaller than their parents.
+		var fudge = 0.0001;	// JavaScript floating point
+		for (var k in keys) {
+			var x = parseFloat(keys[k]);
+			var w = matches[keys[k]];
+			if (x >= lastx + lastw - fudge) {
+				count += w;
+				lastx = x;
+				lastw = w;
+			}
+		}
+		// display matched percent
+		matchedtxt.style["opacity"] = "1.0";
+		pct = 100 * count / maxwidth;
+		if (pct == 100)
+			pct = "100"
+		else
+			pct = pct.toFixed(1)
+		matchedtxt.firstChild.nodeValue = "Matched: " + pct + "%";
+	}
+	function searchover(e) {
+		searchbtn.style["opacity"] = "1.0";
+	}
+	function searchout(e) {
+		if (searching) {
+			searchbtn.style["opacity"] = "1.0";
+		} else {
+			searchbtn.style["opacity"] = "0.1";
+		}
+	}
+]]>
+</script>
+<rect x="0.0" y="0" width="1200.0" height="342.0" fill="url(#background)"  />
+<text text-anchor="middle" x="600.00" y="24" font-size="17" font-family="Verdana" fill="rgb(0,0,0)"  >Flame Graph</text>
+<text text-anchor="" x="10.00" y="325" font-size="12" font-family="Verdana" fill="rgb(0,0,0)" id="details" > </text>
+<text text-anchor="" x="10.00" y="24" font-size="12" font-family="Verdana" fill="rgb(0,0,0)" id="unzoom" onclick="unzoom()" style="opacity:0.0;cursor:pointer" >Reset Zoom</text>
+<text text-anchor="" x="1090.00" y="24" font-size="12" font-family="Verdana" fill="rgb(0,0,0)" id="search" onmouseover="searchover()" onmouseout="searchout()" onclick="search_prompt()" style="opacity:0.1;cursor:pointer" >Search</text>
+<text text-anchor="" x="1090.00" y="325" font-size="12" font-family="Verdana" fill="rgb(0,0,0)" id="matched" > </text>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/abc.py:128:__instancecheck__ (30,870 samples, 0.16%)</title><rect x="250.9" y="133" width="1.9" height="15.0" fill="rgb(237,66,0)" rx="2" ry="2" />
+<text text-anchor="" x="253.91" y="143.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/usr/lib64/python2.7/urlparse.py:137:urlparse (47,441 samples, 0.24%)</title><rect x="527.5" y="149" width="2.9" height="15.0" fill="rgb(253,79,51)" rx="2" ry="2" />
+<text text-anchor="" x="530.47" y="159.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/_abcoll.py:548:update (148,505 samples, 0.77%)</title><rect x="243.7" y="165" width="9.1" height="15.0" fill="rgb(242,53,45)" rx="2" ry="2" />
+<text text-anchor="" x="246.75" y="175.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/packages/ordered_dict.py:120:values (38,041 samples, 0.20%)</title><rect x="142.3" y="133" width="2.3" height="15.0" fill="rgb(218,9,39)" rx="2" ry="2" />
+<text text-anchor="" x="145.30" y="143.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/structures.py:42:__init__ (65,491 samples, 0.34%)</title><rect x="1082.6" y="181" width="4.0" height="15.0" fill="rgb(219,208,36)" rx="2" ry="2" />
+<text text-anchor="" x="1085.58" y="191.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>~:0:&lt;method 'join' of 'str' objects&gt; (773,780 samples, 3.99%)</title><rect x="1012.2" y="181" width="47.1" height="15.0" fill="rgb(254,109,5)" rx="2" ry="2" />
+<text text-anchor="" x="1015.25" y="191.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  >~:0:..</text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/_abcoll.py:548:update (47,548 samples, 0.25%)</title><rect x="239.3" y="181" width="2.9" height="15.0" fill="rgb(246,27,41)" rx="2" ry="2" />
+<text text-anchor="" x="242.30" y="191.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/utils.py:99:super_len (42,373 samples, 0.22%)</title><rect x="171.4" y="165" width="2.6" height="15.0" fill="rgb(236,172,14)" rx="2" ry="2" />
+<text text-anchor="" x="174.39" y="175.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/usr/lib64/python2.7/contextlib.py:82:helper (23,301 samples, 0.12%)</title><rect x="1044.4" y="117" width="1.4" height="15.0" fill="rgb(249,113,51)" rx="2" ry="2" />
+<text text-anchor="" x="1047.38" y="127.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/util/retry.py:285:_is_method_retryable (19,558 samples, 0.10%)</title><rect x="980.4" y="149" width="1.2" height="15.0" fill="rgb(242,159,50)" rx="2" ry="2" />
+<text text-anchor="" x="983.38" y="159.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/util/url.py:22:__new__ (47,909 samples, 0.25%)</title><rect x="511.2" y="133" width="2.9" height="15.0" fill="rgb(229,0,21)" rx="2" ry="2" />
+<text text-anchor="" x="514.20" y="143.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/usr/lib64/python2.7/urlparse.py:137:urlparse (58,562 samples, 0.30%)</title><rect x="988.4" y="165" width="3.6" height="15.0" fill="rgb(237,186,45)" rx="2" ry="2" />
+<text text-anchor="" x="991.44" y="175.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/poolmanager.py:206:connection_from_host (559,271 samples, 2.88%)</title><rect x="472.3" y="149" width="34.0" height="15.0" fill="rgb(207,13,34)" rx="2" ry="2" />
+<text text-anchor="" x="475.30" y="159.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  >/h..</text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>~:0:&lt;isinstance&gt; (41,924 samples, 0.22%)</title><rect x="943.9" y="117" width="2.5" height="15.0" fill="rgb(234,186,20)" rx="2" ry="2" />
+<text text-anchor="" x="946.87" y="127.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>~:0:&lt;isinstance&gt; (72,235 samples, 0.37%)</title><rect x="970.9" y="149" width="4.4" height="15.0" fill="rgb(226,85,13)" rx="2" ry="2" />
+<text text-anchor="" x="973.90" y="159.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/packages/ordered_dict.py:142:update (37,336 samples, 0.19%)</title><rect x="255.7" y="149" width="2.2" height="15.0" fill="rgb(213,20,9)" rx="2" ry="2" />
+<text text-anchor="" x="258.65" y="159.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/usr/lib64/python2.7/urlparse.py:137:urlparse (36,842 samples, 0.19%)</title><rect x="518.1" y="165" width="2.2" height="15.0" fill="rgb(241,8,16)" rx="2" ry="2" />
+<text text-anchor="" x="521.06" y="175.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/usr/lib64/python2.7/urlparse.py:137:urlparse (33,974 samples, 0.18%)</title><rect x="534.0" y="165" width="2.1" height="15.0" fill="rgb(206,93,52)" rx="2" ry="2" />
+<text text-anchor="" x="536.99" y="175.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/packages/ordered_dict.py:120:values (40,286 samples, 0.21%)</title><rect x="670.0" y="101" width="2.4" height="15.0" fill="rgb(230,118,22)" rx="2" ry="2" />
+<text text-anchor="" x="672.99" y="111.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/structures.py:53:__getitem__ (30,902 samples, 0.16%)</title><rect x="139.7" y="149" width="1.9" height="15.0" fill="rgb(210,97,0)" rx="2" ry="2" />
+<text text-anchor="" x="142.70" y="159.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/abc.py:148:__subclasscheck__ (24,233 samples, 0.12%)</title><rect x="942.4" y="101" width="1.5" height="15.0" fill="rgb(241,123,14)" rx="2" ry="2" />
+<text text-anchor="" x="945.40" y="111.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/util/timeout.py:156:clone (39,665 samples, 0.20%)</title><rect x="642.5" y="133" width="2.4" height="15.0" fill="rgb(239,193,19)" rx="2" ry="2" />
+<text text-anchor="" x="645.47" y="143.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/UserDict.py:91:get (28,161 samples, 0.15%)</title><rect x="1105.2" y="149" width="1.7" height="15.0" fill="rgb(234,191,26)" rx="2" ry="2" />
+<text text-anchor="" x="1108.16" y="159.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/usr/lib64/python2.7/threading.py:215:__exit__ (26,429 samples, 0.14%)</title><rect x="493.7" y="101" width="1.7" height="15.0" fill="rgb(208,218,34)" rx="2" ry="2" />
+<text text-anchor="" x="496.74" y="111.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/_weakrefset.py:70:__contains__ (19,464 samples, 0.10%)</title><rect x="974.1" y="117" width="1.2" height="15.0" fill="rgb(251,53,43)" rx="2" ry="2" />
+<text text-anchor="" x="977.12" y="127.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/response.py:489:closed (23,121 samples, 0.12%)</title><rect x="16.9" y="261" width="1.4" height="15.0" fill="rgb(224,0,3)" rx="2" ry="2" />
+<text text-anchor="" x="19.92" y="271.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/usr/lib64/python2.7/httplib.py:888:putrequest (276,063 samples, 1.42%)</title><rect x="705.2" y="117" width="16.8" height="15.0" fill="rgb(226,119,45)" rx="2" ry="2" />
+<text text-anchor="" x="708.20" y="127.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/util/wait.py:29:wait_for_read (629,915 samples, 3.25%)</title><rect x="580.2" y="133" width="38.3" height="15.0" fill="rgb(231,38,44)" rx="2" ry="2" />
+<text text-anchor="" x="583.19" y="143.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  >/ho..</text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/structures.py:82:copy (394,501 samples, 2.03%)</title><rect x="551.9" y="165" width="24.0" height="15.0" fill="rgb(239,72,23)" rx="2" ry="2" />
+<text text-anchor="" x="554.90" y="175.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  >/..</text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/response.py:113:__init__ (402,264 samples, 2.07%)</title><rect x="946.4" y="149" width="24.5" height="15.0" fill="rgb(223,125,23)" rx="2" ry="2" />
+<text text-anchor="" x="949.42" y="159.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  >/..</text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/util/url.py:22:__new__ (73,776 samples, 0.38%)</title><rect x="115.6" y="149" width="4.5" height="15.0" fill="rgb(247,120,16)" rx="2" ry="2" />
+<text text-anchor="" x="118.64" y="159.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/usr/lib64/python2.7/urlparse.py:168:urlsplit (20,317 samples, 0.10%)</title><rect x="990.8" y="149" width="1.2" height="15.0" fill="rgb(211,51,2)" rx="2" ry="2" />
+<text text-anchor="" x="993.77" y="159.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/packages/ordered_dict.py:44:__setitem__ (28,418 samples, 0.15%)</title><rect x="562.1" y="101" width="1.7" height="15.0" fill="rgb(217,35,25)" rx="2" ry="2" />
+<text text-anchor="" x="565.06" y="111.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/usr/lib64/python2.7/httplib.py:1040:request (1,220,584 samples, 6.30%)</title><rect x="647.7" y="149" width="74.3" height="15.0" fill="rgb(216,72,38)" rx="2" ry="2" />
+<text text-anchor="" x="650.72" y="159.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  >/usr/lib..</text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/structures.py:48:__setitem__ (55,181 samples, 0.28%)</title><rect x="560.4" y="117" width="3.4" height="15.0" fill="rgb(207,16,38)" rx="2" ry="2" />
+<text text-anchor="" x="563.43" y="127.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/usr/lib64/python2.7/threading.py:147:acquire (42,630 samples, 0.22%)</title><rect x="387.3" y="133" width="2.6" height="15.0" fill="rgb(244,20,14)" rx="2" ry="2" />
+<text text-anchor="" x="390.27" y="143.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/usr/lib64/python2.7/urlparse.py:168:urlsplit (19,854 samples, 0.10%)</title><rect x="186.1" y="133" width="1.2" height="15.0" fill="rgb(205,227,2)" rx="2" ry="2" />
+<text text-anchor="" x="189.14" y="143.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/util/selectors.py:451:close (81,070 samples, 0.42%)</title><rect x="587.3" y="85" width="5.0" height="15.0" fill="rgb(219,227,41)" rx="2" ry="2" />
+<text text-anchor="" x="590.32" y="95.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/usr/lib64/python2.7/threading.py:187:release (21,053 samples, 0.11%)</title><rect x="212.2" y="117" width="1.3" height="15.0" fill="rgb(220,84,20)" rx="2" ry="2" />
+<text text-anchor="" x="215.23" y="127.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>~:0:&lt;isinstance&gt; (22,298 samples, 0.12%)</title><rect x="124.8" y="165" width="1.3" height="15.0" fill="rgb(240,90,13)" rx="2" ry="2" />
+<text text-anchor="" x="127.77" y="175.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/cookies.py:136:get_cookie_header (464,965 samples, 2.40%)</title><rect x="189.5" y="165" width="28.3" height="15.0" fill="rgb(216,12,32)" rx="2" ry="2" />
+<text text-anchor="" x="192.50" y="175.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  >/..</text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/models.py:568:prepare_hooks (123,845 samples, 0.64%)</title><rect x="217.8" y="181" width="7.5" height="15.0" fill="rgb(232,176,43)" rx="2" ry="2" />
+<text text-anchor="" x="220.80" y="191.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/util/url.py:132:parse_url (158,642 samples, 0.82%)</title><rect x="506.3" y="149" width="9.7" height="15.0" fill="rgb(251,42,10)" rx="2" ry="2" />
+<text text-anchor="" x="509.34" y="159.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/usr/lib64/python2.7/socket.py:216:makefile (63,692 samples, 0.33%)</title><rect x="729.1" y="117" width="3.9" height="15.0" fill="rgb(225,87,43)" rx="2" ry="2" />
+<text text-anchor="" x="732.08" y="127.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/structures.py:48:__setitem__ (94,019 samples, 0.48%)</title><rect x="155.9" y="165" width="5.7" height="15.0" fill="rgb(251,38,32)" rx="2" ry="2" />
+<text text-anchor="" x="158.87" y="175.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/hooks.py:17:default_hooks (44,367 samples, 0.23%)</title><rect x="35.5" y="197" width="2.7" height="15.0" fill="rgb(213,132,17)" rx="2" ry="2" />
+<text text-anchor="" x="38.51" y="207.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/abc.py:128:__instancecheck__ (50,182 samples, 0.26%)</title><rect x="435.4" y="117" width="3.0" height="15.0" fill="rgb(208,184,43)" rx="2" ry="2" />
+<text text-anchor="" x="438.36" y="127.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/response.py:441:from_httplib (1,165,298 samples, 6.01%)</title><rect x="904.4" y="165" width="70.9" height="15.0" fill="rgb(205,138,15)" rx="2" ry="2" />
+<text text-anchor="" x="907.38" y="175.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  >/home/bo..</text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/usr/lib64/python2.7/httplib.py:547:close (36,236 samples, 0.19%)</title><rect x="1050.0" y="101" width="2.2" height="15.0" fill="rgb(219,48,35)" rx="2" ry="2" />
+<text text-anchor="" x="1053.02" y="111.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/_internal_utils.py:30:unicode_is_ascii (35,333 samples, 0.18%)</title><rect x="91.3" y="165" width="2.2" height="15.0" fill="rgb(234,189,36)" rx="2" ry="2" />
+<text text-anchor="" x="94.32" y="175.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/cookies.py:503:cookiejar_from_dict (209,372 samples, 1.08%)</title><rect x="397.8" y="149" width="12.8" height="15.0" fill="rgb(223,213,31)" rx="2" ry="2" />
+<text text-anchor="" x="400.82" y="159.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/sessions.py:401:prepare_request (4,791,434 samples, 24.71%)</title><rect x="38.2" y="213" width="291.6" height="15.0" fill="rgb(232,137,5)" rx="2" ry="2" />
+<text text-anchor="" x="41.21" y="223.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  >/home/bobrov/.virtualenvs/hlupic/lib/py..</text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/usr/lib64/python2.7/threading.py:147:acquire (38,927 samples, 0.20%)</title><rect x="491.4" y="101" width="2.3" height="15.0" fill="rgb(240,212,12)" rx="2" ry="2" />
+<text text-anchor="" x="494.37" y="111.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/util/selectors.py:165:__init__ (22,003 samples, 0.11%)</title><rect x="617.2" y="69" width="1.3" height="15.0" fill="rgb(218,148,21)" rx="2" ry="2" />
+<text text-anchor="" x="620.18" y="79.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/packages/ordered_dict.py:120:values (40,240 samples, 0.21%)</title><rect x="573.5" y="149" width="2.4" height="15.0" fill="rgb(230,187,47)" rx="2" ry="2" />
+<text text-anchor="" x="576.46" y="159.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/usr/lib64/python2.7/socket.py:410:readline (251,625 samples, 1.30%)</title><rect x="882.4" y="69" width="15.4" height="15.0" fill="rgb(253,72,42)" rx="2" ry="2" />
+<text text-anchor="" x="885.45" y="79.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/adapters.py:388:send (10,501,424 samples, 54.16%)</title><rect x="344.4" y="197" width="639.1" height="15.0" fill="rgb(247,198,5)" rx="2" ry="2" />
+<text text-anchor="" x="347.42" y="207.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  >/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/adapters.py:388:send</text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/models.py:741:generate (745,289 samples, 3.84%)</title><rect x="1014.0" y="165" width="45.3" height="15.0" fill="rgb(234,127,37)" rx="2" ry="2" />
+<text text-anchor="" x="1016.98" y="175.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  >/hom..</text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/structures.py:42:__init__ (258,450 samples, 1.33%)</title><rect x="242.2" y="181" width="15.7" height="15.0" fill="rgb(221,64,27)" rx="2" ry="2" />
+<text text-anchor="" x="245.20" y="191.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/models.py:82:_encode_params (155,000 samples, 0.80%)</title><rect x="93.5" y="165" width="9.4" height="15.0" fill="rgb(212,25,4)" rx="2" ry="2" />
+<text text-anchor="" x="96.47" y="175.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/structures.py:48:__setitem__ (42,856 samples, 0.22%)</title><rect x="247.8" y="149" width="2.6" height="15.0" fill="rgb(223,179,3)" rx="2" ry="2" />
+<text text-anchor="" x="250.81" y="159.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/usr/lib64/python2.7/threading.py:114:RLock (29,576 samples, 0.15%)</title><rect x="328.0" y="181" width="1.8" height="15.0" fill="rgb(241,223,22)" rx="2" ry="2" />
+<text text-anchor="" x="331.02" y="191.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/usr/lib64/python2.7/cookielib.py:1651:extract_cookies (323,774 samples, 1.67%)</title><rect x="372.1" y="149" width="19.7" height="15.0" fill="rgb(210,5,21)" rx="2" ry="2" />
+<text text-anchor="" x="375.07" y="159.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/usr/lib64/python2.7/threading.py:132:__init__ (22,067 samples, 0.11%)</title><rect x="328.5" y="165" width="1.3" height="15.0" fill="rgb(238,141,19)" rx="2" ry="2" />
+<text text-anchor="" x="331.48" y="175.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/response.py:250:_init_decoder (67,664 samples, 0.35%)</title><rect x="1026.4" y="117" width="4.1" height="15.0" fill="rgb(240,140,32)" rx="2" ry="2" />
+<text text-anchor="" x="1029.36" y="127.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/usr/lib64/python2.7/rfc822.py:202:isheader (52,145 samples, 0.27%)</title><rect x="879.3" y="69" width="3.1" height="15.0" fill="rgb(209,216,11)" rx="2" ry="2" />
+<text text-anchor="" x="882.27" y="79.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/packages/ordered_dict.py:142:update (45,504 samples, 0.23%)</title><rect x="279.3" y="181" width="2.7" height="15.0" fill="rgb(242,77,14)" rx="2" ry="2" />
+<text text-anchor="" x="282.25" y="191.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/cookies.py:38:__init__ (80,973 samples, 0.42%)</title><rect x="987.1" y="181" width="4.9" height="15.0" fill="rgb(209,123,16)" rx="2" ry="2" />
+<text text-anchor="" x="990.08" y="191.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/structures.py:59:__iter__ (45,117 samples, 0.23%)</title><rect x="268.3" y="149" width="2.7" height="15.0" fill="rgb(207,48,25)" rx="2" ry="2" />
+<text text-anchor="" x="271.29" y="159.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/usr/lib64/python2.7/threading.py:132:__init__ (33,973 samples, 0.18%)</title><rect x="58.1" y="149" width="2.1" height="15.0" fill="rgb(253,162,23)" rx="2" ry="2" />
+<text text-anchor="" x="61.10" y="159.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/adapters.py:201:cert_verify (21,340 samples, 0.11%)</title><rect x="353.1" y="181" width="1.3" height="15.0" fill="rgb(225,125,0)" rx="2" ry="2" />
+<text text-anchor="" x="356.07" y="191.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/models.py:810:content (863,019 samples, 4.45%)</title><rect x="1006.8" y="197" width="52.5" height="15.0" fill="rgb(209,136,25)" rx="2" ry="2" />
+<text text-anchor="" x="1009.81" y="207.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  >/home..</text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/_abcoll.py:412:items (111,201 samples, 0.57%)</title><rect x="264.3" y="165" width="6.7" height="15.0" fill="rgb(211,188,30)" rx="2" ry="2" />
+<text text-anchor="" x="267.27" y="175.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/packages/ordered_dict.py:28:__init__ (130,366 samples, 0.67%)</title><rect x="282.0" y="181" width="8.0" height="15.0" fill="rgb(214,137,22)" rx="2" ry="2" />
+<text text-anchor="" x="285.02" y="191.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/packages/ordered_dict.py:142:update (56,174 samples, 0.29%)</title><rect x="286.5" y="165" width="3.5" height="15.0" fill="rgb(207,65,4)" rx="2" ry="2" />
+<text text-anchor="" x="289.54" y="175.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/packages/ordered_dict.py:28:__init__ (33,034 samples, 0.17%)</title><rect x="1092.0" y="181" width="2.0" height="15.0" fill="rgb(212,173,33)" rx="2" ry="2" />
+<text text-anchor="" x="1094.97" y="191.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/models.py:548:prepare_cookies (500,366 samples, 2.58%)</title><rect x="187.3" y="181" width="30.5" height="15.0" fill="rgb(243,103,37)" rx="2" ry="2" />
+<text text-anchor="" x="190.35" y="191.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  >/h..</text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/usr/lib64/python2.7/cookielib.py:1191:vals_sorted_by_key (27,875 samples, 0.14%)</title><rect x="52.4" y="165" width="1.7" height="15.0" fill="rgb(226,209,0)" rx="2" ry="2" />
+<text text-anchor="" x="55.45" y="175.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/sessions.py:98:get_redirect_target (85,243 samples, 0.44%)</title><rect x="1060.1" y="181" width="5.2" height="15.0" fill="rgb(239,51,32)" rx="2" ry="2" />
+<text text-anchor="" x="1063.09" y="191.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>~:0:&lt;method 'recv' of '_socket.socket' objects&gt; (96,420 samples, 0.50%)</title><rect x="891.9" y="53" width="5.9" height="15.0" fill="rgb(226,36,5)" rx="2" ry="2" />
+<text text-anchor="" x="894.89" y="63.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/posixpath.py:251:expanduser (143,648 samples, 0.74%)</title><rect x="317.1" y="181" width="8.8" height="15.0" fill="rgb(207,151,18)" rx="2" ry="2" />
+<text text-anchor="" x="320.13" y="191.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/util/timeout.py:93:__init__ (32,353 samples, 0.17%)</title><rect x="981.6" y="181" width="1.9" height="15.0" fill="rgb(252,157,8)" rx="2" ry="2" />
+<text text-anchor="" x="984.57" y="191.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/usr/lib64/python2.7/cgi.py:291:_parseparam (36,939 samples, 0.19%)</title><rect x="451.3" y="133" width="2.3" height="15.0" fill="rgb(232,11,17)" rx="2" ry="2" />
+<text text-anchor="" x="454.32" y="143.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/cookies.py:349:update (94,800 samples, 0.49%)</title><rect x="62.5" y="181" width="5.8" height="15.0" fill="rgb(253,4,19)" rx="2" ry="2" />
+<text text-anchor="" x="65.52" y="191.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/_abcoll.py:379:get (195,699 samples, 1.01%)</title><rect x="479.5" y="101" width="11.9" height="15.0" fill="rgb(217,45,2)" rx="2" ry="2" />
+<text text-anchor="" x="482.46" y="111.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/utils.py:524:requote_uri (86,887 samples, 0.45%)</title><rect x="102.9" y="165" width="5.3" height="15.0" fill="rgb(231,29,13)" rx="2" ry="2" />
+<text text-anchor="" x="105.91" y="175.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/usr/lib64/python2.7/contextlib.py:21:__exit__ (228,447 samples, 1.18%)</title><rect x="1030.5" y="117" width="13.9" height="15.0" fill="rgb(253,187,30)" rx="2" ry="2" />
+<text text-anchor="" x="1033.48" y="127.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/packages/ordered_dict.py:28:__init__ (21,397 samples, 0.11%)</title><rect x="1085.3" y="165" width="1.3" height="15.0" fill="rgb(217,161,31)" rx="2" ry="2" />
+<text text-anchor="" x="1088.27" y="175.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/utils.py:244:to_key_val_list (88,803 samples, 0.46%)</title><rect x="1086.6" y="181" width="5.4" height="15.0" fill="rgb(207,225,39)" rx="2" ry="2" />
+<text text-anchor="" x="1089.57" y="191.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/usr/lib64/python2.7/threading.py:187:release (21,863 samples, 0.11%)</title><rect x="494.0" y="85" width="1.4" height="15.0" fill="rgb(235,184,10)" rx="2" ry="2" />
+<text text-anchor="" x="497.02" y="95.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>~:0:&lt;method 'items' of 'dict' objects&gt; (43,318 samples, 0.22%)</title><rect x="1179.6" y="149" width="2.6" height="15.0" fill="rgb(209,28,48)" rx="2" ry="2" />
+<text text-anchor="" x="1182.59" y="159.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/connectionpool.py:253:_put_conn (126,942 samples, 0.65%)</title><rect x="1036.7" y="69" width="7.7" height="15.0" fill="rgb(241,102,49)" rx="2" ry="2" />
+<text text-anchor="" x="1039.65" y="79.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/models.py:299:prepare (2,492,752 samples, 12.86%)</title><rect x="73.6" y="197" width="151.7" height="15.0" fill="rgb(238,67,5)" rx="2" ry="2" />
+<text text-anchor="" x="76.63" y="207.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  >/home/bobrov/.virtu..</text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>bench2.py:9:iter (19,252,018 samples, 99.29%)</title><rect x="18.3" y="261" width="1171.7" height="15.0" fill="rgb(246,46,9)" rx="2" ry="2" />
+<text text-anchor="" x="21.32" y="271.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  >bench2.py:9:iter</text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/usr/lib64/python2.7/httplib.py:1005:putheader (172,734 samples, 0.89%)</title><rect x="672.4" y="117" width="10.6" height="15.0" fill="rgb(227,150,32)" rx="2" ry="2" />
+<text text-anchor="" x="675.45" y="127.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>~:0:&lt;isinstance&gt; (63,287 samples, 0.33%)</title><rect x="434.6" y="133" width="3.8" height="15.0" fill="rgb(231,133,24)" rx="2" ry="2" />
+<text text-anchor="" x="437.56" y="143.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/sessions.py:441:request (19,173,796 samples, 98.89%)</title><rect x="23.1" y="229" width="1166.9" height="15.0" fill="rgb(235,189,34)" rx="2" ry="2" />
+<text text-anchor="" x="26.08" y="239.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  >/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/sessions.py:441:request</text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>~:0:&lt;method 'extend' of 'list' objects&gt; (23,860 samples, 0.12%)</title><rect x="223.9" y="149" width="1.4" height="15.0" fill="rgb(232,7,30)" rx="2" ry="2" />
+<text text-anchor="" x="226.89" y="159.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>~:0:&lt;isinstance&gt; (34,204 samples, 0.18%)</title><rect x="1089.9" y="165" width="2.1" height="15.0" fill="rgb(216,111,36)" rx="2" ry="2" />
+<text text-anchor="" x="1092.89" y="175.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/utils.py:160:get_netrc_auth (472,502 samples, 2.44%)</title><rect x="297.1" y="197" width="28.8" height="15.0" fill="rgb(213,131,27)" rx="2" ry="2" />
+<text text-anchor="" x="300.12" y="207.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  >/h..</text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/models.py:702:is_redirect (71,320 samples, 0.37%)</title><rect x="1060.9" y="165" width="4.4" height="15.0" fill="rgb(225,113,54)" rx="2" ry="2" />
+<text text-anchor="" x="1063.94" y="175.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/usr/lib64/python2.7/collections.py:50:__init__ (138,765 samples, 0.72%)</title><rect x="935.4" y="117" width="8.5" height="15.0" fill="rgb(244,224,14)" rx="2" ry="2" />
+<text text-anchor="" x="938.43" y="127.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/utils.py:244:to_key_val_list (350,451 samples, 1.81%)</title><rect x="257.9" y="181" width="21.4" height="15.0" fill="rgb(228,23,42)" rx="2" ry="2" />
+<text text-anchor="" x="260.93" y="191.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  >/..</text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/poolmanager.py:57:_default_key_normalizer (180,516 samples, 0.93%)</title><rect x="495.4" y="117" width="10.9" height="15.0" fill="rgb(253,52,26)" rx="2" ry="2" />
+<text text-anchor="" x="498.35" y="127.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/usr/lib64/python2.7/httplib.py:364:__init__ (97,802 samples, 0.50%)</title><rect x="727.0" y="133" width="6.0" height="15.0" fill="rgb(226,75,31)" rx="2" ry="2" />
+<text text-anchor="" x="730.00" y="143.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/_weakrefset.py:70:__contains__ (28,322 samples, 0.15%)</title><rect x="295.4" y="149" width="1.7" height="15.0" fill="rgb(219,125,16)" rx="2" ry="2" />
+<text text-anchor="" x="298.39" y="159.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/usr/lib64/python2.7/cookielib.py:1191:vals_sorted_by_key (32,233 samples, 0.17%)</title><rect x="401.6" y="117" width="2.0" height="15.0" fill="rgb(220,30,12)" rx="2" ry="2" />
+<text text-anchor="" x="404.63" y="127.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/connectionpool.py:293:_get_timeout (55,915 samples, 0.29%)</title><rect x="641.5" y="149" width="3.4" height="15.0" fill="rgb(236,60,47)" rx="2" ry="2" />
+<text text-anchor="" x="644.49" y="159.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>~:0:&lt;method 'encode' of 'unicode' objects&gt; (20,678 samples, 0.11%)</title><rect x="128.8" y="165" width="1.3" height="15.0" fill="rgb(216,108,29)" rx="2" ry="2" />
+<text text-anchor="" x="131.80" y="175.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/_abcoll.py:412:items (128,943 samples, 0.67%)</title><rect x="136.8" y="165" width="7.8" height="15.0" fill="rgb(235,130,10)" rx="2" ry="2" />
+<text text-anchor="" x="139.77" y="175.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/_abcoll.py:548:update (241,411 samples, 1.25%)</title><rect x="423.7" y="149" width="14.7" height="15.0" fill="rgb(219,218,22)" rx="2" ry="2" />
+<text text-anchor="" x="426.72" y="159.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/usr/lib64/python2.7/cookielib.py:1196:deepvalues (46,281 samples, 0.24%)</title><rect x="400.8" y="133" width="2.8" height="15.0" fill="rgb(239,198,25)" rx="2" ry="2" />
+<text text-anchor="" x="403.77" y="143.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/packages/ordered_dict.py:28:__init__ (84,442 samples, 0.44%)</title><rect x="252.8" y="165" width="5.1" height="15.0" fill="rgb(224,193,11)" rx="2" ry="2" />
+<text text-anchor="" x="255.79" y="175.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/usr/lib64/python2.7/rfc822.py:233:getallmatchingheaders (98,798 samples, 0.51%)</title><rect x="381.3" y="101" width="6.0" height="15.0" fill="rgb(252,166,38)" rx="2" ry="2" />
+<text text-anchor="" x="384.26" y="111.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/packages/ordered_dict.py:28:__init__ (47,624 samples, 0.25%)</title><rect x="153.0" y="149" width="2.9" height="15.0" fill="rgb(251,27,5)" rx="2" ry="2" />
+<text text-anchor="" x="155.97" y="159.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/utils.py:686:get_environ_proxies (1,547,852 samples, 7.98%)</title><rect x="1095.8" y="197" width="94.2" height="15.0" fill="rgb(226,53,29)" rx="2" ry="2" />
+<text text-anchor="" x="1098.80" y="207.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  >/home/bobro..</text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/usr/lib64/python2.7/Queue.py:107:put (105,664 samples, 0.54%)</title><rect x="1037.9" y="53" width="6.5" height="15.0" fill="rgb(248,157,32)" rx="2" ry="2" />
+<text text-anchor="" x="1040.95" y="63.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/models.py:724:iter_content (31,213 samples, 0.16%)</title><rect x="1010.3" y="181" width="1.9" height="15.0" fill="rgb(208,94,9)" rx="2" ry="2" />
+<text text-anchor="" x="1013.35" y="191.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/sessions.py:50:merge_setting (1,179,414 samples, 6.08%)</title><rect x="225.3" y="197" width="71.8" height="15.0" fill="rgb(237,201,45)" rx="2" ry="2" />
+<text text-anchor="" x="228.34" y="207.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  >/home/bo..</text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/util/selectors.py:250:close (21,336 samples, 0.11%)</title><rect x="588.7" y="69" width="1.3" height="15.0" fill="rgb(246,82,6)" rx="2" ry="2" />
+<text text-anchor="" x="591.69" y="79.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>~:0:&lt;getattr&gt; (22,758 samples, 0.12%)</title><rect x="646.3" y="133" width="1.4" height="15.0" fill="rgb(251,103,31)" rx="2" ry="2" />
+<text text-anchor="" x="649.33" y="143.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/structures.py:59:__iter__ (49,979 samples, 0.26%)</title><rect x="141.6" y="149" width="3.0" height="15.0" fill="rgb(254,15,41)" rx="2" ry="2" />
+<text text-anchor="" x="144.58" y="159.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/structures.py:53:__getitem__ (23,140 samples, 0.12%)</title><rect x="235.6" y="165" width="1.4" height="15.0" fill="rgb(239,103,44)" rx="2" ry="2" />
+<text text-anchor="" x="238.62" y="175.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/encodings/utf_8.py:15:decode (31,309 samples, 0.16%)</title><rect x="454.9" y="149" width="1.9" height="15.0" fill="rgb(211,180,36)" rx="2" ry="2" />
+<text text-anchor="" x="457.87" y="159.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/response.py:202:_init_length (110,513 samples, 0.57%)</title><rect x="964.2" y="133" width="6.7" height="15.0" fill="rgb(249,23,8)" rx="2" ry="2" />
+<text text-anchor="" x="967.18" y="143.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/util/response.py:7:is_fp_closed (25,068 samples, 0.13%)</title><rect x="1057.8" y="133" width="1.5" height="15.0" fill="rgb(215,136,20)" rx="2" ry="2" />
+<text text-anchor="" x="1060.81" y="143.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/packages/ordered_dict.py:142:update (24,126 samples, 0.12%)</title><rect x="420.4" y="117" width="1.5" height="15.0" fill="rgb(223,141,1)" rx="2" ry="2" />
+<text text-anchor="" x="423.45" y="127.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/utils.py:500:unquote_unreserved (34,907 samples, 0.18%)</title><rect x="104.2" y="149" width="2.1" height="15.0" fill="rgb(211,142,41)" rx="2" ry="2" />
+<text text-anchor="" x="107.18" y="159.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/util/selectors.py:281:__exit__ (90,934 samples, 0.47%)</title><rect x="586.7" y="101" width="5.6" height="15.0" fill="rgb(208,140,51)" rx="2" ry="2" />
+<text text-anchor="" x="589.72" y="111.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/usr/lib64/python2.7/cookielib.py:1571:make_cookies (160,021 samples, 0.83%)</title><rect x="377.5" y="133" width="9.8" height="15.0" fill="rgb(227,12,44)" rx="2" ry="2" />
+<text text-anchor="" x="380.53" y="143.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/usr/lib64/python2.7/urllib.py:1408:proxy_bypass_environment (684,930 samples, 3.53%)</title><rect x="1109.9" y="165" width="41.6" height="15.0" fill="rgb(233,110,51)" rx="2" ry="2" />
+<text text-anchor="" x="1112.87" y="175.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  >/us..</text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/usr/lib64/python2.7/httplib.py:1005:putheader (89,219 samples, 0.46%)</title><rect x="714.9" y="101" width="5.4" height="15.0" fill="rgb(222,15,40)" rx="2" ry="2" />
+<text text-anchor="" x="717.90" y="111.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/adapters.py:323:request_url (258,797 samples, 1.33%)</title><rect x="520.3" y="181" width="15.8" height="15.0" fill="rgb(242,185,9)" rx="2" ry="2" />
+<text text-anchor="" x="523.31" y="191.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/usr/lib64/python2.7/mimetools.py:24:__init__ (870,283 samples, 4.49%)</title><rect x="846.0" y="117" width="53.0" height="15.0" fill="rgb(238,151,0)" rx="2" ry="2" />
+<text text-anchor="" x="848.99" y="127.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  >/usr/..</text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/usr/lib64/python2.7/urllib.py:1221:unquote (34,056 samples, 0.18%)</title><rect x="181.9" y="149" width="2.1" height="15.0" fill="rgb(215,104,0)" rx="2" ry="2" />
+<text text-anchor="" x="184.94" y="159.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/_abcoll.py:548:update (46,481 samples, 0.24%)</title><rect x="549.1" y="165" width="2.8" height="15.0" fill="rgb(220,25,49)" rx="2" ry="2" />
+<text text-anchor="" x="552.07" y="175.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/usr/lib64/python2.7/threading.py:132:__init__ (39,283 samples, 0.20%)</title><rect x="408.2" y="101" width="2.4" height="15.0" fill="rgb(253,99,44)" rx="2" ry="2" />
+<text text-anchor="" x="411.17" y="111.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/usr/lib64/python2.7/httplib.py:1025:endheaders (365,453 samples, 1.88%)</title><rect x="683.0" y="117" width="22.2" height="15.0" fill="rgb(219,137,54)" rx="2" ry="2" />
+<text text-anchor="" x="685.96" y="127.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  >/..</text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/adapters.py:290:get_connection (1,043,871 samples, 5.38%)</title><rect x="456.8" y="181" width="63.5" height="15.0" fill="rgb(237,7,16)" rx="2" ry="2" />
+<text text-anchor="" x="459.78" y="191.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  >/home/..</text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>~:0:&lt;isinstance&gt; (25,157 samples, 0.13%)</title><rect x="417.1" y="117" width="1.5" height="15.0" fill="rgb(254,28,53)" rx="2" ry="2" />
+<text text-anchor="" x="420.06" y="127.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/_abcoll.py:386:__contains__ (45,262 samples, 0.23%)</title><rect x="1062.5" y="149" width="2.8" height="15.0" fill="rgb(205,59,48)" rx="2" ry="2" />
+<text text-anchor="" x="1065.52" y="159.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>~:0:&lt;method 'decode' of 'str' objects&gt; (43,889 samples, 0.23%)</title><rect x="126.1" y="165" width="2.7" height="15.0" fill="rgb(247,127,39)" rx="2" ry="2" />
+<text text-anchor="" x="129.13" y="175.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/utils.py:698:select_proxy (149,585 samples, 0.77%)</title><rect x="524.9" y="165" width="9.1" height="15.0" fill="rgb(226,63,0)" rx="2" ry="2" />
+<text text-anchor="" x="527.88" y="175.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/util/selectors.py:565:DefaultSelector (106,780 samples, 0.55%)</title><rect x="612.0" y="101" width="6.5" height="15.0" fill="rgb(222,172,20)" rx="2" ry="2" />
+<text text-anchor="" x="615.03" y="111.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>~:0:&lt;method 'recv' of '_socket.socket' objects&gt; (1,281,597 samples, 6.61%)</title><rect x="760.9" y="85" width="78.0" height="15.0" fill="rgb(209,10,38)" rx="2" ry="2" />
+<text text-anchor="" x="763.88" y="95.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  >~:0:&lt;meth..</text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/utils.py:244:to_key_val_list (68,523 samples, 0.35%)</title><rect x="96.7" y="149" width="4.1" height="15.0" fill="rgb(216,156,48)" rx="2" ry="2" />
+<text text-anchor="" x="99.68" y="159.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/sessions.py:512:get (19,222,214 samples, 99.14%)</title><rect x="20.1" y="245" width="1169.9" height="15.0" fill="rgb(223,109,45)" rx="2" ry="2" />
+<text text-anchor="" x="23.14" y="255.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  >/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/sessions.py:512:get</text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/models.py:331:prepare_method (28,861 samples, 0.15%)</title><rect x="77.3" y="181" width="1.7" height="15.0" fill="rgb(220,92,36)" rx="2" ry="2" />
+<text text-anchor="" x="80.28" y="191.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/usr/lib64/python2.7/contextlib.py:82:helper (22,055 samples, 0.11%)</title><rect x="1108.5" y="165" width="1.4" height="15.0" fill="rgb(248,112,10)" rx="2" ry="2" />
+<text text-anchor="" x="1111.52" y="175.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/poolmanager.py:266:connection_from_url (758,023 samples, 3.91%)</title><rect x="469.9" y="165" width="46.1" height="15.0" fill="rgb(224,65,2)" rx="2" ry="2" />
+<text text-anchor="" x="472.86" y="175.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  >/hom..</text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/usr/lib64/python2.7/collections.py:149:pop (51,061 samples, 0.26%)</title><rect x="487.0" y="69" width="3.1" height="15.0" fill="rgb(242,6,6)" rx="2" ry="2" />
+<text text-anchor="" x="490.04" y="79.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/usr/lib64/python2.7/urllib.py:1308:urlencode (33,824 samples, 0.17%)</title><rect x="100.8" y="149" width="2.1" height="15.0" fill="rgb(251,38,50)" rx="2" ry="2" />
+<text text-anchor="" x="103.85" y="159.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/models.py:347:prepare_url (838,332 samples, 4.32%)</title><rect x="79.0" y="181" width="51.1" height="15.0" fill="rgb(208,180,51)" rx="2" ry="2" />
+<text text-anchor="" x="82.04" y="191.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  >/home..</text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/usr/lib64/python2.7/socket.py:250:__init__ (41,564 samples, 0.21%)</title><rect x="730.4" y="101" width="2.6" height="15.0" fill="rgb(251,132,49)" rx="2" ry="2" />
+<text text-anchor="" x="733.43" y="111.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/util/url.py:99:split_first (47,443 samples, 0.24%)</title><rect x="120.1" y="149" width="2.9" height="15.0" fill="rgb(240,135,53)" rx="2" ry="2" />
+<text text-anchor="" x="123.13" y="159.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/usr/lib64/python2.7/mimetools.py:33:parsetype (75,945 samples, 0.39%)</title><rect x="850.2" y="101" width="4.6" height="15.0" fill="rgb(218,12,39)" rx="2" ry="2" />
+<text text-anchor="" x="853.21" y="111.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/usr/lib64/python2.7/socket.py:280:close (22,771 samples, 0.12%)</title><rect x="1050.8" y="85" width="1.4" height="15.0" fill="rgb(227,139,53)" rx="2" ry="2" />
+<text text-anchor="" x="1053.84" y="95.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/abc.py:128:__instancecheck__ (47,446 samples, 0.24%)</title><rect x="932.5" y="85" width="2.9" height="15.0" fill="rgb(247,115,31)" rx="2" ry="2" />
+<text text-anchor="" x="935.54" y="95.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/usr/lib64/python2.7/rfc822.py:233:getallmatchingheaders (74,240 samples, 0.38%)</title><rect x="998.9" y="133" width="4.5" height="15.0" fill="rgb(232,68,24)" rx="2" ry="2" />
+<text text-anchor="" x="1001.91" y="143.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/util/url.py:99:split_first (30,809 samples, 0.16%)</title><rect x="514.1" y="133" width="1.9" height="15.0" fill="rgb(244,183,22)" rx="2" ry="2" />
+<text text-anchor="" x="517.12" y="143.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/util/timeout.py:93:__init__ (24,273 samples, 0.13%)</title><rect x="627.6" y="133" width="1.5" height="15.0" fill="rgb(238,74,19)" rx="2" ry="2" />
+<text text-anchor="" x="630.58" y="143.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/usr/lib64/python2.7/urlparse.py:137:urlparse (54,744 samples, 0.28%)</title><rect x="462.3" y="149" width="3.4" height="15.0" fill="rgb(229,29,48)" rx="2" ry="2" />
+<text text-anchor="" x="465.34" y="159.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/utils.py:629:should_bypass_proxies (949,207 samples, 4.90%)</title><rect x="1096.8" y="181" width="57.8" height="15.0" fill="rgb(221,15,36)" rx="2" ry="2" />
+<text text-anchor="" x="1099.80" y="191.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  >/home/..</text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/usr/lib64/python2.7/urlparse.py:223:urlunparse (26,466 samples, 0.14%)</title><rect x="516.5" y="149" width="1.6" height="15.0" fill="rgb(228,113,21)" rx="2" ry="2" />
+<text text-anchor="" x="519.45" y="159.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/connectionpool.py:293:_get_timeout (61,589 samples, 0.32%)</title><rect x="625.3" y="165" width="3.8" height="15.0" fill="rgb(215,14,0)" rx="2" ry="2" />
+<text text-anchor="" x="628.31" y="175.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/usr/lib64/python2.7/cookielib.py:1196:deepvalues (40,024 samples, 0.21%)</title><rect x="51.7" y="181" width="2.4" height="15.0" fill="rgb(235,64,43)" rx="2" ry="2" />
+<text text-anchor="" x="54.71" y="191.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/models.py:588:__init__ (495,223 samples, 2.55%)</title><rect x="391.8" y="165" width="30.1" height="15.0" fill="rgb(241,23,3)" rx="2" ry="2" />
+<text text-anchor="" x="394.77" y="175.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  >/h..</text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/_weakrefset.py:70:__contains__ (23,792 samples, 0.12%)</title><rect x="277.8" y="133" width="1.5" height="15.0" fill="rgb(208,136,46)" rx="2" ry="2" />
+<text text-anchor="" x="280.81" y="143.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/models.py:61:path_url (39,187 samples, 0.20%)</title><rect x="522.5" y="165" width="2.4" height="15.0" fill="rgb(205,105,37)" rx="2" ry="2" />
+<text text-anchor="" x="525.50" y="175.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>~:0:&lt;isinstance&gt; (134,981 samples, 0.70%)</title><rect x="271.0" y="165" width="8.3" height="15.0" fill="rgb(230,127,28)" rx="2" ry="2" />
+<text text-anchor="" x="274.04" y="175.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/sessions.py:662:merge_environment_settings (1,975,243 samples, 10.19%)</title><rect x="1069.8" y="213" width="120.2" height="15.0" fill="rgb(243,226,27)" rx="2" ry="2" />
+<text text-anchor="" x="1072.79" y="223.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  >/home/bobrov/...</text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/sessions.py:119:resolve_redirects (97,612 samples, 0.50%)</title><rect x="1059.3" y="197" width="6.0" height="15.0" fill="rgb(232,211,10)" rx="2" ry="2" />
+<text text-anchor="" x="1062.34" y="207.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/_abcoll.py:379:get (30,523 samples, 0.16%)</title><rect x="969.0" y="117" width="1.9" height="15.0" fill="rgb(242,136,48)" rx="2" ry="2" />
+<text text-anchor="" x="972.05" y="127.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/usr/lib64/python2.7/cookielib.py:1191:vals_sorted_by_key (27,258 samples, 0.14%)</title><rect x="209.2" y="101" width="1.6" height="15.0" fill="rgb(226,69,48)" rx="2" ry="2" />
+<text text-anchor="" x="212.18" y="111.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/_abcoll.py:412:items (28,178 samples, 0.15%)</title><rect x="1088.2" y="165" width="1.7" height="15.0" fill="rgb(227,164,30)" rx="2" ry="2" />
+<text text-anchor="" x="1091.18" y="175.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/usr/lib64/python2.7/Queue.py:150:get (111,461 samples, 0.57%)</title><rect x="618.5" y="149" width="6.8" height="15.0" fill="rgb(217,84,12)" rx="2" ry="2" />
+<text text-anchor="" x="621.52" y="159.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/abc.py:128:__instancecheck__ (39,747 samples, 0.21%)</title><rect x="564.4" y="101" width="2.4" height="15.0" fill="rgb(215,59,18)" rx="2" ry="2" />
+<text text-anchor="" x="567.42" y="111.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>~:0:&lt;isinstance&gt; (50,127 samples, 0.26%)</title><rect x="563.8" y="117" width="3.0" height="15.0" fill="rgb(247,129,48)" rx="2" ry="2" />
+<text text-anchor="" x="566.79" y="127.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/_abcoll.py:548:update (83,754 samples, 0.43%)</title><rect x="147.9" y="149" width="5.1" height="15.0" fill="rgb(251,98,18)" rx="2" ry="2" />
+<text text-anchor="" x="150.87" y="159.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/usr/lib64/python2.7/cookielib.py:1233:__init__ (64,861 samples, 0.33%)</title><rect x="325.9" y="197" width="3.9" height="15.0" fill="rgb(232,104,2)" rx="2" ry="2" />
+<text text-anchor="" x="328.87" y="207.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/structures.py:42:__init__ (162,949 samples, 0.84%)</title><rect x="145.9" y="165" width="10.0" height="15.0" fill="rgb(242,35,51)" rx="2" ry="2" />
+<text text-anchor="" x="148.95" y="175.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/usr/lib64/python2.7/collections.py:71:__setitem__ (42,012 samples, 0.22%)</title><rect x="929.4" y="69" width="2.6" height="15.0" fill="rgb(246,174,30)" rx="2" ry="2" />
+<text text-anchor="" x="932.40" y="79.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/structures.py:42:__init__ (408,326 samples, 2.11%)</title><rect x="421.9" y="165" width="24.9" height="15.0" fill="rgb(221,213,11)" rx="2" ry="2" />
+<text text-anchor="" x="424.91" y="175.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  >/..</text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/usr/lib64/python2.7/httplib.py:564:read (197,419 samples, 1.02%)</title><rect x="1045.8" y="117" width="12.0" height="15.0" fill="rgb(217,190,32)" rx="2" ry="2" />
+<text text-anchor="" x="1048.80" y="127.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/usr/lib64/python2.7/urlparse.py:133:geturl (34,019 samples, 0.18%)</title><rect x="516.0" y="165" width="2.1" height="15.0" fill="rgb(209,57,39)" rx="2" ry="2" />
+<text text-anchor="" x="518.99" y="175.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/util/retry.py:294:is_retry (32,966 samples, 0.17%)</title><rect x="979.6" y="165" width="2.0" height="15.0" fill="rgb(215,144,26)" rx="2" ry="2" />
+<text text-anchor="" x="982.56" y="175.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/structures.py:59:__iter__ (53,714 samples, 0.28%)</title><rect x="669.2" y="117" width="3.2" height="15.0" fill="rgb(247,12,17)" rx="2" ry="2" />
+<text text-anchor="" x="672.18" y="127.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/response.py:346:read (646,083 samples, 3.33%)</title><rect x="1018.5" y="133" width="39.3" height="15.0" fill="rgb(227,88,32)" rx="2" ry="2" />
+<text text-anchor="" x="1021.49" y="143.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  >/ho..</text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/usr/lib64/python2.7/socket.py:227:meth (218,815 samples, 1.13%)</title><rect x="691.9" y="69" width="13.3" height="15.0" fill="rgb(232,78,35)" rx="2" ry="2" />
+<text text-anchor="" x="694.88" y="79.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/packages/ordered_dict.py:44:__setitem__ (22,071 samples, 0.11%)</title><rect x="249.1" y="133" width="1.3" height="15.0" fill="rgb(207,119,1)" rx="2" ry="2" />
+<text text-anchor="" x="252.07" y="143.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/usr/lib64/python2.7/cookielib.py:1269:_cookie_attrs (34,252 samples, 0.18%)</title><rect x="204.1" y="133" width="2.1" height="15.0" fill="rgb(206,131,40)" rx="2" ry="2" />
+<text text-anchor="" x="207.11" y="143.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/UserDict.py:57:items (52,439 samples, 0.27%)</title><rect x="1179.0" y="165" width="3.2" height="15.0" fill="rgb(218,29,17)" rx="2" ry="2" />
+<text text-anchor="" x="1182.03" y="175.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/usr/lib64/python2.7/urlparse.py:137:urlparse (49,648 samples, 0.26%)</title><rect x="1151.5" y="165" width="3.1" height="15.0" fill="rgb(220,148,21)" rx="2" ry="2" />
+<text text-anchor="" x="1154.55" y="175.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>~:0:&lt;method 'items' of 'dict' objects&gt; (52,294 samples, 0.27%)</title><rect x="1139.0" y="117" width="3.2" height="15.0" fill="rgb(247,210,8)" rx="2" ry="2" />
+<text text-anchor="" x="1141.98" y="127.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/usr/lib64/python2.7/urllib.py:1262:quote (31,088 samples, 0.16%)</title><rect x="106.3" y="149" width="1.9" height="15.0" fill="rgb(213,25,34)" rx="2" ry="2" />
+<text text-anchor="" x="109.30" y="159.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/usr/lib64/python2.7/cgi.py:303:parse_header (61,451 samples, 0.32%)</title><rect x="449.8" y="149" width="3.8" height="15.0" fill="rgb(218,147,0)" rx="2" ry="2" />
+<text text-anchor="" x="452.83" y="159.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>~:0:&lt;posix.stat&gt; (104,936 samples, 0.54%)</title><rect x="310.7" y="165" width="6.4" height="15.0" fill="rgb(214,93,16)" rx="2" ry="2" />
+<text text-anchor="" x="313.74" y="175.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/usr/lib64/python2.7/httplib.py:431:begin (2,727,608 samples, 14.07%)</title><rect x="733.0" y="133" width="166.0" height="15.0" fill="rgb(220,76,52)" rx="2" ry="2" />
+<text text-anchor="" x="735.96" y="143.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  >/usr/lib64/python2.7/..</text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/usr/lib64/python2.7/urlparse.py:223:urlunparse (28,871 samples, 0.15%)</title><rect x="123.0" y="165" width="1.8" height="15.0" fill="rgb(239,154,9)" rx="2" ry="2" />
+<text text-anchor="" x="126.02" y="175.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/genericpath.py:23:exists (166,472 samples, 0.86%)</title><rect x="307.0" y="181" width="10.1" height="15.0" fill="rgb(237,158,53)" rx="2" ry="2" />
+<text text-anchor="" x="310.00" y="191.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/usr/lib64/python2.7/logging/__init__.py:1346:getEffectiveLevel (27,906 samples, 0.14%)</title><rect x="900.6" y="117" width="1.7" height="15.0" fill="rgb(214,42,0)" rx="2" ry="2" />
+<text text-anchor="" x="903.64" y="127.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/_abcoll.py:412:items (20,689 samples, 0.11%)</title><rect x="98.1" y="133" width="1.2" height="15.0" fill="rgb(253,120,38)" rx="2" ry="2" />
+<text text-anchor="" x="101.06" y="143.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/usr/lib64/python2.7/rfc822.py:88:__init__ (700,822 samples, 3.61%)</title><rect x="856.3" y="101" width="42.7" height="15.0" fill="rgb(206,187,41)" rx="2" ry="2" />
+<text text-anchor="" x="859.31" y="111.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  >/usr..</text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/_collections.py:208:add (127,556 samples, 0.66%)</title><rect x="924.2" y="101" width="7.8" height="15.0" fill="rgb(205,60,2)" rx="2" ry="2" />
+<text text-anchor="" x="927.19" y="111.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/_abcoll.py:548:update (37,631 samples, 0.19%)</title><rect x="1083.0" y="165" width="2.3" height="15.0" fill="rgb(218,126,27)" rx="2" ry="2" />
+<text text-anchor="" x="1085.98" y="175.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/encodings/utf_8.py:15:decode (26,697 samples, 0.14%)</title><rect x="127.2" y="149" width="1.6" height="15.0" fill="rgb(231,75,43)" rx="2" ry="2" />
+<text text-anchor="" x="130.18" y="159.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/UserDict.py:57:items (63,306 samples, 0.33%)</title><rect x="1138.3" y="133" width="3.9" height="15.0" fill="rgb(233,35,36)" rx="2" ry="2" />
+<text text-anchor="" x="1141.31" y="143.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>~:0:&lt;isinstance&gt; (29,810 samples, 0.15%)</title><rect x="1094.0" y="181" width="1.8" height="15.0" fill="rgb(215,68,24)" rx="2" ry="2" />
+<text text-anchor="" x="1096.98" y="191.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/usr/lib64/python2.7/urllib.py:1372:getproxies_environment (650,200 samples, 3.35%)</title><rect x="1112.0" y="149" width="39.5" height="15.0" fill="rgb(235,193,46)" rx="2" ry="2" />
+<text text-anchor="" x="1114.98" y="159.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  >/us..</text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/usr/lib64/python2.7/httplib.py:840:send (267,743 samples, 1.38%)</title><rect x="688.9" y="85" width="16.3" height="15.0" fill="rgb(251,122,15)" rx="2" ry="2" />
+<text text-anchor="" x="691.90" y="95.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/usr/lib64/python2.7/contextlib.py:21:__exit__ (27,107 samples, 0.14%)</title><rect x="1106.9" y="165" width="1.6" height="15.0" fill="rgb(237,213,28)" rx="2" ry="2" />
+<text text-anchor="" x="1109.87" y="175.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/packages/ordered_dict.py:142:update (21,057 samples, 0.11%)</title><rect x="154.6" y="133" width="1.3" height="15.0" fill="rgb(228,184,29)" rx="2" ry="2" />
+<text text-anchor="" x="157.58" y="143.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/utils.py:635:&lt;lambda&gt; (61,661 samples, 0.32%)</title><rect x="1103.1" y="165" width="3.8" height="15.0" fill="rgb(207,110,28)" rx="2" ry="2" />
+<text text-anchor="" x="1106.12" y="175.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/usr/lib64/python2.7/urlparse.py:168:urlsplit (19,705 samples, 0.10%)</title><rect x="464.5" y="133" width="1.2" height="15.0" fill="rgb(227,95,39)" rx="2" ry="2" />
+<text text-anchor="" x="467.47" y="143.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/poolmanager.py:229:connection_from_context (516,236 samples, 2.66%)</title><rect x="474.9" y="133" width="31.4" height="15.0" fill="rgb(214,69,8)" rx="2" ry="2" />
+<text text-anchor="" x="477.92" y="143.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  >/h..</text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/structures.py:42:__init__ (333,349 samples, 1.72%)</title><rect x="553.2" y="149" width="20.3" height="15.0" fill="rgb(210,72,44)" rx="2" ry="2" />
+<text text-anchor="" x="556.17" y="159.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>~:0:&lt;isinstance&gt; (48,710 samples, 0.25%)</title><rect x="220.9" y="149" width="3.0" height="15.0" fill="rgb(234,144,26)" rx="2" ry="2" />
+<text text-anchor="" x="223.92" y="159.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/_abcoll.py:548:update (95,962 samples, 0.49%)</title><rect x="412.8" y="133" width="5.8" height="15.0" fill="rgb(211,165,9)" rx="2" ry="2" />
+<text text-anchor="" x="415.75" y="143.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/util/wait.py:9:_wait_for_io_events (613,907 samples, 3.17%)</title><rect x="581.2" y="117" width="37.3" height="15.0" fill="rgb(251,109,24)" rx="2" ry="2" />
+<text text-anchor="" x="584.16" y="127.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  >/ho..</text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/util/selectors.py:418:select (108,163 samples, 0.56%)</title><rect x="605.4" y="101" width="6.6" height="15.0" fill="rgb(244,219,13)" rx="2" ry="2" />
+<text text-anchor="" x="608.44" y="111.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/usr/lib64/python2.7/cookielib.py:1707:clear_expired_cookies (120,358 samples, 0.62%)</title><rect x="206.2" y="133" width="7.3" height="15.0" fill="rgb(212,10,7)" rx="2" ry="2" />
+<text text-anchor="" x="209.19" y="143.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>~:0:&lt;method 'close' of 'select.epoll' objects&gt; (37,282 samples, 0.19%)</title><rect x="590.0" y="69" width="2.3" height="15.0" fill="rgb(215,202,31)" rx="2" ry="2" />
+<text text-anchor="" x="592.99" y="79.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/abc.py:128:__instancecheck__ (60,427 samples, 0.31%)</title><rect x="971.6" y="133" width="3.7" height="15.0" fill="rgb(207,156,43)" rx="2" ry="2" />
+<text text-anchor="" x="974.62" y="143.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/utils.py:854:check_header_validity (92,780 samples, 0.48%)</title><rect x="161.6" y="165" width="5.6" height="15.0" fill="rgb(241,136,4)" rx="2" ry="2" />
+<text text-anchor="" x="164.59" y="175.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/abc.py:128:__instancecheck__ (73,863 samples, 0.38%)</title><rect x="274.8" y="149" width="4.5" height="15.0" fill="rgb(208,218,23)" rx="2" ry="2" />
+<text text-anchor="" x="277.76" y="159.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/abc.py:128:__instancecheck__ (87,925 samples, 0.45%)</title><rect x="291.8" y="165" width="5.3" height="15.0" fill="rgb(215,201,26)" rx="2" ry="2" />
+<text text-anchor="" x="294.77" y="175.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/sessions.py:50:merge_setting (331,690 samples, 1.71%)</title><rect x="1075.6" y="197" width="20.2" height="15.0" fill="rgb(226,113,47)" rx="2" ry="2" />
+<text text-anchor="" x="1078.61" y="207.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/_abcoll.py:379:get (110,128 samples, 0.57%)</title><rect x="957.5" y="133" width="6.7" height="15.0" fill="rgb(217,165,45)" rx="2" ry="2" />
+<text text-anchor="" x="960.48" y="143.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/usr/lib64/python2.7/cookielib.py:864:__init__ (19,781 samples, 0.10%)</title><rect x="406.2" y="117" width="1.2" height="15.0" fill="rgb(209,99,50)" rx="2" ry="2" />
+<text text-anchor="" x="409.15" y="127.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/usr/lib64/python2.7/threading.py:373:notify (36,963 samples, 0.19%)</title><rect x="1042.1" y="37" width="2.3" height="15.0" fill="rgb(221,14,38)" rx="2" ry="2" />
+<text text-anchor="" x="1045.13" y="47.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/usr/lib64/python2.7/cookielib.py:1651:extract_cookies (243,293 samples, 1.25%)</title><rect x="992.0" y="181" width="14.8" height="15.0" fill="rgb(213,134,47)" rx="2" ry="2" />
+<text text-anchor="" x="995.01" y="191.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/usr/lib64/python2.7/urlparse.py:137:urlparse (54,831 samples, 0.28%)</title><rect x="184.0" y="149" width="3.3" height="15.0" fill="rgb(207,58,9)" rx="2" ry="2" />
+<text text-anchor="" x="187.01" y="159.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/usr/lib64/python2.7/threading.py:147:acquire (40,072 samples, 0.21%)</title><rect x="213.5" y="133" width="2.5" height="15.0" fill="rgb(234,55,30)" rx="2" ry="2" />
+<text text-anchor="" x="216.51" y="143.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/usr/lib64/python2.7/collections.py:81:__delitem__ (22,454 samples, 0.12%)</title><rect x="488.8" y="53" width="1.3" height="15.0" fill="rgb(215,27,35)" rx="2" ry="2" />
+<text text-anchor="" x="491.78" y="63.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/structures.py:53:__getitem__ (37,609 samples, 0.19%)</title><rect x="664.2" y="101" width="2.3" height="15.0" fill="rgb(215,187,44)" rx="2" ry="2" />
+<text text-anchor="" x="667.21" y="111.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/packages/ordered_dict.py:28:__init__ (54,565 samples, 0.28%)</title><rect x="418.6" y="133" width="3.3" height="15.0" fill="rgb(228,51,19)" rx="2" ry="2" />
+<text text-anchor="" x="421.59" y="143.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/usr/lib64/python2.7/httplib.py:517:_check_close (39,777 samples, 0.21%)</title><rect x="843.6" y="117" width="2.4" height="15.0" fill="rgb(213,208,44)" rx="2" ry="2" />
+<text text-anchor="" x="846.57" y="127.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/abc.py:128:__instancecheck__ (40,719 samples, 0.21%)</title><rect x="221.4" y="133" width="2.5" height="15.0" fill="rgb(241,180,19)" rx="2" ry="2" />
+<text text-anchor="" x="224.41" y="143.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/usr/lib64/python2.7/threading.py:187:release (30,351 samples, 0.16%)</title><rect x="216.0" y="133" width="1.8" height="15.0" fill="rgb(223,93,22)" rx="2" ry="2" />
+<text text-anchor="" x="218.95" y="143.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/usr/lib64/python2.7/rfc822.py:300:getheaders (91,079 samples, 0.47%)</title><rect x="997.9" y="149" width="5.5" height="15.0" fill="rgb(237,14,40)" rx="2" ry="2" />
+<text text-anchor="" x="1000.89" y="159.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/_abcoll.py:548:update (191,211 samples, 0.99%)</title><rect x="555.2" y="133" width="11.6" height="15.0" fill="rgb(220,86,6)" rx="2" ry="2" />
+<text text-anchor="" x="558.20" y="143.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/utils.py:410:get_encoding_from_headers (111,871 samples, 0.58%)</title><rect x="446.8" y="165" width="6.8" height="15.0" fill="rgb(245,214,3)" rx="2" ry="2" />
+<text text-anchor="" x="449.76" y="175.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/_collections.py:302:from_httplib (599,778 samples, 3.09%)</title><rect x="909.9" y="149" width="36.5" height="15.0" fill="rgb(247,145,43)" rx="2" ry="2" />
+<text text-anchor="" x="912.92" y="159.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  >/ho..</text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/cookies.py:119:extract_cookies_to_jar (382,461 samples, 1.97%)</title><rect x="983.5" y="197" width="23.3" height="15.0" fill="rgb(250,37,16)" rx="2" ry="2" />
+<text text-anchor="" x="986.54" y="207.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  >/..</text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/connectionpool.py:447:urlopen (7,320,289 samples, 37.76%)</title><rect x="536.1" y="181" width="445.5" height="15.0" fill="rgb(205,8,17)" rx="2" ry="2" />
+<text text-anchor="" x="539.06" y="191.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  >/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages..</text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/models.py:444:prepare_body (148,736 samples, 0.77%)</title><rect x="167.2" y="181" width="9.1" height="15.0" fill="rgb(250,14,30)" rx="2" ry="2" />
+<text text-anchor="" x="170.23" y="191.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/usr/lib64/python2.7/threading.py:187:release (23,607 samples, 0.12%)</title><rect x="1005.4" y="165" width="1.4" height="15.0" fill="rgb(218,139,35)" rx="2" ry="2" />
+<text text-anchor="" x="1008.38" y="175.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>~:0:&lt;_codecs.utf_8_decode&gt; (19,507 samples, 0.10%)</title><rect x="455.6" y="133" width="1.2" height="15.0" fill="rgb(253,34,43)" rx="2" ry="2" />
+<text text-anchor="" x="458.59" y="143.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/usr/lib64/python2.7/threading.py:147:acquire (22,886 samples, 0.12%)</title><rect x="210.8" y="117" width="1.4" height="15.0" fill="rgb(220,15,5)" rx="2" ry="2" />
+<text text-anchor="" x="213.84" y="127.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>~:0:&lt;method 'lower' of 'str' objects&gt; (127,770 samples, 0.66%)</title><rect x="1182.2" y="165" width="7.8" height="15.0" fill="rgb(241,54,40)" rx="2" ry="2" />
+<text text-anchor="" x="1185.22" y="175.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/_abcoll.py:412:items (24,864 samples, 0.13%)</title><rect x="1081.1" y="181" width="1.5" height="15.0" fill="rgb(227,175,41)" rx="2" ry="2" />
+<text text-anchor="" x="1084.07" y="191.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/usr/lib64/python2.7/logging/__init__.py:1145:debug (55,553 samples, 0.29%)</title><rect x="899.0" y="149" width="3.3" height="15.0" fill="rgb(220,81,49)" rx="2" ry="2" />
+<text text-anchor="" x="901.96" y="159.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/usr/lib64/python2.7/httplib.py:392:_read_status (1,656,075 samples, 8.54%)</title><rect x="742.8" y="117" width="100.8" height="15.0" fill="rgb(240,49,6)" rx="2" ry="2" />
+<text text-anchor="" x="745.78" y="127.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  >/usr/lib64/p..</text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>~:0:&lt;method 'match' of '_sre.SRE_Pattern' objects&gt; (46,945 samples, 0.24%)</title><rect x="164.4" y="149" width="2.8" height="15.0" fill="rgb(230,134,33)" rx="2" ry="2" />
+<text text-anchor="" x="167.38" y="159.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/usr/lib64/python2.7/urlparse.py:137:urlparse (71,316 samples, 0.37%)</title><rect x="193.6" y="133" width="4.3" height="15.0" fill="rgb(215,68,1)" rx="2" ry="2" />
+<text text-anchor="" x="196.58" y="143.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/usr/lib64/python2.7/urllib.py:1372:getproxies_environment (582,133 samples, 3.00%)</title><rect x="1154.6" y="181" width="35.4" height="15.0" fill="rgb(232,72,23)" rx="2" ry="2" />
+<text text-anchor="" x="1157.57" y="191.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  >/us..</text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/models.py:433:prepare_headers (610,804 samples, 3.15%)</title><rect x="130.1" y="181" width="37.1" height="15.0" fill="rgb(212,133,52)" rx="2" ry="2" />
+<text text-anchor="" x="133.06" y="191.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  >/ho..</text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>~:0:&lt;method 'encode' of 'str' objects&gt; (27,393 samples, 0.14%)</title><rect x="720.3" y="101" width="1.7" height="15.0" fill="rgb(229,96,43)" rx="2" ry="2" />
+<text text-anchor="" x="723.33" y="111.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/_collections.py:224:extend (246,874 samples, 1.27%)</title><rect x="920.4" y="117" width="15.0" height="15.0" fill="rgb(222,37,42)" rx="2" ry="2" />
+<text text-anchor="" x="923.40" y="127.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/usr/lib64/python2.7/threading.py:187:release (31,416 samples, 0.16%)</title><rect x="389.9" y="133" width="1.9" height="15.0" fill="rgb(222,68,48)" rx="2" ry="2" />
+<text text-anchor="" x="392.86" y="143.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/models.py:171:register_hook (105,904 samples, 0.55%)</title><rect x="218.9" y="165" width="6.4" height="15.0" fill="rgb(250,193,32)" rx="2" ry="2" />
+<text text-anchor="" x="221.89" y="175.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/_collections.py:150:__getitem__ (46,063 samples, 0.24%)</title><rect x="480.7" y="85" width="2.8" height="15.0" fill="rgb(220,88,51)" rx="2" ry="2" />
+<text text-anchor="" x="483.71" y="95.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/structures.py:48:__setitem__ (27,693 samples, 0.14%)</title><rect x="415.4" y="117" width="1.7" height="15.0" fill="rgb(217,152,30)" rx="2" ry="2" />
+<text text-anchor="" x="418.38" y="127.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/connectionpool.py:322:_make_request (4,523,898 samples, 23.33%)</title><rect x="629.1" y="165" width="275.3" height="15.0" fill="rgb(218,163,38)" rx="2" ry="2" />
+<text text-anchor="" x="632.06" y="175.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  >/home/bobrov/.virtualenvs/hlupic/lib..</text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/util/selectors.py:392:__init__ (90,613 samples, 0.47%)</title><rect x="613.0" y="85" width="5.5" height="15.0" fill="rgb(234,71,43)" rx="2" ry="2" />
+<text text-anchor="" x="616.01" y="95.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/utils.py:698:select_proxy (170,235 samples, 0.88%)</title><rect x="459.5" y="165" width="10.4" height="15.0" fill="rgb(252,215,41)" rx="2" ry="2" />
+<text text-anchor="" x="462.50" y="175.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/packages/ordered_dict.py:120:values (32,972 samples, 0.17%)</title><rect x="667.2" y="85" width="2.0" height="15.0" fill="rgb(247,69,35)" rx="2" ry="2" />
+<text text-anchor="" x="670.17" y="95.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>~:0:&lt;isinstance&gt; (30,478 samples, 0.16%)</title><rect x="68.3" y="181" width="1.8" height="15.0" fill="rgb(249,218,34)" rx="2" ry="2" />
+<text text-anchor="" x="71.29" y="191.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/usr/lib64/python2.7/threading.py:114:RLock (52,650 samples, 0.27%)</title><rect x="407.4" y="117" width="3.2" height="15.0" fill="rgb(239,187,23)" rx="2" ry="2" />
+<text text-anchor="" x="410.36" y="127.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/abc.py:128:__instancecheck__ (23,187 samples, 0.12%)</title><rect x="174.9" y="149" width="1.4" height="15.0" fill="rgb(250,111,19)" rx="2" ry="2" />
+<text text-anchor="" x="177.88" y="159.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/structures.py:53:__getitem__ (27,896 samples, 0.14%)</title><rect x="266.6" y="149" width="1.7" height="15.0" fill="rgb(221,146,42)" rx="2" ry="2" />
+<text text-anchor="" x="269.60" y="159.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/util/selectors.py:71:_syscall_wrapper (55,868 samples, 0.29%)</title><rect x="608.6" y="85" width="3.4" height="15.0" fill="rgb(245,221,27)" rx="2" ry="2" />
+<text text-anchor="" x="611.63" y="95.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/_abcoll.py:379:get (33,512 samples, 0.17%)</title><rect x="976.3" y="149" width="2.1" height="15.0" fill="rgb(232,72,38)" rx="2" ry="2" />
+<text text-anchor="" x="979.31" y="159.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/packages/ordered_dict.py:142:update (48,073 samples, 0.25%)</title><rect x="570.5" y="117" width="3.0" height="15.0" fill="rgb(220,209,54)" rx="2" ry="2" />
+<text text-anchor="" x="573.53" y="127.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/abc.py:128:__instancecheck__ (19,948 samples, 0.10%)</title><rect x="417.4" y="101" width="1.2" height="15.0" fill="rgb(212,168,2)" rx="2" ry="2" />
+<text text-anchor="" x="420.38" y="111.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/response.py:415:stream (707,729 samples, 3.65%)</title><rect x="1016.3" y="149" width="43.0" height="15.0" fill="rgb(211,227,44)" rx="2" ry="2" />
+<text text-anchor="" x="1019.27" y="159.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  >/hom..</text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/usr/lib64/python2.7/httplib.py:867:_send_output (332,270 samples, 1.71%)</title><rect x="685.0" y="101" width="20.2" height="15.0" fill="rgb(250,188,2)" rx="2" ry="2" />
+<text text-anchor="" x="687.98" y="111.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/models.py:218:__init__ (90,756 samples, 0.47%)</title><rect x="32.7" y="213" width="5.5" height="15.0" fill="rgb(214,55,50)" rx="2" ry="2" />
+<text text-anchor="" x="35.69" y="223.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/packages/ordered_dict.py:142:update (60,694 samples, 0.31%)</title><rect x="443.1" y="133" width="3.7" height="15.0" fill="rgb(241,117,12)" rx="2" ry="2" />
+<text text-anchor="" x="446.07" y="143.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/_collections.py:50:__getitem__ (129,224 samples, 0.67%)</title><rect x="483.5" y="85" width="7.9" height="15.0" fill="rgb(253,215,46)" rx="2" ry="2" />
+<text text-anchor="" x="486.51" y="95.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/util/timeout.py:156:clone (42,926 samples, 0.22%)</title><rect x="626.4" y="149" width="2.7" height="15.0" fill="rgb(227,132,51)" rx="2" ry="2" />
+<text text-anchor="" x="629.44" y="159.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/usr/lib64/python2.7/httplib.py:860:_output (21,772 samples, 0.11%)</title><rect x="679.7" y="101" width="1.4" height="15.0" fill="rgb(213,20,48)" rx="2" ry="2" />
+<text text-anchor="" x="682.74" y="111.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/packages/ordered_dict.py:44:__setitem__ (50,179 samples, 0.26%)</title><rect x="158.5" y="149" width="3.1" height="15.0" fill="rgb(226,224,25)" rx="2" ry="2" />
+<text text-anchor="" x="161.53" y="159.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/packages/ordered_dict.py:28:__init__ (108,725 samples, 0.56%)</title><rect x="566.8" y="133" width="6.7" height="15.0" fill="rgb(206,197,45)" rx="2" ry="2" />
+<text text-anchor="" x="569.84" y="143.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/usr/lib64/python2.7/cookielib.py:1571:make_cookies (120,245 samples, 0.62%)</title><rect x="996.1" y="165" width="7.3" height="15.0" fill="rgb(226,176,6)" rx="2" ry="2" />
+<text text-anchor="" x="999.11" y="175.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/packages/ordered_dict.py:124:items (35,252 samples, 0.18%)</title><rect x="1067.6" y="181" width="2.2" height="15.0" fill="rgb(228,153,7)" rx="2" ry="2" />
+<text text-anchor="" x="1070.64" y="191.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/response.py:289:_error_catcher (191,361 samples, 0.99%)</title><rect x="1032.7" y="101" width="11.7" height="15.0" fill="rgb(209,54,8)" rx="2" ry="2" />
+<text text-anchor="" x="1035.73" y="111.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/usr/lib64/python2.7/rfc822.py:290:getheader (24,246 samples, 0.13%)</title><rect x="854.8" y="101" width="1.5" height="15.0" fill="rgb(225,96,30)" rx="2" ry="2" />
+<text text-anchor="" x="857.83" y="111.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/usr/lib64/python2.7/urlparse.py:95:hostname (68,813 samples, 0.35%)</title><rect x="465.7" y="149" width="4.2" height="15.0" fill="rgb(241,156,37)" rx="2" ry="2" />
+<text text-anchor="" x="468.67" y="159.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>~:0:&lt;method 'lower' of 'str' objects&gt; (154,245 samples, 0.80%)</title><rect x="1142.2" y="133" width="9.3" height="15.0" fill="rgb(254,98,16)" rx="2" ry="2" />
+<text text-anchor="" x="1145.16" y="143.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/packages/ordered_dict.py:120:values (34,340 samples, 0.18%)</title><rect x="268.9" y="133" width="2.1" height="15.0" fill="rgb(224,156,31)" rx="2" ry="2" />
+<text text-anchor="" x="271.95" y="143.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/usr/lib64/python2.7/threading.py:215:__exit__ (20,230 samples, 0.10%)</title><rect x="490.1" y="69" width="1.3" height="15.0" fill="rgb(228,130,42)" rx="2" ry="2" />
+<text text-anchor="" x="493.14" y="79.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/util/selectors.py:71:_syscall_wrapper (62,266 samples, 0.32%)</title><rect x="601.7" y="85" width="3.7" height="15.0" fill="rgb(206,5,18)" rx="2" ry="2" />
+<text text-anchor="" x="604.65" y="95.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/usr/lib64/python2.7/socket.py:227:meth (33,521 samples, 0.17%)</title><rect x="902.3" y="149" width="2.1" height="15.0" fill="rgb(235,74,53)" rx="2" ry="2" />
+<text text-anchor="" x="905.34" y="159.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/structures.py:48:__setitem__ (24,170 samples, 0.12%)</title><rect x="150.2" y="133" width="1.4" height="15.0" fill="rgb(228,67,48)" rx="2" ry="2" />
+<text text-anchor="" x="153.16" y="143.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/usr/lib64/python2.7/threading.py:114:RLock (45,533 samples, 0.23%)</title><rect x="57.4" y="165" width="2.8" height="15.0" fill="rgb(216,177,1)" rx="2" ry="2" />
+<text text-anchor="" x="60.40" y="175.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>~:0:&lt;method 'decode' of 'str' objects&gt; (52,628 samples, 0.27%)</title><rect x="453.6" y="165" width="3.2" height="15.0" fill="rgb(241,169,8)" rx="2" ry="2" />
+<text text-anchor="" x="456.57" y="175.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/usr/lib64/python2.7/cookielib.py:1233:__init__ (99,071 samples, 0.51%)</title><rect x="54.1" y="181" width="6.1" height="15.0" fill="rgb(242,179,6)" rx="2" ry="2" />
+<text text-anchor="" x="57.14" y="191.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/util/selectors.py:41:_fileobj_to_fd (59,639 samples, 0.31%)</title><rect x="598.0" y="53" width="3.7" height="15.0" fill="rgb(232,151,30)" rx="2" ry="2" />
+<text text-anchor="" x="601.02" y="63.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>~:0:&lt;isinstance&gt; (117,642 samples, 0.61%)</title><rect x="290.0" y="181" width="7.1" height="15.0" fill="rgb(226,4,11)" rx="2" ry="2" />
+<text text-anchor="" x="292.96" y="191.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/cookies.py:119:extract_cookies_to_jar (504,972 samples, 2.60%)</title><rect x="361.0" y="165" width="30.8" height="15.0" fill="rgb(253,60,54)" rx="2" ry="2" />
+<text text-anchor="" x="364.04" y="175.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  >/h..</text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/util/response.py:38:assert_header_parsing (46,463 samples, 0.24%)</title><rect x="644.9" y="149" width="2.8" height="15.0" fill="rgb(253,200,13)" rx="2" ry="2" />
+<text text-anchor="" x="647.89" y="159.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/usr/lib64/python2.7/urlparse.py:95:hostname (59,634 samples, 0.31%)</title><rect x="530.4" y="149" width="3.6" height="15.0" fill="rgb(238,44,8)" rx="2" ry="2" />
+<text text-anchor="" x="533.36" y="159.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/structures.py:48:__setitem__ (69,668 samples, 0.36%)</title><rect x="430.3" y="133" width="4.3" height="15.0" fill="rgb(212,67,2)" rx="2" ry="2" />
+<text text-anchor="" x="433.32" y="143.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/structures.py:59:__iter__ (43,986 samples, 0.23%)</title><rect x="666.5" y="101" width="2.7" height="15.0" fill="rgb(241,186,13)" rx="2" ry="2" />
+<text text-anchor="" x="669.50" y="111.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/usr/lib64/python2.7/httplib.py:1067:_send_request (1,200,225 samples, 6.19%)</title><rect x="649.0" y="133" width="73.0" height="15.0" fill="rgb(228,49,8)" rx="2" ry="2" />
+<text text-anchor="" x="651.96" y="143.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  >/usr/lib..</text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/usr/lib64/python2.7/cookielib.py:1233:__init__ (114,556 samples, 0.59%)</title><rect x="403.6" y="133" width="7.0" height="15.0" fill="rgb(206,35,3)" rx="2" ry="2" />
+<text text-anchor="" x="406.59" y="143.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/usr/lib64/python2.7/cookielib.py:1328:add_cookie_header (326,703 samples, 1.69%)</title><rect x="197.9" y="149" width="19.9" height="15.0" fill="rgb(253,225,30)" rx="2" ry="2" />
+<text text-anchor="" x="200.92" y="159.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/usr/lib64/python2.7/rfc822.py:300:getheaders (121,207 samples, 0.63%)</title><rect x="379.9" y="117" width="7.4" height="15.0" fill="rgb(212,139,41)" rx="2" ry="2" />
+<text text-anchor="" x="382.89" y="127.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>~:0:&lt;method 'write' of 'cStringIO.StringO' objects&gt; (49,822 samples, 0.26%)</title><rect x="840.5" y="85" width="3.1" height="15.0" fill="rgb(233,1,47)" rx="2" ry="2" />
+<text text-anchor="" x="843.54" y="95.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/response.py:474:getheader (50,189 samples, 0.26%)</title><rect x="975.3" y="165" width="3.1" height="15.0" fill="rgb(220,141,52)" rx="2" ry="2" />
+<text text-anchor="" x="978.30" y="175.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/connectionpool.py:215:_get_conn (811,714 samples, 4.19%)</title><rect x="575.9" y="165" width="49.4" height="15.0" fill="rgb(245,153,28)" rx="2" ry="2" />
+<text text-anchor="" x="578.91" y="175.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  >/hom..</text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/_abcoll.py:379:get (33,920 samples, 0.17%)</title><rect x="1028.4" y="101" width="2.1" height="15.0" fill="rgb(253,136,34)" rx="2" ry="2" />
+<text text-anchor="" x="1031.41" y="111.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/usr/lib64/python2.7/cookielib.py:1196:deepvalues (36,387 samples, 0.19%)</title><rect x="208.6" y="117" width="2.2" height="15.0" fill="rgb(211,204,44)" rx="2" ry="2" />
+<text text-anchor="" x="211.63" y="127.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/_abcoll.py:412:items (98,124 samples, 0.51%)</title><rect x="233.3" y="181" width="6.0" height="15.0" fill="rgb(210,87,16)" rx="2" ry="2" />
+<text text-anchor="" x="236.33" y="191.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/sessions.py:691:get_adapter (74,080 samples, 0.38%)</title><rect x="1065.3" y="197" width="4.5" height="15.0" fill="rgb(249,50,39)" rx="2" ry="2" />
+<text text-anchor="" x="1068.28" y="207.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/packages/ordered_dict.py:44:__setitem__ (35,879 samples, 0.19%)</title><rect x="432.4" y="117" width="2.2" height="15.0" fill="rgb(211,52,43)" rx="2" ry="2" />
+<text text-anchor="" x="435.38" y="127.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/usr/lib64/python2.7/cookielib.py:1191:vals_sorted_by_key (35,178 samples, 0.18%)</title><rect x="66.2" y="149" width="2.1" height="15.0" fill="rgb(211,50,4)" rx="2" ry="2" />
+<text text-anchor="" x="69.15" y="159.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/sessions.py:589:send (12,158,500 samples, 62.71%)</title><rect x="329.8" y="213" width="740.0" height="15.0" fill="rgb(217,61,42)" rx="2" ry="2" />
+<text text-anchor="" x="332.82" y="223.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  >/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/sessions.py:589:send</text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>~:0:&lt;hasattr&gt; (19,713 samples, 0.10%)</title><rect x="897.8" y="69" width="1.2" height="15.0" fill="rgb(211,6,1)" rx="2" ry="2" />
+<text text-anchor="" x="900.76" y="79.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/usr/lib64/python2.7/cookielib.py:1196:deepvalues (49,268 samples, 0.25%)</title><rect x="65.3" y="165" width="3.0" height="15.0" fill="rgb(254,220,36)" rx="2" ry="2" />
+<text text-anchor="" x="68.29" y="175.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>~:0:&lt;isinstance&gt; (56,991 samples, 0.29%)</title><rect x="932.0" y="101" width="3.4" height="15.0" fill="rgb(205,149,14)" rx="2" ry="2" />
+<text text-anchor="" x="934.96" y="111.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/_collections.py:135:__init__ (506,470 samples, 2.61%)</title><rect x="915.6" y="133" width="30.8" height="15.0" fill="rgb(219,211,37)" rx="2" ry="2" />
+<text text-anchor="" x="918.60" y="143.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  >/h..</text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/adapters.py:253:build_response (1,682,603 samples, 8.68%)</title><rect x="354.4" y="181" width="102.4" height="15.0" fill="rgb(237,112,50)" rx="2" ry="2" />
+<text text-anchor="" x="357.37" y="191.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  >/home/bobrov..</text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>~:0:&lt;method 'match' of '_sre.SRE_Pattern' objects&gt; (31,175 samples, 0.16%)</title><rect x="681.1" y="101" width="1.9" height="15.0" fill="rgb(237,10,34)" rx="2" ry="2" />
+<text text-anchor="" x="684.06" y="111.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/cookies.py:38:__init__ (95,455 samples, 0.49%)</title><rect x="192.1" y="149" width="5.8" height="15.0" fill="rgb(244,123,14)" rx="2" ry="2" />
+<text text-anchor="" x="195.11" y="159.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/util/selectors.py:172:_fileobj_lookup (69,917 samples, 0.36%)</title><rect x="597.4" y="69" width="4.3" height="15.0" fill="rgb(213,138,52)" rx="2" ry="2" />
+<text text-anchor="" x="600.40" y="79.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/usr/lib64/python2.7/socket.py:410:readline (1,539,621 samples, 7.94%)</title><rect x="749.9" y="101" width="93.7" height="15.0" fill="rgb(206,166,7)" rx="2" ry="2" />
+<text text-anchor="" x="752.87" y="111.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  >/usr/lib64/..</text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/usr/lib64/python2.7/urlparse.py:137:urlparse (77,935 samples, 0.40%)</title><rect x="367.3" y="133" width="4.8" height="15.0" fill="rgb(219,228,31)" rx="2" ry="2" />
+<text text-anchor="" x="370.33" y="143.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/util/timeout.py:93:__init__ (22,429 samples, 0.12%)</title><rect x="643.5" y="117" width="1.4" height="15.0" fill="rgb(226,35,24)" rx="2" ry="2" />
+<text text-anchor="" x="646.52" y="127.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>all (19,388,774 samples, 100%)</title><rect x="10.0" y="293" width="1180.0" height="15.0" fill="rgb(242,71,43)" rx="2" ry="2" />
+<text text-anchor="" x="13.00" y="303.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/response.py:174:release_conn (152,884 samples, 0.79%)</title><rect x="1035.1" y="85" width="9.3" height="15.0" fill="rgb(208,7,37)" rx="2" ry="2" />
+<text text-anchor="" x="1038.07" y="95.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/utils.py:833:get_auth_from_url (147,149 samples, 0.76%)</title><rect x="178.4" y="165" width="8.9" height="15.0" fill="rgb(239,203,27)" rx="2" ry="2" />
+<text text-anchor="" x="181.39" y="175.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/usr/lib64/python2.7/threading.py:147:acquire (32,033 samples, 0.17%)</title><rect x="1003.4" y="165" width="2.0" height="15.0" fill="rgb(252,88,47)" rx="2" ry="2" />
+<text text-anchor="" x="1006.43" y="175.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>~:0:&lt;isinstance&gt; (38,932 samples, 0.20%)</title><rect x="250.4" y="149" width="2.4" height="15.0" fill="rgb(212,80,20)" rx="2" ry="2" />
+<text text-anchor="" x="253.42" y="159.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/models.py:526:prepare_auth (181,755 samples, 0.94%)</title><rect x="176.3" y="181" width="11.0" height="15.0" fill="rgb(212,121,51)" rx="2" ry="2" />
+<text text-anchor="" x="179.29" y="191.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/cookies.py:38:__init__ (107,759 samples, 0.56%)</title><rect x="365.5" y="149" width="6.6" height="15.0" fill="rgb(251,76,24)" rx="2" ry="2" />
+<text text-anchor="" x="368.51" y="159.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/usr/lib64/python2.7/threading.py:373:notify (44,580 samples, 0.23%)</title><rect x="622.6" y="133" width="2.7" height="15.0" fill="rgb(222,134,54)" rx="2" ry="2" />
+<text text-anchor="" x="625.59" y="143.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>~:0:&lt;isinstance&gt; (25,113 samples, 0.13%)</title><rect x="99.3" y="133" width="1.5" height="15.0" fill="rgb(207,136,16)" rx="2" ry="2" />
+<text text-anchor="" x="102.32" y="143.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>~:0:&lt;isinstance&gt; (38,016 samples, 0.20%)</title><rect x="174.0" y="165" width="2.3" height="15.0" fill="rgb(240,48,38)" rx="2" ry="2" />
+<text text-anchor="" x="176.97" y="175.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/usr/lib64/python2.7/collections.py:163:setdefault (81,578 samples, 0.42%)</title><rect x="927.0" y="85" width="5.0" height="15.0" fill="rgb(254,113,6)" rx="2" ry="2" />
+<text text-anchor="" x="929.99" y="95.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/usr/lib64/python2.7/urlparse.py:168:urlsplit (27,038 samples, 0.14%)</title><rect x="370.4" y="117" width="1.7" height="15.0" fill="rgb(217,128,45)" rx="2" ry="2" />
+<text text-anchor="" x="373.42" y="127.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/_abcoll.py:403:iteritems (144,234 samples, 0.74%)</title><rect x="660.4" y="117" width="8.8" height="15.0" fill="rgb(236,216,42)" rx="2" ry="2" />
+<text text-anchor="" x="663.40" y="127.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/structures.py:42:__init__ (186,507 samples, 0.96%)</title><rect x="410.6" y="149" width="11.3" height="15.0" fill="rgb(238,82,42)" rx="2" ry="2" />
+<text text-anchor="" x="413.56" y="159.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/util/connection.py:7:is_connection_dropped (664,699 samples, 3.43%)</title><rect x="578.1" y="149" width="40.4" height="15.0" fill="rgb(220,43,30)" rx="2" ry="2" />
+<text text-anchor="" x="581.07" y="159.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  >/ho..</text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/abc.py:128:__instancecheck__ (22,280 samples, 0.11%)</title><rect x="1094.4" y="165" width="1.4" height="15.0" fill="rgb(232,25,27)" rx="2" ry="2" />
+<text text-anchor="" x="1097.44" y="175.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/usr/lib64/python2.7/httplib.py:271:readheaders (673,134 samples, 3.47%)</title><rect x="858.0" y="85" width="41.0" height="15.0" fill="rgb(240,55,14)" rx="2" ry="2" />
+<text text-anchor="" x="860.99" y="95.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  >/us..</text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/usr/lib64/python2.7/logging/__init__.py:1360:isEnabledFor (43,012 samples, 0.22%)</title><rect x="899.7" y="133" width="2.6" height="15.0" fill="rgb(238,100,2)" rx="2" ry="2" />
+<text text-anchor="" x="902.72" y="143.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/packages/ordered_dict.py:28:__init__ (137,269 samples, 0.71%)</title><rect x="438.4" y="149" width="8.4" height="15.0" fill="rgb(234,225,43)" rx="2" ry="2" />
+<text text-anchor="" x="441.41" y="159.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/util/selectors.py:192:register (113,544 samples, 0.59%)</title><rect x="594.7" y="85" width="7.0" height="15.0" fill="rgb(227,126,26)" rx="2" ry="2" />
+<text text-anchor="" x="597.74" y="95.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/_internal_utils.py:14:to_native_string (21,862 samples, 0.11%)</title><rect x="144.6" y="165" width="1.3" height="15.0" fill="rgb(242,146,13)" rx="2" ry="2" />
+<text text-anchor="" x="147.62" y="175.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/models.py:282:__init__ (57,218 samples, 0.30%)</title><rect x="70.1" y="197" width="3.5" height="15.0" fill="rgb(254,215,27)" rx="2" ry="2" />
+<text text-anchor="" x="73.15" y="207.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/util/request.py:77:set_file_position (19,848 samples, 0.10%)</title><rect x="978.4" y="165" width="1.2" height="15.0" fill="rgb(207,225,23)" rx="2" ry="2" />
+<text text-anchor="" x="981.35" y="175.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>~:0:&lt;method 'seek' of 'cStringIO.StringO' objects&gt; (27,258 samples, 0.14%)</title><rect x="838.9" y="85" width="1.6" height="15.0" fill="rgb(219,112,6)" rx="2" ry="2" />
+<text text-anchor="" x="841.88" y="95.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/structures.py:59:__iter__ (37,425 samples, 0.19%)</title><rect x="237.0" y="165" width="2.3" height="15.0" fill="rgb(206,67,32)" rx="2" ry="2" />
+<text text-anchor="" x="240.02" y="175.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/hooks.py:17:default_hooks (31,894 samples, 0.16%)</title><rect x="71.7" y="181" width="1.9" height="15.0" fill="rgb(254,62,43)" rx="2" ry="2" />
+<text text-anchor="" x="74.69" y="191.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/poolmanager.py:242:connection_from_pool_key (294,060 samples, 1.52%)</title><rect x="477.5" y="117" width="17.9" height="15.0" fill="rgb(230,135,14)" rx="2" ry="2" />
+<text text-anchor="" x="480.46" y="127.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/usr/lib64/python2.7/socket.py:340:read (91,716 samples, 0.47%)</title><rect x="1052.2" y="101" width="5.6" height="15.0" fill="rgb(247,96,3)" rx="2" ry="2" />
+<text text-anchor="" x="1055.23" y="111.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>~:0:&lt;method 'sendall' of '_socket.socket' objects&gt; (171,318 samples, 0.88%)</title><rect x="694.8" y="53" width="10.4" height="15.0" fill="rgb(225,36,20)" rx="2" ry="2" />
+<text text-anchor="" x="697.77" y="63.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/cookies.py:523:merge_cookies (163,890 samples, 0.85%)</title><rect x="60.2" y="197" width="9.9" height="15.0" fill="rgb(251,173,30)" rx="2" ry="2" />
+<text text-anchor="" x="63.17" y="207.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>bench2.py:71:timeit (19,388,774 samples, 100.00%)</title><rect x="10.0" y="277" width="1180.0" height="15.0" fill="rgb(253,108,20)" rx="2" ry="2" />
+<text text-anchor="" x="13.00" y="287.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  >bench2.py:71:timeit</text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/usr/lib64/python2.7/httplib.py:257:addheader (35,815 samples, 0.18%)</title><rect x="877.1" y="69" width="2.2" height="15.0" fill="rgb(237,108,10)" rx="2" ry="2" />
+<text text-anchor="" x="880.09" y="79.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/usr/lib64/python2.7/httplib.py:1084:getresponse (2,907,629 samples, 15.00%)</title><rect x="722.0" y="149" width="177.0" height="15.0" fill="rgb(227,38,44)" rx="2" ry="2" />
+<text text-anchor="" x="725.00" y="159.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  >/usr/lib64/python2.7/h..</text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/requests/cookies.py:503:cookiejar_from_dict (179,230 samples, 0.92%)</title><rect x="49.3" y="197" width="10.9" height="15.0" fill="rgb(217,206,0)" rx="2" ry="2" />
+<text text-anchor="" x="52.26" y="207.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/packages/ordered_dict.py:120:values (28,485 samples, 0.15%)</title><rect x="237.6" y="149" width="1.7" height="15.0" fill="rgb(246,117,0)" rx="2" ry="2" />
+<text text-anchor="" x="240.57" y="159.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/usr/lib64/python2.7/urlparse.py:168:urlsplit (24,742 samples, 0.13%)</title><rect x="196.4" y="117" width="1.5" height="15.0" fill="rgb(249,192,54)" rx="2" ry="2" />
+<text text-anchor="" x="199.41" y="127.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/abc.py:128:__instancecheck__ (34,589 samples, 0.18%)</title><rect x="944.3" y="101" width="2.1" height="15.0" fill="rgb(222,96,38)" rx="2" ry="2" />
+<text text-anchor="" x="947.32" y="111.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/util/selectors.py:399:register (216,679 samples, 1.12%)</title><rect x="592.3" y="101" width="13.1" height="15.0" fill="rgb(220,192,4)" rx="2" ry="2" />
+<text text-anchor="" x="595.26" y="111.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/home/bobrov/.virtualenvs/hlupic/lib/python2.7/site-packages/urllib3/util/url.py:132:parse_url (243,573 samples, 1.26%)</title><rect x="108.2" y="165" width="14.8" height="15.0" fill="rgb(228,112,51)" rx="2" ry="2" />
+<text text-anchor="" x="111.19" y="175.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>/usr/lib64/python2.7/socket.py:227:meth (25,360 samples, 0.13%)</title><rect x="600.1" y="37" width="1.6" height="15.0" fill="rgb(222,65,25)" rx="2" ry="2" />
+<text text-anchor="" x="603.11" y="47.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>~:0:&lt;isinstance&gt; (21,957 samples, 0.11%)</title><rect x="151.6" y="133" width="1.4" height="15.0" fill="rgb(239,194,8)" rx="2" ry="2" />
+<text text-anchor="" x="154.63" y="143.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+</svg>

@@ -1,8 +1,9 @@
 from setuptools import setup, find_packages
+import flameprof
 
 setup(
     name='flameprof',
-    version='0.1',
+    version=flameprof.version,
     url='https://github.com/baverman/flameprof/',
     license='MIT',
     author='Anton Bobrov',
