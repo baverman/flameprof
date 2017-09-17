@@ -49,6 +49,8 @@ options.
     :width: 100%
     :align: center
 
+`SVG version <https://cdn.rawgit.com/baverman/flameprof/master/img/requests.svg>`_
+
 
 Svg generated with flamegraph.pl (--format=log)
 ===============================================
@@ -65,3 +67,5 @@ You can treat "samples" as microseconds by default (see ``--log-mult`` option).
     :alt: Requests profile with flamegraph.pl
     :width: 100%
     :align: center
+
+`SVG version <https://cdn.rawgit.com/baverman/flameprof/master/img/requests-flamegraph.svg>`_
