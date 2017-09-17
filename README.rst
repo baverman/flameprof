@@ -2,11 +2,13 @@ Flamegraph generator for python's `cProfile <https://docs.python.org/3/library/p
 
 `Flamegraphs <http://www.brendangregg.com/flamegraphs.html>`_ allow to
 visualize relations between functions in a very compact and understandable
-manner and solve main problems of built-in cProfile reporting and can replace
+manner.
+
+`Flameprof` solves main problems of built-in cProfile reporting and can replace
 `gprof2dot <https://github.com/jrfonseca/gprof2dot>`_ because later outputs
 very huge graphs with a lot of noise.
 
-`Flameprof` works with profile stat files which can be obtained via
+`Flameprof` works with profile stat files obtained by
 `Profile.dump_stats() <https://docs.python.org/3/library/profile.html#profile.Profile.dump_stats>`_
 call or via direct script profiling::
 
