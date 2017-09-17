@@ -4,11 +4,11 @@ Flamegraph generator for python's `cProfile <https://docs.python.org/3/library/p
 visualize relations between functions in a very compact and understandable
 manner.
 
-`Flameprof` solves main problems of built-in cProfile reporting and can replace
+``Flameprof`` solves main problems of built-in cProfile reporting and can replace
 `gprof2dot <https://github.com/jrfonseca/gprof2dot>`_ because later outputs
 very huge graphs with a lot of noise.
 
-`Flameprof` works with profile stat files obtained by
+``Flameprof`` works with profile stat files obtained by
 `Profile.dump_stats() <https://docs.python.org/3/library/profile.html#profile.Profile.dump_stats>`_
 call or via direct script profiling::
 
@@ -22,7 +22,7 @@ Via pip::
 
     pip install flameprof
 
-Or you can invoke `flameprof.py` directly::
+Or you can invoke ``flameprof.py`` directly::
 
     python flameprof.py input.prof > output.svg
 
@@ -53,9 +53,9 @@ options.
 Svg generated with flamegraph.pl (--format=log)
 ===============================================
 
-Also `Flameprof` can output trace log suitable as input for flamegraph.pl.
+Also ``flameprof`` can output trace log suitable as input for flamegraph.pl.
 
-You can treat "samples" as microseconds by default (see `--log-mult` option).
+You can treat "samples" as microseconds by default (see ``--log-mult`` option).
 
 ::
 
