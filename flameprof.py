@@ -76,7 +76,7 @@ def prepare(funcs, calls, threshold=0.0001, h=24, fsize=12, width=1200):
                 if k not in visited:
                     _counts(child, visited | {k}, level+1)
 
-    def _calc(parent, timings, level, origin, visited, trace=(), pccnt=1):
+    def _calc(parent, timings, level, origin, visited, trace=(), pccnt=1, pblock=None):
         childs = funcs[parent]['calls']
         _, _, ptt, ptc = timings
         fchilds = sorted(((f, funcs[f], calls[(parent, f)], max(block_counts[(parent, f)], pccnt))
@@ -101,7 +101,7 @@ def prepare(funcs, calls, threshold=0.0001, h=24, fsize=12, width=1200):
             if tc/maxw > threshold:
                 ckey = parent, child
                 ctrace = trace + (child,)
-                blocks.append({
+                block = {
                     'trace': ctrace,
                     'ccnt': (pccnt==1 and ccnt > 1),
                     'level': level,
@@ -111,9 +111,14 @@ def prepare(funcs, calls, threshold=0.0001, h=24, fsize=12, width=1200):
                     'w': tc,
                     'ww': tt,
                     'x': origin
-                })
+                }
+                blocks.append(block)
                 if ckey not in visited:
-                    _calc(child, (cc, nc, tt, tc), level + 1, origin, visited | {ckey}, ctrace, ccnt)
+                    _calc(child, (cc, nc, tt, tc), level + 1, origin, visited | {ckey},
+                          ctrace, ccnt, block)
+            elif pblock:
+                pblock['ww'] += tc
+
             origin += tc
 
     maxw = funcs['root']['total'] * 1.0
@@ -150,7 +155,7 @@ def render_fg(blocks, multiplier):
         for t in b['trace']:
             trace.append('{}:{}:{}'.format(*t))
 
-        print(';'.join(trace), int(b['ww'] * multiplier))
+        print(';'.join(trace), round(b['ww'] * multiplier))
 
 
 SVG = '''\
