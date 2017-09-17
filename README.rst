@@ -1,2 +1,4 @@
-# flameprof
+flameprof
+=========
+
 cProfile flamegraph generator
