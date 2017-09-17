@@ -64,7 +64,7 @@ def calc_callers(stats):
     return funcs, calls
 
 
-def render(funcs, calls, threshold=0.0001, h=24, fsize=12, width=1200):
+def prepare(funcs, calls, threshold=0.0001, h=24, fsize=12, width=1200):
     blocks = []
     block_counts = Counter()
 
@@ -76,7 +76,7 @@ def render(funcs, calls, threshold=0.0001, h=24, fsize=12, width=1200):
                 if k not in visited:
                     _counts(child, visited | {k}, level+1)
 
-    def _render(parent, timings, level, origin, visited, pccnt=1):
+    def _calc(parent, timings, level, origin, visited, trace=(), pccnt=1):
         childs = funcs[parent]['calls']
         _, _, ptt, ptc = timings
         fchilds = sorted(((f, funcs[f], calls[(parent, f)], max(block_counts[(parent, f)], pccnt))
@@ -98,25 +98,31 @@ def render(funcs, calls, threshold=0.0001, h=24, fsize=12, width=1200):
                        for f, ff, (cc, nc, tt, tc), ccnt in bchilds]
 
         for child, _, (cc, nc, tt, tc), ccnt in gchilds + bchilds:
-            ckey = parent, child
             if tc/maxw > threshold:
+                ckey = parent, child
+                ctrace = trace + (child,)
                 blocks.append({
+                    'trace': ctrace,
                     'ccnt': (pccnt==1 and ccnt > 1),
                     'level': level,
                     'name': child[2],
                     'hash_name': '{0[0]}:{0[1]}:{0[2]}'.format(child),
                     'full_name': '{0[0]}:{0[1]}:{0[2]} {5:.2%} ({1} {2} {3} {4})'.format(child, cc, nc, tt, tc, tc/maxw),
                     'w': tc,
+                    'ww': tt,
                     'x': origin
                 })
                 if ckey not in visited:
-                    _render(child, (cc, nc, tt, tc), level + 1, origin, visited | {ckey}, ccnt)
+                    _calc(child, (cc, nc, tt, tc), level + 1, origin, visited | {ckey}, ctrace, ccnt)
             origin += tc
 
     maxw = funcs['root']['total'] * 1.0
     _counts('root', set())
-    _render('root', (1, 1, maxw, maxw), 0, 0, set())
+    _calc('root', (1, 1, maxw, maxw), 0, 0, set())
+    return blocks, maxw
 
+
+def render_svg(blocks, maxw, threshold=0.0001, h=24, fsize=12, width=1200):
     maxlevel = max(r['level'] for r in blocks)
     height = (maxlevel + 1) * h
     content = []
@@ -136,6 +142,15 @@ def render(funcs, calls, threshold=0.0001, h=24, fsize=12, width=1200):
                                    fsize=fsize, h=h-1, fill=fill))
 
     return SVG.format('\n'.join(content), width=width, height=height)
+
+
+def render_fg(blocks, multiplier):
+    for b in blocks:
+        trace = []
+        for t in b['trace']:
+            trace.append('{}:{}:{}'.format(*t))
+
+        print(';'.join(trace), int(b['ww'] * multiplier))
 
 
 SVG = '''\
@@ -163,12 +178,22 @@ if __name__ == '__main__':
     parser.add_argument('--width', type=int, help='image width, default is %(default)s', default=1200)
     parser.add_argument('--row-height', type=int, help='row height, default is %(default)s', default=24)
     parser.add_argument('--font-size', type=int, help='font size, default is %(default)s', default=12)
-    parser.add_argument('--threshold', type=float,
-                        help='limit functions relative cumulative time in percents, default is %(default)s%%', default=0.1)
+    parser.add_argument('--threshold', type=float, default=0.1,
+                        help='limit functions relative cumulative time in percents, default is %(default)s%%')
+    parser.add_argument('--format', choices=['svg', 'log'], default='svg',
+                        help='output format, default is %(default)s. `log` is suitable as input for flamegraph.pl')
+    parser.add_argument('--log-mult', type=int, default=1000000,
+                        help='multiply score value for log format, default is %(default)s')
 
     args = parser.parse_args()
 
     s = pstats.Stats(args.stats)
     funcs, calls = calc_callers(s.stats)
-    print(render(funcs, calls, h=args.row_height,
-                 fsize=args.font_size, width=args.width, threshold=args.threshold / 100))
+    blocks, maxw = prepare(funcs, calls, threshold=args.threshold / 100)
+
+    if args.format == 'svg':
+        print(render_svg(blocks, maxw, h=args.row_height,
+                         fsize=args.font_size, width=args.width))
+
+    if args.format == 'log':
+        render_fg(blocks, args.log_mult)
