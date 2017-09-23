@@ -12,7 +12,7 @@ from functools import partial
 from collections import Counter
 from xml.sax.saxutils import escape
 
-version = '0.2'
+version = '0.2.1'
 
 eprint = partial(print, file=sys.stderr)
 epprint = partial(pprint.pprint, stream=sys.stderr)
@@ -180,8 +180,7 @@ ELEM = '''\
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='Make flamegraph from cProfile stats.',
-                                     version=version)
+    parser = argparse.ArgumentParser(description='Make flamegraph from cProfile stats.')
     parser.add_argument('stats', help='file with cProfile stats')
     parser.add_argument('--width', type=int, help='image width, default is %(default)s', default=1200)
     parser.add_argument('--row-height', type=int, help='row height, default is %(default)s', default=24)
@@ -192,6 +191,7 @@ if __name__ == '__main__':
                         help='output format, default is %(default)s. `log` is suitable as input for flamegraph.pl')
     parser.add_argument('--log-mult', type=int, default=1000000,
                         help='multiply score value for log format, default is %(default)s')
+    parser.add_argument('--version', action='version', version='%(prog)s {}'.format(version))
 
     args = parser.parse_args()
 
