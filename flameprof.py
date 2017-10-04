@@ -36,6 +36,8 @@ def gen_colors(s, e, size):
 
 COLORS = list(gen_colors((255, 240, 141), (255, 65, 34), 7))
 CCOLORS = list(gen_colors((44, 255, 210), (113, 194, 0), 5))
+ECOLORS = list(gen_colors((230, 230, 255), (150, 150, 255), 5))
+DCOLORS = list(gen_colors((190, 190, 190), (240, 240, 240), 7))
 
 
 int_struct = Struct('!L')
@@ -49,7 +51,7 @@ def calc_callers(stats):
     funcs = {}
     calls = {}
     for func, (cc, nc, tt, ct, clist) in stats.items():
-        funcs[func] = {'calls': [], 'stat': (cc, nc, tt, ct)}
+        funcs[func] = {'calls': [], 'called': [], 'stat': (cc, nc, tt, ct)}
         if not clist:
             roots.append(func)
             calls[('root', func)] = funcs[func]['stat']
@@ -58,16 +60,20 @@ def calc_callers(stats):
         for cfunc, t in clist.items():
             assert (cfunc, func) not in calls
             funcs[cfunc]['calls'].append(func)
+            funcs[func]['called'].append(cfunc)
             calls[(cfunc, func)] = t
 
+    total = sum(funcs[r]['stat'][3] for r in roots)
     funcs['root'] = {'calls': roots,
-                     'total': sum(funcs[r]['stat'][3] for r in roots)}
+                     'called': [],
+                     'stat': (1, 1, 0, total)}
 
     return funcs, calls
 
 
 def prepare(funcs, calls, threshold=0.0001, h=24, fsize=12, width=1200):
     blocks = []
+    bblocks = []
     block_counts = Counter()
 
     def _counts(parent, visited, level=0):
@@ -105,7 +111,7 @@ def prepare(funcs, calls, threshold=0.0001, h=24, fsize=12, width=1200):
                 ctrace = trace + (child,)
                 block = {
                     'trace': ctrace,
-                    'ccnt': (pccnt==1 and ccnt > 1),
+                    'color': (pccnt==1 and ccnt > 1),
                     'level': level,
                     'name': child[2],
                     'hash_name': '{0[0]}:{0[1]}:{0[2]}'.format(child),
@@ -123,32 +129,75 @@ def prepare(funcs, calls, threshold=0.0001, h=24, fsize=12, width=1200):
 
             origin += tc
 
-    maxw = funcs['root']['total'] * 1.0
+    def _calc_back(names, level, to, origin, visited, pw):
+        if to and names:
+            factor = pw / sum(calls[(r, to)][3] for r in names)
+        else:
+            factor = 1
+
+        for name in sorted(names):
+            func = funcs[name]
+            if to:
+                cc, nc, tt, tc = calls[(name, to)]
+                ttt = tc * factor
+            else:
+                cc, nc, tt, tc = func['stat']
+                ttt = tt * factor
+
+            if ttt / maxw > threshold:
+                block = {
+                    'color': 2 if level > 0 else not func['calls'],
+                    'level': level,
+                    'name': name[2],
+                    'hash_name': '{0[0]}:{0[1]}:{0[2]}'.format(name),
+                    'full_name': '{0[0]}:{0[1]}:{0[2]} {5:.2%} ({1} {2} {3} {4})'.format(name, cc, nc, tt, tc, tt/maxw),
+                    'w': ttt,
+                    'x': origin
+                }
+                bblocks.append(block)
+                key = name, to
+                if key not in visited:
+                    _calc_back(func['called'], level+1, name, origin, visited | {key}, ttt)
+
+            origin += ttt
+
+    maxw = funcs['root']['stat'][3] * 1.0
     _counts('root', set())
     _calc('root', (1, 1, maxw, maxw), 0, 0, set())
-    return blocks, maxw
+    _calc_back((f for f in funcs if f != 'root'), 0, None, 0, set(), 0)
+
+    return blocks, bblocks, maxw
 
 
-def render_svg(blocks, maxw, threshold=0.0001, h=24, fsize=12, width=1200):
+def render_svg_section(blocks, maxw, colors, h=24, fsize=12, width=1200, top=0, invert=False):
     maxlevel = max(r['level'] for r in blocks)
     height = (maxlevel + 1) * h
     content = []
     for b in blocks:
         x = b['x'] * width / maxw
         tx = h / 6
-        y = height - b['level']*h - h
+        if invert:
+            y = top + height - (maxlevel - b['level']) * h - h
+        else:
+            y = top + height - b['level'] * h - h
         ty = h / 2
         w = max(1, b['w'] * width / maxw - 1)
-        if b['ccnt']:
-            fill = CCOLORS[int(len(CCOLORS) * name_hash(b['hash_name']))]
-        else:
-            fill = COLORS[int(len(COLORS) * name_hash(b['hash_name']))]
+        bcolors = colors[b['color']]
+        fill = bcolors[int(len(bcolors) * name_hash(b['hash_name']))]
         content.append(ELEM.format(w=w, x=x, y=y, tx=tx, ty=ty,
                                    name=escape(b['name']),
                                    full_name=escape(b['full_name']),
                                    fsize=fsize, h=h-1, fill=fill))
 
-    return SVG.format('\n'.join(content), width=width, height=height)
+    return content, top + height
+
+
+def render_svg(blocks, bblocks, maxw, h=24, fsize=12, width=1200):
+    s1, h1 = render_svg_section(blocks, maxw, [COLORS, CCOLORS], h=h,
+                                fsize=fsize, width=width, top=0)
+    s2, h2 = render_svg_section(bblocks, maxw, [COLORS, ECOLORS, DCOLORS], h=h,
+                                fsize=fsize, width=width, top=h1 + h, invert=True)
+    return SVG.format('\n'.join(s1 + s2), width=width, height=h2)
 
 
 def render_fg(blocks, multiplier):
@@ -197,10 +246,10 @@ if __name__ == '__main__':
 
     s = pstats.Stats(args.stats)
     funcs, calls = calc_callers(s.stats)
-    blocks, maxw = prepare(funcs, calls, threshold=args.threshold / 100)
+    blocks, bblocks, maxw = prepare(funcs, calls, threshold=args.threshold / 100)
 
     if args.format == 'svg':
-        print(render_svg(blocks, maxw, h=args.row_height,
+        print(render_svg(blocks, bblocks, maxw, h=args.row_height,
                          fsize=args.font_size, width=args.width))
 
     if args.format == 'log':
