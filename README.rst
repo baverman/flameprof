@@ -35,7 +35,8 @@ Native svg features:
 * compact function names with full names in a tooltip
 * precise timings (cumulative and total)
 * call counts (in a tooltip on hover)
-* green bars show stack frames where flameprof starts to guess timing ratios.
+* green bars show stack frames where flameprof starts to guess timing ratios
+* inverted flamegraph to show total time of all calls
 
 Graph width, row height, font size and threshold can be set via appropriate cli
 options.
@@ -44,12 +45,19 @@ options.
 
     flameprof requests.prof > requests.svg
 
-.. image:: https://github.com/baverman/flameprof/raw/master/img/requests.png?raw=true
+.. image:: https://cdn.rawgit.com/baverman/flameprof/master/img/requests.svg
     :alt: Requests profile
     :width: 100%
     :align: center
 
-`SVG version <https://cdn.rawgit.com/baverman/flameprof/master/img/requests.svg>`_
+Inverted flamegraph:
+
+.. image:: https://cdn.rawgit.com/baverman/flameprof/master/img/httplib.svg
+    :alt: Requests profile
+    :width: 100%
+    :align: center
+
+(Images are clickable)
 
 
 Svg generated with flamegraph.pl (--format=log)
@@ -63,9 +71,9 @@ You can treat "samples" as microseconds by default (see ``--log-mult`` option).
 
     flameprof --format=log requests.prof | flamegraph > requests-flamegraph.svg
 
-.. image:: https://github.com/baverman/flameprof/raw/master/img/requests-flamegraph.png?raw=true
+.. image:: https://cdn.rawgit.com/baverman/flameprof/master/img/requests-flamegraph.svg
     :alt: Requests profile with flamegraph.pl
     :width: 100%
     :align: center
 
-`SVG version <https://cdn.rawgit.com/baverman/flameprof/master/img/requests-flamegraph.svg>`_
+(Image is clickable)
