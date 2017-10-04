@@ -12,7 +12,7 @@ from functools import partial
 from collections import Counter
 from xml.sax.saxutils import escape
 
-version = '0.2.1'
+version = '0.3'
 
 eprint = partial(print, file=sys.stderr)
 epprint = partial(pprint.pprint, stream=sys.stderr)
