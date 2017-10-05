@@ -240,45 +240,6 @@ def render_fg(blocks, multiplier, out):
         print(';'.join(trace), round(b['ww'] * multiplier), file=out)
 
 
-try:
-    import pytest
-
-    def pytest_addoption(parser):
-        group = parser.getgroup('flameprof')
-        group.addoption("--flameprof-svg", help="filename with out svg, default is %(default)s",
-                        default='/tmp/pytest-prof.svg')
-        group.addoption("--flameprof-cpu", action="store_true", help="ignore io wait")
-
-    def pytest_configure(config):
-        config.pluginmanager.register(PyTestPlugin(config.getvalue('flameprof_svg'),
-                                                   config.getvalue('flameprof_cpu')))
-
-    class PyTestPlugin(object):
-        def __init__(self, out, cpu):
-            self.out = out
-            self.any_test_was_run = False
-            if cpu:
-                self.profiler = Profile(time.clock)
-            else:
-                self.profiler = Profile()
-
-        @pytest.hookimpl(hookwrapper=True)
-        def pytest_runtest_call(self, item):
-            self.any_test_was_run = True
-            self.profiler.enable()
-            try:
-                yield
-            finally:
-                self.profiler.disable()
-
-        def pytest_unconfigure(self, config):
-            if self.any_test_was_run:
-                self.profiler.create_stats()
-                render(self.profiler.stats, open(self.out, 'w'))
-except ImportError:
-    pass
-
-
 SVG = '''\
 <?xml version="1.0" standalone="no"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
@@ -315,7 +276,27 @@ def render(stats, out, fmt=DEFAULT_FORMAT, threshold=DEFAULT_THRESHOLD/100,
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='Make flamegraph from cProfile stats.')
+    import textwrap
+    parser = argparse.ArgumentParser(formatter_class=argparse.RawDescriptionHelpFormatter,
+                                     description=textwrap.dedent('''\
+    Make flamegraph from cProfile stats.
+
+    Using existing profile:
+
+        flameprof -o /tmp/profile.svg /path/to/file-with-cprofile.stats
+
+    Profile script:
+
+        flameprof -o /tmp/profile.svg -r myscript.py [-- script_arg1, script_arg2, ...]
+
+    Profile python module:
+
+        flameprof -o /tmp/profile.svg -m some.module [-- mod_arg1, mod_arg2, ...]
+
+    Profile pytest:
+
+        py.test -p flameprof  # by default svg will be put in /tmp/pytest-prof.svg, see --help for other options
+    '''))
     parser.add_argument('stats', help='file with cProfile stats or command to run')
     parser.add_argument('--width', type=int, help='image width, default is %(default)s', default=DEFAULT_WIDTH)
     parser.add_argument('--row-height', type=int, help='row height, default is %(default)s', default=DEFAULT_ROW_HEIGHT)
@@ -367,3 +348,41 @@ if __name__ == '__main__':
 
     render(s.stats, args.out, args.format, args.threshold / 100,
            args.width, args.row_height, args.font_size, args.log_mult)
+else:
+    try:
+        import pytest
+
+        def pytest_addoption(parser):
+            group = parser.getgroup('flameprof')
+            group.addoption("--flameprof-svg", help="filename with out svg, default is %(default)s",
+                            default='/tmp/pytest-prof.svg')
+            group.addoption("--flameprof-cpu", action="store_true", help="ignore io wait")
+
+        def pytest_configure(config):
+            config.pluginmanager.register(PyTestPlugin(config.getvalue('flameprof_svg'),
+                                                       config.getvalue('flameprof_cpu')))
+
+        class PyTestPlugin(object):
+            def __init__(self, out, cpu):
+                self.out = out
+                self.any_test_was_run = False
+                if cpu:
+                    self.profiler = Profile(time.clock)
+                else:
+                    self.profiler = Profile()
+
+            @pytest.hookimpl(hookwrapper=True)
+            def pytest_runtest_call(self, item):
+                self.any_test_was_run = True
+                self.profiler.enable()
+                try:
+                    yield
+                finally:
+                    self.profiler.disable()
+
+            def pytest_unconfigure(self, config):
+                if self.any_test_was_run:
+                    self.profiler.create_stats()
+                    render(self.profiler.stats, open(self.out, 'w'))
+    except ImportError:
+        pass
