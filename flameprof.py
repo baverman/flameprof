@@ -8,13 +8,13 @@ import pstats
 import argparse
 import pprint
 import runpy
+import shlex
 
 from struct import Struct
 from hashlib import sha1
 from functools import partial
 from collections import Counter
 from xml.sax.saxutils import escape
-from cProfile import  Profile
 
 version = '0.3'
 
@@ -31,11 +31,37 @@ DEFAULT_LOG_MULT = 1000000
 PY2 = sys.version_info[0] == 2
 if PY2:
     bstr = lambda r: r
+    ustr = lambda r: r
 else:
     def bstr(data):
         if type(data) is str:
             data = data.encode('utf-8')
         return data
+
+    def ustr(data):
+        if type(data) is bytes:
+            data = data.decode('latin1')
+        return data
+
+
+def get_profiler(cpu):
+    try:
+        from cProfile import Profile
+    except ImportError:
+        from Profile import Profile
+
+    if cpu:
+        return Profile(time.clock)
+    else:
+        return Profile()
+
+
+def get_out(out, default=None):
+    out = out or default
+    if out:
+        return open(out, 'w')
+    else:
+        return sys.stdout
 
 
 def gen_colors(s, e, size):
@@ -298,8 +324,12 @@ def get_arg_parser():
         py.test -p flameprof  # by default svg will be put in /tmp/pytest-prof.svg
 
         # other options can be set via --flameprof-opts
+
+    Profile WSGI:
+
+        FLAMEPROF="mypkg.mymod:application" uwsgi --http=:5000 -w flameprof:wsgi
     '''))
-    parser.add_argument('stats', help='file with cProfile stats or command to run')
+    parser.add_argument('stats', help='file with cProfile stats or command to run or wsgi entry')
     parser.add_argument('--width', type=int, help='image width, default is %(default)s', default=DEFAULT_WIDTH)
     parser.add_argument('--row-height', type=int, help='row height, default is %(default)s', default=DEFAULT_ROW_HEIGHT)
     parser.add_argument('--font-size', type=int, help='font size, default is %(default)s', default=DEFAULT_FONT_SIZE)
@@ -313,7 +343,7 @@ def get_arg_parser():
     parser.add_argument('-r', '--run', action='store_true', help='run python script')
     parser.add_argument('-m', '--run-module', action='store_true', help='run python module')
     parser.add_argument('--cpu', action='store_true', help='count cpu time only (without io wait)')
-    parser.add_argument('-o', '--out', type=argparse.FileType('w'), default=sys.stdout, help='file with final svg')
+    parser.add_argument('-o', '--out', help='filename with output, default is stdout')
     return parser
 
 
@@ -332,10 +362,7 @@ if __name__ == '__main__':
                 mod_name, mod_spec, code = runpy._get_module_details(args.stats)
                 fname = mod_spec.origin
 
-        if args.cpu:
-            s = Profile(time.clock)
-        else:
-            s = Profile()
+        s = get_profiler(args.cpu)
 
         globs = {
             '__file__': fname,
@@ -352,7 +379,7 @@ if __name__ == '__main__':
     else:
         s = pstats.Stats(args.stats)
 
-    render(s.stats, args.out, args.format, args.threshold / 100,
+    render(s.stats, get_out(args.out), args.format, args.threshold / 100,
            args.width, args.row_height, args.font_size, args.log_mult)
 else:
     try:
@@ -360,11 +387,9 @@ else:
 
         def pytest_addoption(parser):
             group = parser.getgroup('flameprof')
-            group.addoption("--flameprof-opts", help="flameprof opts, default is %(default)s",
-                            default='-o /tmp/pytest-prof.svg')
+            group.addoption("--flameprof-opts", help="flameprof opts, default out is /tmp/pytest-prof.svg")
 
         def pytest_configure(config):
-            import shlex
             parser = get_arg_parser()
             argv = shlex.split(config.getvalue('flameprof_opts'))
             args = parser.parse_args(argv + ['null'])
@@ -374,10 +399,7 @@ else:
             def __init__(self, args):
                 self.args = args
                 self.any_test_was_run = False
-                if args.cpu:
-                    self.profiler = Profile(time.clock)
-                else:
-                    self.profiler = Profile()
+                self.profiler = get_profiler(args.cpu)
 
             @pytest.hookimpl(hookwrapper=True)
             def pytest_runtest_call(self, item):
@@ -392,7 +414,57 @@ else:
                 if self.any_test_was_run:
                     self.profiler.create_stats()
                     args = self.args
-                    render(self.profiler.stats, args.out, args.format, args.threshold / 100,
-                           args.width, args.row_height, args.font_size, args.log_mult)
+                    render(self.profiler.stats, get_out(args.out, '/tmp/pytest-prof.svg'), args.format,
+                           args.threshold / 100, args.width, args.row_height, args.font_size, args.log_mult)
     except ImportError:
         pass
+
+
+    wsgi_app = None
+
+
+    class ProfileWSGI(object):
+        def __init__(self, app, args):
+            self.args = args
+            self.app = app
+
+        def __call__(self, environ, start_response):
+            def catching_start_response(status, headers, exc_info=None):
+                start_response(status, headers, exc_info)
+                return response_body.append
+
+            p = get_profiler(self.args.cpu)
+            response_body = []
+            p.enable()
+            try:
+                appiter = self.app(environ, catching_start_response)
+                response_body.extend(appiter)
+                if hasattr(appiter, 'close'):
+                    appiter.close()
+            finally:
+                p.disable()
+                p.snapshot_stats()
+                args = self.args
+                render(p.stats, get_out(args.out, '/tmp/wsgi-prof.svg'), args.format, args.threshold / 100,
+                       args.width, args.row_height, args.font_size, args.log_mult)
+
+            return response_body
+
+
+    def wsgi(environ, start_response):
+        global wsgi_app
+
+        if not wsgi_app:
+            parser = get_arg_parser()
+            args = parser.parse_args(shlex.split(os.environ.get('FLAMEPROF', '')))
+            app_entry = ustr(args.stats)
+            pm, sep, vname = app_entry.rpartition(':')
+            if not sep:
+                pm = app_entry
+                vname = 'application'
+            __import__(pm)
+            mod = sys.modules[pm]
+            app = getattr(mod, vname)
+            wsgi_app = ProfileWSGI(app, args)
+
+        return wsgi_app(environ, start_response)
