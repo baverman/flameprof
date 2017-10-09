@@ -78,7 +78,7 @@ def calc_callers(stats):
     ttotal = sum(funcs[r]['stat'][2] for r in funcs)
 
     if not (0.8 < total / ttotal < 1.2):
-        eprint('Warning: can not find proper roots, root cumtime is {} but sum tottime is {}'.format(total, ttotal))
+        eprint('Warning: flameprof can\'t find proper roots, root cumtime is {} but sum tottime is {}'.format(total, ttotal))
 
     # Try to find suitable root
     newroot = max((r for r in funcs if r not in roots), key=lambda r: funcs[r]['stat'][3])
@@ -275,7 +275,7 @@ def render(stats, out, fmt=DEFAULT_FORMAT, threshold=DEFAULT_THRESHOLD/100,
     out.flush()
 
 
-if __name__ == '__main__':
+def get_arg_parser():
     import textwrap
     parser = argparse.ArgumentParser(formatter_class=argparse.RawDescriptionHelpFormatter,
                                      description=textwrap.dedent('''\
@@ -295,7 +295,9 @@ if __name__ == '__main__':
 
     Profile pytest:
 
-        py.test -p flameprof  # by default svg will be put in /tmp/pytest-prof.svg, see --help for other options
+        py.test -p flameprof  # by default svg will be put in /tmp/pytest-prof.svg
+
+        # other options can be set via --flameprof-opts
     '''))
     parser.add_argument('stats', help='file with cProfile stats or command to run')
     parser.add_argument('--width', type=int, help='image width, default is %(default)s', default=DEFAULT_WIDTH)
@@ -312,7 +314,11 @@ if __name__ == '__main__':
     parser.add_argument('-m', '--run-module', action='store_true', help='run python module')
     parser.add_argument('--cpu', action='store_true', help='count cpu time only (without io wait)')
     parser.add_argument('-o', '--out', type=argparse.FileType('w'), default=sys.stdout, help='file with final svg')
+    return parser
 
+
+if __name__ == '__main__':
+    parser = get_arg_parser()
     args, rest = parser.parse_known_args()
 
     if args.run or args.run_module:
@@ -354,19 +360,21 @@ else:
 
         def pytest_addoption(parser):
             group = parser.getgroup('flameprof')
-            group.addoption("--flameprof-svg", help="filename with out svg, default is %(default)s",
-                            default='/tmp/pytest-prof.svg')
-            group.addoption("--flameprof-cpu", action="store_true", help="ignore io wait")
+            group.addoption("--flameprof-opts", help="flameprof opts, default is %(default)s",
+                            default='-o /tmp/pytest-prof.svg')
 
         def pytest_configure(config):
-            config.pluginmanager.register(PyTestPlugin(config.getvalue('flameprof_svg'),
-                                                       config.getvalue('flameprof_cpu')))
+            import shlex
+            parser = get_arg_parser()
+            argv = shlex.split(config.getvalue('flameprof_opts'))
+            args = parser.parse_args(argv + ['null'])
+            config.pluginmanager.register(PyTestPlugin(args))
 
         class PyTestPlugin(object):
-            def __init__(self, out, cpu):
-                self.out = out
+            def __init__(self, args):
+                self.args = args
                 self.any_test_was_run = False
-                if cpu:
+                if args.cpu:
                     self.profiler = Profile(time.clock)
                 else:
                     self.profiler = Profile()
@@ -383,6 +391,8 @@ else:
             def pytest_unconfigure(self, config):
                 if self.any_test_was_run:
                     self.profiler.create_stats()
-                    render(self.profiler.stats, open(self.out, 'w'))
+                    args = self.args
+                    render(self.profiler.stats, args.out, args.format, args.threshold / 100,
+                           args.width, args.row_height, args.font_size, args.log_mult)
     except ImportError:
         pass
