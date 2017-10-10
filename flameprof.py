@@ -328,6 +328,11 @@ def get_arg_parser():
     Profile WSGI:
 
         FLAMEPROF="mypkg.mymod:application" uwsgi --http=:5000 -w flameprof:wsgi
+
+    Out files will be placed in /tmp by default. Profile WSGI with custom filename format:
+
+        FLAMEPROF="--wsgi-format='{method}.{url}.{ts}.{duration}ms' mypkg.mymod:application" uwsgi --http=:5000 -w flameprof:wsgi
+
     '''))
     parser.add_argument('stats', help='file with cProfile stats or command to run or wsgi entry')
     parser.add_argument('--width', type=int, help='image width, default is %(default)s', default=DEFAULT_WIDTH)
