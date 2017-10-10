@@ -401,7 +401,11 @@ else:
 
         def pytest_configure(config):
             parser = get_arg_parser()
-            argv = shlex.split(config.getvalue('flameprof_opts'))
+            argstr = config.getvalue('flameprof_opts')
+            if argstr:
+                argv = shlex.split(argstr)
+            else:
+                argv = []
             args = parser.parse_args(argv + ['null'])
             config.pluginmanager.register(PyTestPlugin(args))
 
