@@ -344,6 +344,11 @@ def get_arg_parser():
     parser.add_argument('-m', '--run-module', action='store_true', help='run python module')
     parser.add_argument('--cpu', action='store_true', help='count cpu time only (without io wait)')
     parser.add_argument('-o', '--out', help='filename with output, default is stdout')
+    parser.add_argument('--wsgi-out-dir', default='/tmp',
+                        help='directory where svg will be places in wsgi mode, default is %(default)s')
+    parser.add_argument('--wsgi-format',  default='{method}.{url}',
+                        help=('file name template in wsgi mode, default is %(default)s.'
+                              ' Possible vars are method, url, ts or duration'))
     return parser
 
 
@@ -436,16 +441,31 @@ else:
             p = get_profiler(self.args.cpu)
             response_body = []
             p.enable()
+            start = time.time()
             try:
                 appiter = self.app(environ, catching_start_response)
                 response_body.extend(appiter)
                 if hasattr(appiter, 'close'):
                     appiter.close()
             finally:
+                duration = time.time() - start
                 p.disable()
                 p.snapshot_stats()
                 args = self.args
-                render(p.stats, get_out(args.out, '/tmp/wsgi-prof.svg'), args.format, args.threshold / 100,
+                if not args.out:
+                    out = os.path.join(
+                        self.args.wsgi_out_dir,
+                        self.args.wsgi_format.format(
+                            method=environ['REQUEST_METHOD'],
+                            url=environ.get('PATH_INFO').strip('/').replace('/', '.') or 'root',
+                            duration=int(round(duration * 1000)),
+                            ts=int(round(start * 1000))
+                        )
+                    )
+                    out += '.svg' if args.format == 'svg' else '.log'
+                else:
+                    out = args.out
+                render(p.stats, get_out(out), args.format, args.threshold / 100,
                        args.width, args.row_height, args.font_size, args.log_mult)
 
             return response_body
