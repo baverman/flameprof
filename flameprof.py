@@ -424,6 +424,15 @@ else:
                 finally:
                     self.profiler.disable()
 
+            @pytest.hookimpl(hookwrapper=True)
+            def pytest_runtest_setup(self, item):
+                self.any_test_was_run = True
+                self.profiler.enable()
+                try:
+                    yield
+                finally:
+                    self.profiler.disable()
+
             def pytest_unconfigure(self, config):
                 if self.any_test_was_run:
                     self.profiler.create_stats()

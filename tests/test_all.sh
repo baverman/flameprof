@@ -6,3 +6,4 @@ $tdir/test_module.sh
 $tdir/test_script.sh
 $tdir/test_pytest.sh
 $tdir/test_wsgi.sh
+echo ALL OK

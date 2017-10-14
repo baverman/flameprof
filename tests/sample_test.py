@@ -1,9 +1,16 @@
+import pytest
 import time
 
 
-def test_simple1():
-    time.sleep(1)
+@pytest.fixture
+def dep(request):
+    time.sleep(0.3)
+    return None
 
 
-def test_simple2():
-    time.sleep(1)
+def test_simple1(dep):
+    time.sleep(0.2)
+
+
+def test_simple2(dep):
+    time.sleep(0.2)
