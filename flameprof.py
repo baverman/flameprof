@@ -14,6 +14,7 @@ from struct import Struct
 from hashlib import sha1
 from functools import partial
 from collections import Counter
+from contextlib import contextmanager
 from xml.sax.saxutils import escape
 
 version = '0.3'
@@ -54,6 +55,17 @@ def get_profiler(cpu):
         return Profile(time.clock)
     else:
         return Profile()
+
+
+@contextmanager
+def profile(filename, cpu=False):
+    p = get_profiler(cpu)
+    p.enable()
+    try:
+        yield
+    finally:
+        p.disable()
+        p.dump_stats(filename)
 
 
 def get_out(out, default=None):
