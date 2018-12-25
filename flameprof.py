@@ -480,7 +480,6 @@ else:
             finally:
                 duration = time.time() - start
                 p.disable()
-                p.snapshot_stats()
                 args = self.args
                 if not args.out:
                     out = os.path.join(
@@ -495,6 +494,7 @@ else:
                     out += '.svg' if args.format == 'svg' else '.log'
                 else:
                     out = args.out
+                p.dump_stats(out + '.pstat')
                 render(p.stats, get_out(out), args.format, args.threshold / 100,
                        args.width, args.row_height, args.font_size, args.log_mult)
 

@@ -1,4 +1,6 @@
 *.pyc
+*.pstat
+/test.py
 /dist
 /build
 *.egg-info/
