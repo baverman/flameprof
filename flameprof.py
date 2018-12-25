@@ -17,7 +17,7 @@ from collections import Counter
 from contextlib import contextmanager
 from xml.sax.saxutils import escape
 
-version = '0.3'
+version = '0.4'
 
 eprint = partial(print, file=sys.stderr)
 epprint = partial(pprint.pprint, stream=sys.stderr)
