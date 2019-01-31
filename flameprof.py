@@ -500,6 +500,43 @@ else:
 
             return response_body
 
+    class ProfileAllWSGI(object):
+        def __init__(self, app, args):
+            self.args = args
+            self.app = app
+            self.profiler = get_profiler(self.args.cpu)
+
+        def __call__(self, environ, start_response):
+            def catching_start_response(status, headers, exc_info=None):
+                start_response(status, headers, exc_info)
+                return response_body.append
+
+            if environ['PATH_INFO'] == '/flameprof-dump':
+                start_response('200 OK', [('Content-Type','text/plain')])
+                self.dump()
+                return [bstr('Ok')]
+
+            response_body = []
+            self.profiler.enable()
+            try:
+                appiter = self.app(environ, catching_start_response)
+                response_body.extend(appiter)
+                if hasattr(appiter, 'close'):
+                    appiter.close()
+            finally:
+                self.profiler.disable()
+            return response_body
+
+        def dump(self):
+            args = self.args
+            if not args.out:
+                out = os.path.join(self.args.wsgi_out_dir, 'profile-all')
+                out += '.svg' if args.format == 'svg' else '.log'
+            else:
+                out = args.out
+            self.profiler.dump_stats(out + '.pstat')
+            render(self.profiler.stats, get_out(out), args.format, args.threshold / 100,
+                   args.width, args.row_height, args.font_size, args.log_mult)
 
     def wsgi(environ, start_response):
         global wsgi_app
@@ -515,6 +552,6 @@ else:
             __import__(pm)
             mod = sys.modules[pm]
             app = getattr(mod, vname)
-            wsgi_app = ProfileWSGI(app, args)
+            wsgi_app = ProfileAllWSGI(app, args)
 
         return wsgi_app(environ, start_response)
