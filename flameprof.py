@@ -366,6 +366,8 @@ def get_arg_parser():
     parser.add_argument('--wsgi-format',  default='{method}.{url}',
                         help=('file name template in wsgi mode, default is %(default)s.'
                               ' Possible vars are method, url, ts or duration'))
+    parser.add_argument('--pstat', action='store_true',
+                        help='Also save profile output into *.pstat file')
     return parser
 
 
@@ -400,6 +402,10 @@ if __name__ == '__main__':
         s.create_stats()
     else:
         s = pstats.Stats(args.stats)
+
+    if args.out and args.pstat:
+        filename = os.path.splitext(args.out)[0] + '.pstat'
+        s.dump_stats(filename)
 
     render(s.stats, get_out(args.out), args.format, args.threshold / 100,
            args.width, args.row_height, args.font_size, args.log_mult)
