@@ -371,7 +371,9 @@ def get_arg_parser():
     return parser
 
 
-if __name__ == '__main__':
+
+def main():
+
     parser = get_arg_parser()
     args, rest = parser.parse_known_args()
 
@@ -409,6 +411,10 @@ if __name__ == '__main__':
 
     render(s.stats, get_out(args.out), args.format, args.threshold / 100,
            args.width, args.row_height, args.font_size, args.log_mult)
+
+
+if __name__ == '__main__':
+    main()
 else:
     try:
         import pytest
