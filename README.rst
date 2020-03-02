@@ -12,7 +12,7 @@ very huge graphs with a lot of noise.
 `Profile.dump_stats() <https://docs.python.org/3/library/profile.html#profile.Profile.dump_stats>`_
 call or via direct script profiling::
 
-    python -m cProfile -o myscript.prof myscript.py
+    python3 -m cProfile -o myscript.prof myscript.py
 
 
 Install
@@ -24,7 +24,7 @@ Via pip::
 
 Or you can invoke ``flameprof.py`` directly::
 
-    python flameprof.py input.prof > output.svg
+    python3 flameprof.py input.prof > output.svg
 
 
 Native svg (--format=svg)
