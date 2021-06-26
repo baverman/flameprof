@@ -371,10 +371,9 @@ def get_arg_parser():
     return parser
 
 
-if __name__ == '__main__':
+def main():
     parser = get_arg_parser()
     args, rest = parser.parse_known_args()
-
     if args.run or args.run_module:
         if args.run:
             code = compile(open(args.stats, mode='rb').read(), '__main__', 'exec', dont_inherit=True)
@@ -402,13 +401,15 @@ if __name__ == '__main__':
         s.create_stats()
     else:
         s = pstats.Stats(args.stats)
-
     if args.out and args.pstat:
         filename = os.path.splitext(args.out)[0] + '.pstat'
         s.dump_stats(filename)
-
     render(s.stats, get_out(args.out), args.format, args.threshold / 100,
            args.width, args.row_height, args.font_size, args.log_mult)
+
+
+if __name__ == '__main__':
+    main()
 else:
     try:
         import pytest

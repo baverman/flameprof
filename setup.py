@@ -11,7 +11,9 @@ setup(
     description='cProfile flamegraph generator',
     long_description=open('README.rst').read(),
     py_modules=['flameprof'],
-    scripts=['bin/flameprof'],
+    entry_points={
+        'console_scripts': ['flameprof=flameprof:main'],
+    },
     include_package_data=True,
     zip_safe=False,
     platforms='any',
