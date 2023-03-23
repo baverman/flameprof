@@ -141,13 +141,16 @@ def prepare(funcs, calls, threshold=0.0001):
     bblocks = []
     block_counts = Counter()
 
-    def _counts(parent, visited, level=0):
+    visited = set()
+    todo = [('root', set(), 0)]
+    while todo:
+        parent, visited, level = todo.pop(-1)
         for child in funcs[parent]['calls']:
             k = parent, child
             block_counts[k] += 1
             if block_counts[k] < 2:
                 if k not in visited:
-                    _counts(child, visited | {k}, level+1)
+                    todo.append((child, visited | {k}, level+1))
 
     def _calc(parent, timings, level, origin, visited, trace=(), pccnt=1, pblock=None):
         childs = funcs[parent]['calls']
@@ -227,7 +230,6 @@ def prepare(funcs, calls, threshold=0.0001):
             origin += ttt
 
     maxw = funcs['root']['stat'][3] * 1.0
-    _counts('root', set())
     _calc('root', (1, 1, maxw, maxw), 0, 0, set())
     _calc_back((f for f in funcs if f != 'root'), 0, None, 0, set(), 0)
 
